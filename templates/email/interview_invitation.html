@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4ff;margin:0;padding:20px">
+<div style="max-width:600px;margin:0 auto">
+  <div style="background:#1a56db;padding:24px 32px;border-radius:10px 10px 0 0">
+    <h1 style="color:white;margin:0;font-size:1.4rem">Sedik Recruiting</h1>
+    <p style="color:#bfdbfe;margin:4px 0 0">Ihr digitaler Recruiting-Partner</p>
+  </div>
+  <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none">
+    <h2 style="color:#111827;margin-top:0">Einladung zum Vorstellungsgespräch</h2>
+    <p style="color:#374151">Sehr geehrte/r <strong>{{ applicant_name }}</strong>,</p>
+    <p style="color:#374151">wir freuen uns, Sie zu einem Vorstellungsgespräch einzuladen:</p>
+    <div style="background:#f0f4ff;border-left:4px solid #1a56db;padding:16px;margin:20px 0;border-radius:0 8px 8px 0">
+      <p style="margin:0 0 8px"><strong>Stelle:</strong> {{ position }}</p>
+      <p style="margin:0 0 8px"><strong>Unternehmen:</strong> {{ company }}</p>
+      <p style="margin:0 0 8px"><strong>Datum:</strong> {{ date_str }}</p>
+      <p style="margin:0 0 8px"><strong>Uhrzeit:</strong> {{ time_str }} Uhr</p>
+      <p style="margin:0 0 8px"><strong>Ort:</strong> {{ location }}</p>
+      <p style="margin:0"><strong>Gesprächspartner:</strong> {{ interviewer_name }}</p>
+    </div>
+    {% if additional_notes %}
+    <p style="color:#374151"><strong>Hinweise:</strong><br>{{ additional_notes }}</p>
+    {% endif %}
+    <div style="text-align:center;margin:28px 0">
+      <a href="{{ confirmation_link }}"
+         style="background:#10b981;color:white;padding:14px 28px;border-radius:8px;
+                text-decoration:none;font-weight:600;display:inline-block">
+        ✅ Teilnahme bestätigen
+      </a>
+    </div>
+    <p style="color:#6b7280;font-size:0.9rem">
+      Bei Fragen stehen wir Ihnen jederzeit zur Verfügung.<br>
+      Wir freuen uns auf das Gespräch!
+    </p>
+  </div>
+  <div style="padding:16px;text-align:center;color:#9ca3af;font-size:0.8rem">
+    Sedik Recruiting Agent &mdash; Automatisch erstellt
+  </div>
+</div>
+</body>
+</html>
