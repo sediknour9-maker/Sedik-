@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse
 
 from config import settings
 from database import init_db
-from api.routes import agent, applicants, job_orders, appointments, approvals, phone
+from api.routes import agent, applicants, job_orders, appointments, approvals, phone, tenants, gdpr
 
 logging.basicConfig(
     level=logging.DEBUG if settings.debug else logging.INFO,
@@ -53,6 +53,8 @@ app.include_router(job_orders.router, prefix="/api")
 app.include_router(appointments.router, prefix="/api")
 app.include_router(approvals.router, prefix="/api")
 app.include_router(phone.router, prefix="/api")
+app.include_router(tenants.router, prefix="/api")
+app.include_router(gdpr.router, prefix="/api")
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
