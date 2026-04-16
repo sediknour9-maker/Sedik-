@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:-apple-system,sans-serif;background:#f0f4ff;margin:0;padding:20px">
+<div style="max-width:600px;margin:0 auto">
+  <div style="background:#10b981;padding:24px 32px;border-radius:10px 10px 0 0">
+    <h1 style="color:white;margin:0;font-size:1.3rem">✅ Terminbestätigung</h1>
+  </div>
+  <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none">
+    <p>Sehr geehrte/r <strong>{{ recipient_name }}</strong>,</p>
+    <p>Ihr Termin wurde bestätigt:</p>
+    <div style="background:#f0fdf4;border-left:4px solid #10b981;padding:16px;margin:20px 0;border-radius:0 8px 8px 0">
+      <p style="margin:0 0 8px"><strong>Termin:</strong> {{ appointment_title }}</p>
+      <p style="margin:0 0 8px"><strong>Datum:</strong> {{ date_str }}</p>
+      <p style="margin:0 0 8px"><strong>Uhrzeit:</strong> {{ time_str }} Uhr</p>
+      <p style="margin:0"><strong>Ort:</strong> {{ location }}</p>
+    </div>
+    <p style="color:#6b7280;font-size:0.9rem">Wir freuen uns auf das Gespräch!</p>
+  </div>
+  <div style="padding:12px;text-align:center;color:#9ca3af;font-size:0.8rem">
+    Sedik Recruiting Agent
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:-apple-system,sans-serif;background:#f9fafb;margin:0;padding:20px">
+<div style="max-width:600px;margin:0 auto">
+  <div style="background:#ef4444;padding:20px 32px;border-radius:10px 10px 0 0">
+    <h1 style="color:white;margin:0;font-size:1.2rem">🚨 Eskalation – Ihre Aufmerksamkeit erforderlich</h1>
+  </div>
+  <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none">
+    <p>Der <strong>Sedik KI-Agent</strong> hat eine Situation identifiziert, die menschliche Einschätzung erfordert:</p>
+    <div style="background:#fef2f2;border:1px solid #fca5a5;padding:16px;border-radius:8px;margin:16px 0">
+      <h3 style="margin:0 0 8px;color:#991b1b">{{ issue_title }}</h3>
+      <p style="margin:0;color:#7f1d1d">{{ issue_description }}</p>
+    </div>
+    {% if suggested_action %}
+    <div style="background:#f0fdf4;border:1px solid #86efac;padding:12px;border-radius:6px;margin:12px 0">
+      <strong style="color:#166534">Empfehlung des Agenten:</strong>
+      <p style="margin:8px 0 0;color:#14532d">{{ suggested_action }}</p>
+    </div>
+    {% endif %}
+    <a href="{{ conversation_link }}"
+       style="display:inline-block;background:#1a56db;color:white;padding:12px 24px;
+              border-radius:8px;text-decoration:none;font-weight:600;margin-top:16px">
+      Gespräch ansehen →
+    </a>
+  </div>
+  <div style="padding:12px;text-align:center;color:#9ca3af;font-size:0.8rem">
+    Sedik Recruiting Agent &mdash; Eskalationsbenachrichtigung
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"></head>
+<body style="font-family:-apple-system,sans-serif;background:#f9fafb;margin:0;padding:20px">
+<div style="max-width:600px;margin:0 auto">
+  <div style="background:#f59e0b;padding:20px 32px;border-radius:10px 10px 0 0">
+    <h1 style="color:white;margin:0;font-size:1.2rem">⚠️ Genehmigung erforderlich</h1>
+  </div>
+  <div style="background:white;padding:32px;border:1px solid #e5e7eb;border-top:none">
+    <p>Der <strong>Sedik KI-Agent</strong> benötigt Ihre Genehmigung:</p>
+    <div style="background:#fffbeb;border:1px solid #fcd34d;padding:16px;border-radius:8px;margin:16px 0">
+      <h3 style="margin:0 0 8px;color:#92400e">{{ action_title }}</h3>
+      <p style="margin:0;color:#78350f">{{ action_description }}</p>
+    </div>
+    {% if context_info %}
+    <div style="background:#f3f4f6;padding:12px;border-radius:6px;margin:12px 0;font-size:0.9rem">
+      <strong>Details:</strong><br>
+      <pre style="margin:8px 0 0;white-space:pre-wrap;font-family:inherit">{{ context_info }}</pre>
+    </div>
+    {% endif %}
+    <p style="color:#6b7280;font-size:0.85rem">Diese Anfrage läuft in <strong>{{ timeout_hours }} Stunden</strong> ab.</p>
+    <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+      <a href="{{ approval_link }}"
+         style="background:#10b981;color:white;padding:12px 24px;border-radius:8px;
+                text-decoration:none;font-weight:600">✅ Genehmigen</a>
+      <a href="{{ rejection_link }}"
+         style="background:#ef4444;color:white;padding:12px 24px;border-radius:8px;
+                text-decoration:none;font-weight:600">❌ Ablehnen</a>
+    </div>
+  </div>
+  <div style="padding:12px;text-align:center;color:#9ca3af;font-size:0.8rem">
+    Sedik Recruiting Agent &mdash; Interne Benachrichtigung
+  </div>
+</div>
+</body>
+</html>
