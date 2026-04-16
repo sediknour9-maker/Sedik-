@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALERO – Recruiting-Assistent Demo</title>
+  <style>
+    :root {
+      --alero-red:    #C8281E;
+      --alero-dark:   #1a1a2e;
+      --alero-light:  #f5f5f5;
+      --alero-grey:   #6b7280;
+      --alero-border: #e5e7eb;
+      --radius:       12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--alero-light);
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    .header {
+      background: var(--alero-dark);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      background: var(--alero-red);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: white;
+      font-size: 1.1rem;
+      letter-spacing: -1px;
+    }
+    .logo-text {
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    .logo-text span {
+      color: var(--alero-red);
+    }
+    .header-badge {
+      background: rgba(200,40,30,.2);
+      border: 1px solid var(--alero-red);
+      color: #ff8a80;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--alero-dark) 0%, #2d1b2e 100%);
+      color: white;
+      padding: 48px 32px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .hero h1 em {
+      color: var(--alero-red);
+      font-style: normal;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      opacity: .8;
+      max-width: 520px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+    .hero-chips {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: .8rem;
+    }
+
+    /* ── Main layout ─────────────────────────────────────────────────────── */
+    .main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 760px) {
+      .main { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.5rem; }
+    }
+
+    /* ── Chat-Karte ──────────────────────────────────────────────────────── */
+    .chat-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(0,0,0,.1);
+      overflow: hidden;
+      border: 1px solid var(--alero-border);
+    }
+    .chat-topbar {
+      background: var(--alero-red);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .agent-avatar {
+      width: 38px;
+      height: 38px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .agent-info strong {
+      color: white;
+      font-size: .95rem;
+      display: block;
+    }
+    .agent-info span {
+      color: rgba(255,255,255,.8);
+      font-size: .78rem;
+    }
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      margin-left: auto;
+      box-shadow: 0 0 0 2px rgba(74,222,128,.3);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(74,222,128,.3); }
+      50%       { box-shadow: 0 0 0 5px rgba(74,222,128,.15); }
+    }
+
+    /* ── Messages ────────────────────────────────────────────────────────── */
+    #messages {
+      height: 420px;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-thumb { background: var(--alero-border); border-radius: 2px; }
+
+    .msg-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    .msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+    }
+    .msg-avatar.agent { background: var(--alero-red); color: white; }
+    .msg-avatar.user  { background: var(--alero-dark); color: white; }
+
+    .msg-bubble {
+      max-width: 78%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+    .msg-row.agent .msg-bubble {
+      background: var(--alero-light);
+      border: 1px solid var(--alero-border);
+      border-bottom-left-radius: 4px;
+      color: #1f2937;
+    }
+    .msg-row.user .msg-bubble {
+      background: var(--alero-red);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* typing indicator */
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+      padding: 4px 0;
+    }
+    .typing-dots span {
+      width: 7px;
+      height: 7px;
+      background: var(--alero-grey);
+      border-radius: 50%;
+      animation: bounce .9s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .15s; }
+    .typing-dots span:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40%           { transform: translateY(-6px); }
+    }
+
+    /* ── Input ───────────────────────────────────────────────────────────── */
+    .chat-input-area {
+      padding: 14px 16px;
+      border-top: 1px solid var(--alero-border);
+      display: flex;
+      gap: 8px;
+      background: white;
+    }
+    #user-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--alero-border);
+      border-radius: 24px;
+      font-size: .9rem;
+      outline: none;
+      transition: border-color .2s;
+      font-family: inherit;
+    }
+    #user-input:focus {
+      border-color: var(--alero-red);
+      box-shadow: 0 0 0 3px rgba(200,40,30,.12);
+    }
+    #send-btn {
+      width: 42px;
+      height: 42px;
+      background: var(--alero-red);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .2s, transform .1s;
+    }
+    #send-btn:hover:not(:disabled) { background: #a01f16; transform: scale(1.05); }
+    #send-btn:disabled { background: #d1d5db; cursor: not-allowed; }
+    #send-btn svg { fill: white; width: 18px; height: 18px; }
+
+    /* ── Quick-Buttons ───────────────────────────────────────────────────── */
+    .quick-btns {
+      padding: 0 16px 12px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .quick-btn {
+      background: white;
+      border: 1.5px solid var(--alero-border);
+      color: var(--alero-dark);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+      font-family: inherit;
+    }
+    .quick-btn:hover {
+      border-color: var(--alero-red);
+      color: var(--alero-red);
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────────────────────── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    .info-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--alero-border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .info-card h3 {
+      font-size: .85rem;
+      color: var(--alero-grey);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 14px;
+    }
+
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .875rem;
+      color: #374151;
+      line-height: 1.4;
+    }
+    .feature-list li::before {
+      content: "✓";
+      color: var(--alero-red);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .contact-list { display: flex; flex-direction: column; gap: 10px; }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+      color: #374151;
+    }
+    .contact-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(200,40,30,.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    .embed-card {
+      background: var(--alero-dark);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: white;
+    }
+    .embed-card h3 { color: rgba(255,255,255,.6); font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+    .embed-card p  { font-size: .82rem; color: rgba(255,255,255,.7); margin-bottom: 12px; line-height: 1.5; }
+    .code-block {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: .73rem;
+      color: #93c5fd;
+      word-break: break-all;
+      line-height: 1.5;
+      cursor: pointer;
+      transition: background .2s;
+      user-select: all;
+    }
+    .code-block:hover { background: rgba(255,255,255,.12); }
+    .copy-hint { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 6px; text-align: right; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      color: var(--alero-grey);
+      font-size: .78rem;
+      padding: 20px;
+      border-top: 1px solid var(--alero-border);
+      background: white;
+    }
+    .footer a { color: var(--alero-red); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-mark">AL</div>
+      <div class="logo-text">ALERO <span>GmbH</span></div>
+    </div>
+    <div class="header-badge">🤖 KI-Demo</div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Ihr digitaler<br><em>Recruiting-Assistent</em></h1>
+    <p>Testen Sie, wie unser KI-Agent Bewerbungen entgegennimmt,
+       Qualifikationen prüft und Termine vereinbart – rund um die Uhr.</p>
+    <div class="hero-chips">
+      <span class="chip">📍 Ludwigsburg &amp; Stuttgart</span>
+      <span class="chip">🏭 Industrie &amp; Logistik</span>
+      <span class="chip">💼 Kaufmännisch</span>
+      <span class="chip">⏱ 15 Jahre Erfahrung</span>
+    </div>
+  </section>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Chat -->
+    <div class="chat-card">
+      <div class="chat-topbar">
+        <div class="agent-avatar">🤖</div>
+        <div class="agent-info">
+          <strong>Alex – ALERO Recruiting-Assistent</strong>
+          <span>Für die richtige Einstellung.</span>
+        </div>
+        <div class="online-dot"></div>
+      </div>
+
+      <!-- Quick Buttons -->
+      <div class="quick-btns">
+        <button class="quick-btn" onclick="quickMsg('Ich möchte mich bewerben')">📝 Bewerben</button>
+        <button class="quick-btn" onclick="quickMsg('Welche Jobs sind gerade offen?')">🔍 Jobs ansehen</button>
+        <button class="quick-btn" onclick="quickMsg('Ich bin ein Unternehmen und brauche Personal')">🏢 Personal finden</button>
+        <button class="quick-btn" onclick="quickMsg('Einen Termin vereinbaren')">📅 Termin</button>
+      </div>
+
+      <div id="messages"></div>
+
+      <div class="chat-input-area">
+        <input id="user-input" type="text"
+               placeholder="Schreiben Sie eine Nachricht…"
+               autocomplete="off" />
+        <button id="send-btn" onclick="sendMessage()" title="Senden">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <div class="info-card">
+        <h3>Was kann der Assistent?</h3>
+        <ul class="feature-list">
+          <li>Bewerber-Daten aufnehmen &amp; Profil erstellen</li>
+          <li>Qualifikationen gegen offene Stellen prüfen</li>
+          <li>Bewerbungsgespräch-Termin vereinbaren</li>
+          <li>Bestätigungs-E-Mails automatisch versenden</li>
+          <li>Eingehende Anrufe entgegennehmen</li>
+          <li>Bei Fragen Mitarbeiter einschalten</li>
+          <li>Jede Aktion benötigt Mitarbeiter-Freigabe</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>Kontakt &amp; Standort</h3>
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <span>Mörikestraße 120<br>71636 Ludwigsburg</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <span>+49 7141 913 11 80</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <span>info@alero-gmbh.de</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🌐</div>
+            <span><a href="https://alero-gmbh.de" target="_blank" style="color:var(--alero-red)">alero-gmbh.de</a></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="embed-card">
+        <h3>Auf Ihrer Webseite einbinden</h3>
+        <p>Kopieren Sie diesen Code und fügen Sie ihn auf Ihrer Webseite ein:</p>
+        <div class="code-block" id="embed-code" onclick="copyEmbedCode()"
+             title="Klicken zum Kopieren"></div>
+        <div class="copy-hint" id="copy-hint">Klicken zum Kopieren</div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="footer">
+    Demo-Version · ALERO GmbH · Powered by
+    <a href="https://anthropic.com" target="_blank">Claude KI</a> ·
+    <a href="https://alero-gmbh.de/datenschutz" target="_blank">Datenschutz</a>
+  </footer>
+
+<script>
+  // ── Konfiguration ──────────────────────────────────────────────────────────
+  const BASE_URL     = window.location.origin;
+  const TENANT_SHORT = "alero";
+
+  let conversationId = null;
+  const input        = document.getElementById('user-input');
+  const sendBtn      = document.getElementById('send-btn');
+  const msgBox       = document.getElementById('messages');
+
+  // Embed-Code dynamisch befüllen
+  const embedCode = `<script src="${BASE_URL}/demo/${TENANT_SHORT}/widget.js"><\/script>`;
+  document.getElementById('embed-code').textContent = embedCode;
+
+  // ── Eingabe ────────────────────────────────────────────────────────────────
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+
+  function quickMsg(text) {
+    input.value = text;
+    sendMessage();
+  }
+
+  // ── Nachrichten rendern ────────────────────────────────────────────────────
+  function addMessage(text, role) {
+    const row = document.createElement('div');
+    row.className = `msg-row ${role}`;
+
+    const avatar = document.createElement('div');
+    avatar.className = `msg-avatar ${role}`;
+    avatar.textContent = role === 'agent' ? '🤖' : '👤';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.textContent = text;
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    msgBox.appendChild(row);
+    msgBox.scrollTop = msgBox.scrollHeight;
+    return row;
+  }
+
+  function showTyping() {
+    const row = document.createElement('div');
+    row.className = 'msg-row agent';
+    row.id = 'typing-indicator';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar agent';
+    avatar.textContent = '🤖';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    msgBox.appendChild(row);
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+
+  function hideTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+  }
+
+  // ── API-Kommunikation ──────────────────────────────────────────────────────
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    addMessage(text, 'user');
+    sendBtn.disabled = true;
+    showTyping();
+
+    try {
+      const res = await fetch(`${BASE_URL}/api/agent/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Tenant': TENANT_SHORT,
+        },
+        body: JSON.stringify({
+          message: text,
+          conversation_id: conversationId,
+          tenant_short: TENANT_SHORT,
+        }),
+      });
+      const data = await res.json();
+      conversationId = data.conversation_id;
+      hideTyping();
+      addMessage(data.response, 'agent');
+    } catch (err) {
+      hideTyping();
+      addMessage('Verbindungsfehler. Bitte versuchen Sie es erneut.', 'agent');
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  // ── Embed-Code kopieren ────────────────────────────────────────────────────
+  function copyEmbedCode() {
+    const code = document.getElementById('embed-code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const hint = document.getElementById('copy-hint');
+      hint.textContent = '✅ Kopiert!';
+      hint.style.color = '#4ade80';
+      setTimeout(() => {
+        hint.textContent = 'Klicken zum Kopieren';
+        hint.style.color = '';
+      }, 2500);
+    });
+  }
+
+  // ── Willkommens-Nachricht ──────────────────────────────────────────────────
+  window.addEventListener('load', () => {
+    addMessage(
+      'Guten Tag! Ich bin Alex, Ihr digitaler Recruiting-Assistent der ALERO GmbH – ' +
+      'Für die richtige Einstellung. Ich helfe Ihnen bei Bewerbungen, offenen Stellen ' +
+      'und Terminvereinbarungen. Wie kann ich Ihnen heute helfen?',
+      'agent'
+    );
+  });
+</script>
+</body>
+</html>

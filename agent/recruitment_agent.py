@@ -30,6 +30,7 @@ class RecruitmentAgent:
     def __init__(self, db: AsyncSession):
         self.db = db
         self.client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+        self._tenant_system_prompt: Optional[str] = None  # wird von außen gesetzt bei Tenant-Nutzung
 
         # Services initialisieren
         self.email_svc = EmailService()
@@ -56,10 +57,11 @@ class RecruitmentAgent:
         while iteration < max_iterations:
             iteration += 1
 
+            active_system = self._tenant_system_prompt or SYSTEM_PROMPT
             response = self.client.messages.create(
                 model=settings.claude_model,
                 max_tokens=4096,
-                system=SYSTEM_PROMPT,
+                system=active_system,
                 tools=AGENT_TOOLS,
                 messages=current_messages,
             )
