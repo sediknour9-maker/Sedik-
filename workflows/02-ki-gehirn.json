@@ -1,0 +1,319 @@
+{
+  "name": "02 – KI Gehirn (Claude Haiku · Konversation · DSGVO)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "22100001-0000-0000-0000-000000000001",
+      "name": "🔌 Workflow Eingang",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [200, 400]
+    },
+
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO sessions (channel, user_identifier, user_type, status, dsgvo_consent, collected_data, metadata)\nVALUES ('{{ $json.channel }}', '{{ $json.user_identifier }}', 'unknown', 'active', false, '{}', '{{ JSON.stringify($json.metadata || {}) }}'::jsonb)\nON CONFLICT (channel, user_identifier) DO UPDATE SET\n  updated_at = NOW()\nRETURNING id, channel, user_identifier, user_type, status, dsgvo_consent, collected_data, assigned_staff, created_at",
+        "additionalFields": {}
+      },
+      "id": "22100002-0000-0000-0000-000000000002",
+      "name": "💾 Session Upsert",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [440, 400],
+      "credentials": {
+        "postgres": { "id": "REPLACE_POSTGRES_CREDENTIAL_ID", "name": "Hetzner PostgreSQL" }
+      }
+    },
+
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT role, content FROM conversation_history\nWHERE session_id = '{{ $json.id }}'\nORDER BY created_at ASC\nLIMIT 30",
+        "additionalFields": {}
+      },
+      "id": "22100003-0000-0000-0000-000000000003",
+      "name": "📜 Konversation laden",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [680, 400],
+      "credentials": {
+        "postgres": { "id": "REPLACE_POSTGRES_CREDENTIAL_ID", "name": "Hetzner PostgreSQL" }
+      }
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Alle Knoten-Ausgaben sammeln\nconst historyRows = $input.all(); // Konversationshistorie\nconst session = $node['💾 Session Upsert'].json; // Aktuelle Session\nconst inputData = $node['🔌 Workflow Eingang'].json; // Originaleingabe\n\n// Konversationshistorie für Claude aufbauen\nconst historyMessages = historyRows\n  .filter(row => row.json && row.json.role && row.json.content)\n  .map(row => ({ role: row.json.role, content: row.json.content }));\n\n// Gesammelte Daten formatieren\nconst collectedData = session.collected_data || {};\nconst collectedDataStr = Object.keys(collectedData).length > 0\n  ? Object.entries(collectedData).map(([k, v]) => `• ${k}: ${v}`).join('\\n')\n  : '(noch keine Daten)';\n\n// Firmenname aus Umgebungsvariable\nconst firmaName = $env.FIRMA_NAME || '[FIRMENNAME]';\n\n// System Prompt aufbauen\nconst systemPrompt = `Du bist Maria, die virtuelle Empfangsdame bei ${firmaName} – einer professionellen Zeitarbeitsfirma.\nDu bist freundlich, geduldig, kompetent und antwortest IMMER in der Sprache des Nutzers (bevorzugt Deutsch).\n\n## DEINE AUFGABEN\n1. Herausfinden ob Bewerber (sucht Arbeit) oder Unternehmen (sucht Personal)\n2. Schrittweise Daten sammeln – IMMER nur EINE Frage auf einmal\n3. Bewerber vorqualifizieren (Eignung + Verfügbarkeit)\n4. Termine buchen (Vorstellungsgespräch oder Beratung)\n5. FAQ beantworten (Zeitarbeit, Prozess, Rechte)\n6. Bei Bedarf an Mitarbeiter weiterleiten\n\n## AKTUELLER KONTEXT\n- Nutzertyp: ${session.user_type}\n- DSGVO-Einwilligung: ${session.dsgvo_consent ? '✅ Erteilt' : '❌ NOCH NICHT ERTEILT'}\n- Kanal: ${inputData.channel}\n- Status: ${session.status}\n- Bisher gesammelte Daten:\\n${collectedDataStr}\n\n## PFLICHT: DSGVO-EINWILLIGUNG ZUERST\nWenn DSGVO-Einwilligung = NICHT ERTEILT:\nBitte zuerst um Einwilligung: \"Willkommen bei ${firmaName}! Ich bin Maria, Ihre virtuelle Empfangsdame. Bevor wir beginnen: Darf ich Ihre Daten DSGVO-konform für den Vermittlungsprozess verarbeiten? Diese werden ausschließlich auf deutschen Servern gespeichert. Stimmen Sie zu? (Ja/Nein)\"\n\n## DATEN BEWERBER (eine Frage pro Nachricht, in Reihenfolge):\nName → Geburtsdatum → Telefon → E-Mail → Berufssituation → Ausbildung → Erfahrung (Branche/Jahre) → Wunschstelle → Verfügbarkeit (ab wann + Vollzeit/Teilzeit) → Arbeitsort/Pendelbereitschaft → Führerschein + Fahrzeug → Sprachkenntnisse → Zertifikate/Sonderfähigkeiten → DANN: Terminvorschlag\n\n## DATEN UNTERNEHMEN (eine Frage pro Nachricht):\nFirmenname → Ansprechpartner (Name+Position) → Telefon → E-Mail → Benötigte Stelle (genau) → Mitarbeiterzahl → Einsatzbeginn+Dauer → Qualifikationen → Arbeitszeiten/Schicht → Einsatzort (Adresse) → Branche/spez. Anforderungen → Budget/Stundenlohn (optional) → DANN: Terminvorschlag\n\n## FAQ ANTWORTEN:\n- Zeitarbeit: \"Zeitarbeit = Sie arbeiten bei unserem Kundenunternehmen, sind aber bei uns angestellt. Vollständige Sozialversicherung und faire Vergütung nach BAP/DGB-Tarifvertrag.\"\n- Gehalt: \"Richtet sich nach BAP/DGB-Tarif + Qualifikation. Details im persönlichen Gespräch.\"\n- Dauer: \"Einsätze von einigen Wochen bis mehreren Jahren möglich. Verlängerungen häufig.\"\n- Sozialleistungen: \"Ja! Vollständige Kranken-, Renten-, Arbeitslosen- und Unfallversicherung.\"\n- Geschwindigkeit: \"In der Regel 1-3 Wochen nach erfolgreichem Gespräch.\"\n- Unterlagen: \"Personalausweis, Qualifikationsnachweise, Zeugnisse, ggf. Führerschein.\"\n\n## SOFORTIGE ESKALATION BEI:\n- Rechtsfragen (Kündigung, Vertragsdetails)\n- Beschwerden oder Konflikte\n- Gehaltsverhandlungen über Standardrahmen\n- Fragen zu laufenden Einsätzen\n- Nutzer fragt explizit nach echter Person\n\n## ANTWORTFORMAT (IMMER valides JSON, KEIN Markdown drumherum):\n{\n  \"message\": \"Antwort an den Nutzer\",\n  \"user_type\": \"unknown|applicant|company\",\n  \"action\": \"greeting|ask_dsgvo|collect_data|faq_answer|book_appointment|escalate_human|qualification_complete|request_complete|continue_conversation\",\n  \"collected_data\": {},\n  \"current_step\": \"Aktueller Schritt\",\n  \"requires_approval\": false,\n  \"approval_summary\": \"\",\n  \"appointment_needed\": false,\n  \"appointment_type\": null,\n  \"dsgvo_given\": false,\n  \"escalate_reason\": \"\"\n}`;\n\n// Claude-Nachrichten aufbauen\nconst messages = [\n  ...historyMessages,\n  { role: 'user', content: inputData.message_text }\n];\n\nreturn [{ json: {\n  // Originaldaten für spätere Referenz\n  channel: inputData.channel,\n  user_identifier: inputData.user_identifier,\n  message_text: inputData.message_text,\n  metadata: inputData.metadata || {},\n  session_id: session.id,\n  session: session,\n  // Claude API Payload\n  claude_request: {\n    model: 'claude-haiku-4-5-20251001',\n    max_tokens: 1024,\n    system: systemPrompt,\n    messages: messages\n  }\n}}];"
+      },
+      "id": "22100004-0000-0000-0000-000000000004",
+      "name": "🧠 Prompt aufbauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 400]
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.claude_request) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "22100005-0000-0000-0000-000000000005",
+      "name": "🤖 Claude API aufrufen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1160, 400],
+      "credentials": {
+        "httpHeaderAuth": { "id": "REPLACE_ANTHROPIC_CREDENTIAL_ID", "name": "Anthropic API Key" }
+      }
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const claudeOutput = $input.first().json;\nconst prevData = $node['🧠 Prompt aufbauen'].json;\n\n// Claude Antworttext extrahieren\nconst rawContent = claudeOutput.content?.[0]?.text || '';\n\n// JSON aus der Antwort parsen\nlet aiResponse;\ntry {\n  // Versuche JSON direkt zu parsen\n  const jsonMatch = rawContent.match(/\\{[\\s\\S]*\\}/);\n  const jsonStr = jsonMatch ? jsonMatch[0] : rawContent;\n  aiResponse = JSON.parse(jsonStr);\n} catch(e) {\n  // Fallback wenn Claude kein valides JSON zurückgibt\n  aiResponse = {\n    message: rawContent || 'Entschuldigung, es gab einen technischen Fehler. Bitte versuchen Sie es erneut.',\n    user_type: prevData.session?.user_type || 'unknown',\n    action: 'continue_conversation',\n    collected_data: {},\n    requires_approval: false,\n    appointment_needed: false,\n    dsgvo_given: false\n  };\n}\n\nreturn [{ json: {\n  // Weiterleiten der Originaldaten\n  channel: prevData.channel,\n  user_identifier: prevData.user_identifier,\n  message_text: prevData.message_text,\n  metadata: prevData.metadata,\n  session_id: prevData.session_id,\n  session: prevData.session,\n  // KI Ergebnis\n  ai_response: aiResponse,\n  response_text: aiResponse.message || '',\n  action: aiResponse.action || 'continue_conversation',\n  requires_approval: aiResponse.requires_approval || false,\n  appointment_needed: aiResponse.appointment_needed || false\n}}];"
+      },
+      "id": "22100006-0000-0000-0000-000000000006",
+      "name": "🔍 Antwort parsen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1400, 400]
+    },
+
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO conversation_history (session_id, role, content)\nVALUES\n  ('{{ $json.session_id }}', 'user', '{{ $json.message_text.replace(/'/g, \"''\") }}'),\n  ('{{ $json.session_id }}', 'assistant', '{{ $json.response_text.replace(/'/g, \"''\") }}')",
+        "additionalFields": {}
+      },
+      "id": "22100007-0000-0000-0000-000000000007",
+      "name": "💾 Gespräch speichern",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1640, 400],
+      "credentials": {
+        "postgres": { "id": "REPLACE_POSTGRES_CREDENTIAL_ID", "name": "Hetzner PostgreSQL" }
+      }
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const data = $node['🔍 Antwort parsen'].json;\nconst aiResp = data.ai_response || {};\nconst session = data.session || {};\n\n// Session-Updates vorbereiten\nconst newCollectedData = aiResp.collected_data || {};\nconst existingData = session.collected_data || {};\nconst mergedData = { ...existingData, ...newCollectedData };\nconst newUserType = aiResp.user_type && aiResp.user_type !== 'unknown' ? aiResp.user_type : session.user_type;\nconst dsgvoGiven = aiResp.dsgvo_given === true;\n\n// Bestimme neuen Status\nlet newStatus = session.status;\nif (aiResp.action === 'escalate_human') newStatus = 'escalated';\nelse if (aiResp.action === 'qualification_complete' || aiResp.action === 'request_complete') newStatus = 'waiting_approval';\n\nreturn [{ json: {\n  ...data,\n  update_params: {\n    merged_data: JSON.stringify(mergedData),\n    user_type: newUserType,\n    dsgvo_given: dsgvoGiven,\n    new_status: newStatus,\n    session_id: data.session_id\n  }\n}}];"
+      },
+      "id": "22100008-0000-0000-0000-000000000008",
+      "name": "📋 Update vorbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1640, 560]
+    },
+
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE sessions SET\n  user_type = CASE WHEN '{{ $json.update_params.user_type }}' != 'unknown' THEN '{{ $json.update_params.user_type }}' ELSE user_type END,\n  collected_data = '{{ $json.update_params.merged_data }}'::jsonb,\n  dsgvo_consent = CASE WHEN {{ $json.update_params.dsgvo_given }} THEN true ELSE dsgvo_consent END,\n  dsgvo_timestamp = CASE WHEN {{ $json.update_params.dsgvo_given }} AND dsgvo_timestamp IS NULL THEN NOW() ELSE dsgvo_timestamp END,\n  status = '{{ $json.update_params.new_status }}',\n  updated_at = NOW()\nWHERE id = '{{ $json.update_params.session_id }}'",
+        "additionalFields": {}
+      },
+      "id": "22100009-0000-0000-0000-000000000009",
+      "name": "💾 Session aktualisieren",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1880, 560],
+      "credentials": {
+        "postgres": { "id": "REPLACE_POSTGRES_CREDENTIAL_ID", "name": "Hetzner PostgreSQL" }
+      }
+    },
+
+    {
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "loose" },
+                "combinator": "and",
+                "conditions": [{
+                  "id": "rule-approval",
+                  "leftValue": "={{ $node['🔍 Antwort parsen'].json.requires_approval }}",
+                  "rightValue": true,
+                  "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+                }]
+              },
+              "outputIndex": 0,
+              "renameOutput": true,
+              "outputKey": "Genehmigung erforderlich"
+            },
+            {
+              "conditions": {
+                "options": { "caseSensitive": false, "leftValue": "", "typeValidation": "loose" },
+                "combinator": "and",
+                "conditions": [{
+                  "id": "rule-appointment",
+                  "leftValue": "={{ $node['🔍 Antwort parsen'].json.appointment_needed }}",
+                  "rightValue": true,
+                  "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+                }]
+              },
+              "outputIndex": 1,
+              "renameOutput": true,
+              "outputKey": "Termin buchen"
+            }
+          ]
+        },
+        "options": { "fallbackOutput": "extra" }
+      },
+      "id": "22100010-0000-0000-0000-000000000010",
+      "name": "🔀 Aktion routen",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [2120, 400]
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_BASE_URL }}/webhook/genehmigung-eingang",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  session_id: $node['🔍 Antwort parsen'].json.session_id,\n  session_data: {\n    channel: $node['🔍 Antwort parsen'].json.channel,\n    user_identifier: $node['🔍 Antwort parsen'].json.user_identifier,\n    user_type: $node['🔍 Antwort parsen'].json.session?.user_type\n  },\n  action_type: $node['🔍 Antwort parsen'].json.ai_response?.action === 'qualification_complete' ? 'new_applicant' : $node['🔍 Antwort parsen'].json.ai_response?.action === 'request_complete' ? 'new_company' : $node['🔍 Antwort parsen'].json.ai_response?.action === 'escalate_human' ? 'escalation' : 'appointment',\n  approval_summary: $node['🔍 Antwort parsen'].json.ai_response?.approval_summary || 'Keine Zusammenfassung verfügbar',\n  full_data: $node['🔍 Antwort parsen'].json.ai_response?.collected_data || {},\n  staff_email: $env.STAFF_EMAIL_PRIMARY\n}) }}",
+        "options": { "allowUnauthorizedCerts": false }
+      },
+      "id": "22100011-0000-0000-0000-000000000011",
+      "name": "📨 Genehmigung anfragen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2360, 200]
+    },
+
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.googleapis.com/calendar/v3/freeBusy",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  timeMin: new Date().toISOString(),\n  timeMax: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),\n  timeZone: 'Europe/Berlin',\n  items: [{ id: $env.GOOGLE_CALENDAR_ID }]\n}) }}",
+        "options": {}
+      },
+      "id": "22100012-0000-0000-0000-000000000012",
+      "name": "📅 Kalender abfragen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2360, 400],
+      "credentials": {
+        "oAuth2Api": { "id": "REPLACE_GOOGLE_CREDENTIAL_ID", "name": "Google Calendar OAuth2" }
+      }
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Freie Slots aus Google Calendar berechnen\nconst calendarData = $input.first().json;\nconst prevData = $node['🔍 Antwort parsen'].json;\n\nconst busySlots = calendarData.calendars?.[$env.GOOGLE_CALENDAR_ID]?.busy || [];\n\n// Verfügbare 30-min-Slots Mo-Fr 9-17 Uhr in den nächsten 5 Tagen\nconst availableSlots = [];\nconst now = new Date();\nconst days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\n\nfor (let d = 1; d <= 7 && availableSlots.length < 6; d++) {\n  const date = new Date(now);\n  date.setDate(now.getDate() + d);\n  if (date.getDay() === 0 || date.getDay() === 6) continue; // Skip weekends\n  \n  for (const hour of [9, 10, 11, 14, 15, 16]) {\n    if (availableSlots.length >= 6) break;\n    const slotStart = new Date(date);\n    slotStart.setHours(hour, 0, 0, 0);\n    const slotEnd = new Date(slotStart);\n    slotEnd.setMinutes(30);\n    \n    // Prüfen ob Slot frei ist\n    const isBusy = busySlots.some(busy => {\n      const bs = new Date(busy.start);\n      const be = new Date(busy.end);\n      return slotStart < be && slotEnd > bs;\n    });\n    \n    if (!isBusy && slotStart > now) {\n      const dateStr = slotStart.toLocaleDateString('de-DE', {\n        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'\n      });\n      const timeStr = slotStart.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });\n      availableSlots.push({\n        id: slotStart.toISOString(),\n        label: `${dateStr} um ${timeStr} Uhr`,\n        datetime: slotStart.toISOString()\n      });\n    }\n  }\n}\n\nconst slotsText = availableSlots.length > 0\n  ? availableSlots.map((s, i) => `${i + 1}. ${s.label}`).join('\\n')\n  : 'Leider sind in den nächsten 7 Tagen keine Termine verfügbar. Unser Team kontaktiert Sie direkt.';\n\nconst responseMessage = `Super! Gerne vereinbare ich einen Termin für Sie. Hier sind unsere verfügbaren Termine:\\n\\n${slotsText}\\n\\nBitte antworten Sie mit der Nummer Ihres Wunsch-Termins.`;\n\nreturn [{ json: {\n  ...prevData,\n  response_text: responseMessage,\n  available_slots: availableSlots,\n  action: 'select_slot'\n}}];"
+      },
+      "id": "22100013-0000-0000-0000-000000000013",
+      "name": "📅 Slots berechnen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2600, 400]
+    },
+
+    {
+      "parameters": {
+        "jsCode": "// Normaler Gesprächsverlauf – Antwort direkt zurückgeben\nconst data = $node['🔍 Antwort parsen'].json;\nreturn [{ json: {\n  response_text: data.response_text || '',\n  action: data.action || 'continue_conversation',\n  session_id: data.session_id,\n  channel: data.channel,\n  user_identifier: data.user_identifier\n}}];"
+      },
+      "id": "22100014-0000-0000-0000-000000000014",
+      "name": "💬 Normale Antwort",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2360, 560]
+    }
+  ],
+  "connections": {
+    "🔌 Workflow Eingang": {
+      "main": [
+        [{ "node": "💾 Session Upsert", "type": "main", "index": 0 }]
+      ]
+    },
+    "💾 Session Upsert": {
+      "main": [
+        [{ "node": "📜 Konversation laden", "type": "main", "index": 0 }]
+      ]
+    },
+    "📜 Konversation laden": {
+      "main": [
+        [{ "node": "🧠 Prompt aufbauen", "type": "main", "index": 0 }]
+      ]
+    },
+    "🧠 Prompt aufbauen": {
+      "main": [
+        [{ "node": "🤖 Claude API aufrufen", "type": "main", "index": 0 }]
+      ]
+    },
+    "🤖 Claude API aufrufen": {
+      "main": [
+        [{ "node": "🔍 Antwort parsen", "type": "main", "index": 0 }]
+      ]
+    },
+    "🔍 Antwort parsen": {
+      "main": [
+        [
+          { "node": "💾 Gespräch speichern", "type": "main", "index": 0 },
+          { "node": "📋 Update vorbereiten", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📋 Update vorbereiten": {
+      "main": [
+        [{ "node": "💾 Session aktualisieren", "type": "main", "index": 0 }]
+      ]
+    },
+    "💾 Session aktualisieren": {
+      "main": [
+        [{ "node": "🔀 Aktion routen", "type": "main", "index": 0 }]
+      ]
+    },
+    "💾 Gespräch speichern": {
+      "main": [
+        [{ "node": "🔀 Aktion routen", "type": "main", "index": 0 }]
+      ]
+    },
+    "🔀 Aktion routen": {
+      "main": [
+        [{ "node": "📨 Genehmigung anfragen", "type": "main", "index": 0 }],
+        [{ "node": "📅 Kalender abfragen", "type": "main", "index": 0 }],
+        [{ "node": "💬 Normale Antwort", "type": "main", "index": 0 }]
+      ]
+    },
+    "📅 Kalender abfragen": {
+      "main": [
+        [{ "node": "📅 Slots berechnen", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "REPLACE_WITH_N8N_INSTANCE_ID"
+  },
+  "id": "REPLACE_AI_BRAIN_WORKFLOW_ID",
+  "tags": [{ "name": "zeitarbeit-rezeptionist" }]
+}

@@ -1,0 +1,350 @@
+{
+  "name": "01 – Kanal Router (WhatsApp · Telegram · Chat · E-Mail)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rezeptionist-whatsapp",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "11100001-0000-0000-0000-000000000001",
+      "name": "📱 WhatsApp Eingang",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 200],
+      "webhookId": "wa-rezeptionist-v1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\nconst entry = body.entry?.[0];\nconst change = entry?.changes?.[0];\nconst value = change?.value;\nconst messages = value?.messages;\n// Ignore delivery receipts and status updates\nif (!messages?.length) return [];\nconst msg = messages[0];\n// Only handle text messages\nif (msg.type !== 'text') return [];\nreturn [{ json: {\n  channel: 'whatsapp',\n  user_identifier: msg.from,\n  message_text: msg.text.body,\n  timestamp: new Date().toISOString(),\n  metadata: {\n    phone_number_id: value.metadata?.phone_number_id,\n    display_phone_number: value.metadata?.display_phone_number\n  }\n}}];"
+      },
+      "id": "11100002-0000-0000-0000-000000000002",
+      "name": "📱 WA Normalizer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "OK",
+        "options": {}
+      },
+      "id": "11100003-0000-0000-0000-000000000003",
+      "name": "📱 WA Webhook ACK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [420, 80]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_AI_BRAIN_WORKFLOW_ID",
+          "mode": "id"
+        },
+        "options": { "waitForSubWorkflow": true }
+      },
+      "id": "11100004-0000-0000-0000-000000000004",
+      "name": "📱 WA → KI Gehirn",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [640, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $node['📱 WA Normalizer'].json.metadata.phone_number_id }}/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ messaging_product: 'whatsapp', to: $node['📱 WA Normalizer'].json.user_identifier, type: 'text', text: { body: $json.response_text } }) }}",
+        "options": {}
+      },
+      "id": "11100005-0000-0000-0000-000000000005",
+      "name": "📱 WA Antwort senden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [860, 200],
+      "credentials": {
+        "httpHeaderAuth": { "id": "REPLACE_CREDENTIAL_ID", "name": "WhatsApp Bearer Token" }
+      }
+    },
+
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rezeptionist-telegram",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "11200001-0000-0000-0000-000000000001",
+      "name": "✈️ Telegram Eingang",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 420],
+      "webhookId": "tg-rezeptionist-v1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\nconst msg = body.message;\nif (!msg || !msg.text) return [];\nreturn [{ json: {\n  channel: 'telegram',\n  user_identifier: String(msg.chat.id),\n  message_text: msg.text,\n  timestamp: new Date().toISOString(),\n  metadata: {\n    username: msg.from?.username || '',\n    first_name: msg.from?.first_name || '',\n    chat_type: msg.chat.type\n  }\n}}];"
+      },
+      "id": "11200002-0000-0000-0000-000000000002",
+      "name": "✈️ TG Normalizer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 420]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "OK",
+        "options": {}
+      },
+      "id": "11200003-0000-0000-0000-000000000003",
+      "name": "✈️ TG Webhook ACK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_AI_BRAIN_WORKFLOW_ID",
+          "mode": "id"
+        },
+        "options": { "waitForSubWorkflow": true }
+      },
+      "id": "11200004-0000-0000-0000-000000000004",
+      "name": "✈️ TG → KI Gehirn",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [640, 420]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ chat_id: $node['✈️ TG Normalizer'].json.user_identifier, text: $json.response_text, parse_mode: 'HTML' }) }}",
+        "options": {}
+      },
+      "id": "11200005-0000-0000-0000-000000000005",
+      "name": "✈️ TG Antwort senden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [860, 420]
+    },
+
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rezeptionist-chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "11300001-0000-0000-0000-000000000001",
+      "name": "💬 Chat Eingang",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 640],
+      "webhookId": "chat-rezeptionist-v1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\nconst text = (body.message || body.text || '').trim();\nconst sessionId = body.session_id || body.user_id || ('chat_' + Date.now());\nif (!text) return [];\nreturn [{ json: {\n  channel: 'chat',\n  user_identifier: sessionId,\n  message_text: text,\n  timestamp: new Date().toISOString(),\n  metadata: { session_id: sessionId }\n}}];"
+      },
+      "id": "11300002-0000-0000-0000-000000000002",
+      "name": "💬 Chat Normalizer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 640]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_AI_BRAIN_WORKFLOW_ID",
+          "mode": "id"
+        },
+        "options": { "waitForSubWorkflow": true }
+      },
+      "id": "11300003-0000-0000-0000-000000000003",
+      "name": "💬 Chat → KI Gehirn",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [640, 640]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ reply: $json.response_text, session_id: $json.session_id, action: $json.action }) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" },
+              { "name": "Access-Control-Allow-Origin", "value": "*" }
+            ]
+          }
+        }
+      },
+      "id": "11300004-0000-0000-0000-000000000004",
+      "name": "💬 Chat Antwort senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [860, 640]
+    },
+
+    {
+      "parameters": {
+        "triggerOn": "specificFolder",
+        "mailbox": "INBOX",
+        "postProcessAction": "read",
+        "options": {
+          "allowUnauthorizedCerts": false,
+          "ignoreSSL": false
+        }
+      },
+      "id": "11400001-0000-0000-0000-000000000001",
+      "name": "📧 E-Mail Eingang",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [200, 860],
+      "credentials": {
+        "imap": { "id": "REPLACE_IMAP_CREDENTIAL_ID", "name": "IMAP Empfangs-Konto" }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\nconst fromEmail = (body.from?.value?.[0]?.address || body.from || '').toLowerCase().trim();\nconst rawText = (body.text || (body.html || '').replace(/<[^>]*>/g, ' ')).replace(/\\s+/g, ' ').trim();\nif (!fromEmail || !rawText || rawText.length < 3) return [];\n// Ignore auto-replies and bounce messages\nconst subject = body.subject || '';\nif (/^(auto:|automatische|mailer-daemon|no-reply)/i.test(subject) || /^(auto:|automatische|mailer-daemon|no-reply)/i.test(fromEmail)) return [];\nreturn [{ json: {\n  channel: 'email',\n  user_identifier: fromEmail,\n  message_text: rawText.substring(0, 2000),\n  timestamp: new Date().toISOString(),\n  metadata: {\n    subject: subject || 'Neue Anfrage',\n    reply_to: fromEmail\n  }\n}}];"
+      },
+      "id": "11400002-0000-0000-0000-000000000002",
+      "name": "📧 E-Mail Normalizer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 860]
+    },
+    {
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_AI_BRAIN_WORKFLOW_ID",
+          "mode": "id"
+        },
+        "options": { "waitForSubWorkflow": true }
+      },
+      "id": "11400003-0000-0000-0000-000000000003",
+      "name": "📧 E-Mail → KI Gehirn",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [640, 860]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.SMTP_FROM_EMAIL }}",
+        "toEmail": "={{ $node['📧 E-Mail Normalizer'].json.user_identifier }}",
+        "subject": "=Re: {{ $node['📧 E-Mail Normalizer'].json.metadata.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.response_text }}\n\n--\nMaria – Virtuelle Empfangsdame\n{{ $env.FIRMA_NAME }}\n{{ $env.FIRMA_WEBSITE }}",
+        "options": {}
+      },
+      "id": "11400004-0000-0000-0000-000000000004",
+      "name": "📧 E-Mail Antwort senden",
+      "type": "n8n-nodes-base.sendEmail",
+      "typeVersion": 2,
+      "position": [860, 860],
+      "credentials": {
+        "smtp": { "id": "REPLACE_SMTP_CREDENTIAL_ID", "name": "SMTP Ausgang" }
+      }
+    }
+  ],
+  "connections": {
+    "📱 WhatsApp Eingang": {
+      "main": [
+        [
+          { "node": "📱 WA Normalizer", "type": "main", "index": 0 },
+          { "node": "📱 WA Webhook ACK", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📱 WA Normalizer": {
+      "main": [
+        [{ "node": "📱 WA → KI Gehirn", "type": "main", "index": 0 }]
+      ]
+    },
+    "📱 WA → KI Gehirn": {
+      "main": [
+        [{ "node": "📱 WA Antwort senden", "type": "main", "index": 0 }]
+      ]
+    },
+    "✈️ Telegram Eingang": {
+      "main": [
+        [
+          { "node": "✈️ TG Normalizer", "type": "main", "index": 0 },
+          { "node": "✈️ TG Webhook ACK", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "✈️ TG Normalizer": {
+      "main": [
+        [{ "node": "✈️ TG → KI Gehirn", "type": "main", "index": 0 }]
+      ]
+    },
+    "✈️ TG → KI Gehirn": {
+      "main": [
+        [{ "node": "✈️ TG Antwort senden", "type": "main", "index": 0 }]
+      ]
+    },
+    "💬 Chat Eingang": {
+      "main": [
+        [{ "node": "💬 Chat Normalizer", "type": "main", "index": 0 }]
+      ]
+    },
+    "💬 Chat Normalizer": {
+      "main": [
+        [{ "node": "💬 Chat → KI Gehirn", "type": "main", "index": 0 }]
+      ]
+    },
+    "💬 Chat → KI Gehirn": {
+      "main": [
+        [{ "node": "💬 Chat Antwort senden", "type": "main", "index": 0 }]
+      ]
+    },
+    "📧 E-Mail Eingang": {
+      "main": [
+        [{ "node": "📧 E-Mail Normalizer", "type": "main", "index": 0 }]
+      ]
+    },
+    "📧 E-Mail Normalizer": {
+      "main": [
+        [{ "node": "📧 E-Mail → KI Gehirn", "type": "main", "index": 0 }]
+      ]
+    },
+    "📧 E-Mail → KI Gehirn": {
+      "main": [
+        [{ "node": "📧 E-Mail Antwort senden", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "REPLACE_WITH_N8N_INSTANCE_ID"
+  },
+  "id": "REPLACE_WORKFLOW_01_ID",
+  "tags": [{ "name": "zeitarbeit-rezeptionist" }]
+}
