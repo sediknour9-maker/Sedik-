@@ -16,7 +16,8 @@
     "carbs": "كربوهيدرات",
     "fat": "دهون",
     "today": "اليوم",
-    "perDay": "في اليوم"
+    "perDay": "في اليوم",
+    "minutes": "دقيقة"
   },
   "onboarding": {
     "languageTitle": "اختر لغتك",
@@ -95,6 +96,101 @@
     "bannerActive": "وضع رمضان مفعّل",
     "suhoorLabel": "السحور",
     "iftarLabel": "الإفطار"
+  },
+  "nutrition": {
+    "title": "التغذية"
+  },
+  "home": {
+    "streak": "أيام متتالية",
+    "dailyGoals": "أهداف اليوم",
+    "goalFood": "سجّل وجباتك",
+    "goalWorkout": "أكمل تمرينًا",
+    "goalMobility": "قم بروتين المرونة",
+    "todaysTraining": "تمرين اليوم",
+    "goToTraining": "إلى التمرين",
+    "kcalBurnedToday": "المحروقة اليوم",
+    "nutritionToday": "التغذية اليوم"
+  },
+  "training": {
+    "title": "التمرين",
+    "segStrength": "قوة",
+    "segCardio": "كارديو",
+    "segMobility": "مرونة",
+    "dayA": "جسم كامل أ",
+    "dayB": "جسم كامل ب",
+    "dayC": "جسم كامل ج",
+    "sets": "مجموعات",
+    "completeWorkout": "إنهاء التمرين",
+    "workoutDone": "اكتمل اليوم ✓",
+    "duration": "المدة (دقيقة)",
+    "logCardio": "تسجيل النشاط",
+    "completeRoutine": "إنهاء الروتين",
+    "routineDone": "اكتمل الروتين اليوم ✓",
+    "estBurn": "≈ {{kcal}} سعرة"
+  },
+  "progress": {
+    "title": "التقدم",
+    "weightTitle": "الوزن",
+    "addWeight": "تسجيل الوزن",
+    "weightPlaceholder": "الوزن (كغ)",
+    "statsTitle": "إحصائيات",
+    "totalWorkouts": "تمارين قوة",
+    "totalCardio": "جلسات كارديو",
+    "totalMobility": "روتينات مرونة",
+    "nutritionHistory": "سجل التغذية"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "yourTargets": "أهدافك اليومية"
+  },
+  "exercise": {
+    "squat": "سكوات",
+    "lunge": "اندفاع أمامي",
+    "leg_press": "ضغط الأرجل",
+    "romanian_deadlift": "رفعة رومانية",
+    "bench_press": "ضغط الصدر بالبار",
+    "pushup": "تمرين الضغط",
+    "incline_dumbbell_press": "ضغط مائل بالدمبل",
+    "pullup": "عقلة",
+    "lat_pulldown": "سحب علوي",
+    "barbell_row": "تجديف بالبار",
+    "overhead_press": "ضغط الكتف",
+    "lateral_raise": "رفرفة جانبية",
+    "biceps_curl": "تمرين البايسبس",
+    "triceps_dip": "متوازي",
+    "plank": "بلانك",
+    "crunch": "تمرين البطن",
+    "hip_thrust": "رفع الورك",
+    "deadlift": "الرفعة الميتة"
+  },
+  "mobility": {
+    "cat_cow": "قطة-بقرة",
+    "worlds_greatest_stretch": "أفضل تمدد في العالم",
+    "hip_flexor_stretch": "تمدد عضلة الورك",
+    "shoulder_circles": "دوائر الكتف",
+    "thoracic_rotation": "دوران الظهر",
+    "hamstring_stretch": "تمدد أوتار الركبة",
+    "ankle_mobility": "مرونة الكاحل",
+    "deep_squat_hold": "وضعية القرفصاء العميقة",
+    "target_spine": "العمود الفقري",
+    "target_hips": "الوركان",
+    "target_shoulders": "الكتفان",
+    "target_legs": "الساقان",
+    "target_ankles": "الكاحلان"
+  },
+  "cardio": {
+    "walking": "مشي",
+    "running": "جري",
+    "cycling": "دراجة هوائية",
+    "swimming": "سباحة",
+    "football": "كرة القدم",
+    "basketball": "كرة السلة",
+    "boxing": "ملاكمة",
+    "rope_jumping": "نط الحبل",
+    "rowing": "تجديف",
+    "hiking": "مشي جبلي",
+    "dancing": "رقص",
+    "stairs": "صعود الدرج"
   },
   "portion": {
     "plate": "طبق",

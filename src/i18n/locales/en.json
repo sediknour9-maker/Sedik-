@@ -16,7 +16,8 @@
     "carbs": "Carbs",
     "fat": "Fat",
     "today": "Today",
-    "perDay": "per day"
+    "perDay": "per day",
+    "minutes": "min"
   },
   "onboarding": {
     "languageTitle": "Choose your language",
@@ -95,6 +96,101 @@
     "bannerActive": "Ramadan mode is active",
     "suhoorLabel": "Suhoor",
     "iftarLabel": "Iftar"
+  },
+  "nutrition": {
+    "title": "Nutrition"
+  },
+  "home": {
+    "streak": "day streak",
+    "dailyGoals": "Daily goals",
+    "goalFood": "Log your meals",
+    "goalWorkout": "Complete a workout",
+    "goalMobility": "Do your mobility routine",
+    "todaysTraining": "Today's training",
+    "goToTraining": "Go to training",
+    "kcalBurnedToday": "Burned today",
+    "nutritionToday": "Nutrition today"
+  },
+  "training": {
+    "title": "Training",
+    "segStrength": "Strength",
+    "segCardio": "Cardio",
+    "segMobility": "Mobility",
+    "dayA": "Full Body A",
+    "dayB": "Full Body B",
+    "dayC": "Full Body C",
+    "sets": "sets",
+    "completeWorkout": "Complete workout",
+    "workoutDone": "Completed today ✓",
+    "duration": "Duration (min)",
+    "logCardio": "Log activity",
+    "completeRoutine": "Complete routine",
+    "routineDone": "Routine completed today ✓",
+    "estBurn": "≈ {{kcal}} kcal"
+  },
+  "progress": {
+    "title": "Progress",
+    "weightTitle": "Weight",
+    "addWeight": "Log weight",
+    "weightPlaceholder": "Weight (kg)",
+    "statsTitle": "Statistics",
+    "totalWorkouts": "Workouts",
+    "totalCardio": "Cardio sessions",
+    "totalMobility": "Mobility routines",
+    "nutritionHistory": "Nutrition history"
+  },
+  "profile": {
+    "title": "Profile",
+    "yourTargets": "Your daily targets"
+  },
+  "exercise": {
+    "squat": "Squat",
+    "lunge": "Lunges",
+    "leg_press": "Leg press",
+    "romanian_deadlift": "Romanian deadlift",
+    "bench_press": "Bench press",
+    "pushup": "Push-ups",
+    "incline_dumbbell_press": "Incline dumbbell press",
+    "pullup": "Pull-ups",
+    "lat_pulldown": "Lat pulldown",
+    "barbell_row": "Barbell row",
+    "overhead_press": "Overhead press",
+    "lateral_raise": "Lateral raises",
+    "biceps_curl": "Biceps curls",
+    "triceps_dip": "Dips",
+    "plank": "Plank",
+    "crunch": "Crunches",
+    "hip_thrust": "Hip thrusts",
+    "deadlift": "Deadlift"
+  },
+  "mobility": {
+    "cat_cow": "Cat-cow",
+    "worlds_greatest_stretch": "World's greatest stretch",
+    "hip_flexor_stretch": "Hip flexor stretch",
+    "shoulder_circles": "Shoulder circles",
+    "thoracic_rotation": "Thoracic rotation",
+    "hamstring_stretch": "Hamstring stretch",
+    "ankle_mobility": "Ankle mobility",
+    "deep_squat_hold": "Deep squat hold",
+    "target_spine": "Spine",
+    "target_hips": "Hips",
+    "target_shoulders": "Shoulders",
+    "target_legs": "Legs",
+    "target_ankles": "Ankles"
+  },
+  "cardio": {
+    "walking": "Walking",
+    "running": "Running",
+    "cycling": "Cycling",
+    "swimming": "Swimming",
+    "football": "Football",
+    "basketball": "Basketball",
+    "boxing": "Boxing",
+    "rope_jumping": "Rope jumping",
+    "rowing": "Rowing",
+    "hiking": "Hiking",
+    "dancing": "Dancing",
+    "stairs": "Stair climbing"
   },
   "portion": {
     "plate": "plate",

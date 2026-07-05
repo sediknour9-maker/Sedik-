@@ -22,19 +22,23 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: t('dashboard.title'), tabBarIcon: () => <TabIcon emoji="🏠" /> }}
+        options={{ title: t('common.today'), tabBarIcon: () => <TabIcon emoji="🏠" /> }}
       />
       <Tabs.Screen
-        name="browse"
-        options={{ title: t('browse.title'), tabBarIcon: () => <TabIcon emoji="🍽️" /> }}
+        name="training"
+        options={{ title: t('training.title'), tabBarIcon: () => <TabIcon emoji="🏋️" /> }}
       />
       <Tabs.Screen
-        name="history"
-        options={{ title: t('history.title'), tabBarIcon: () => <TabIcon emoji="📅" /> }}
+        name="nutrition"
+        options={{ title: t('nutrition.title'), tabBarIcon: () => <TabIcon emoji="🍽️" /> }}
       />
       <Tabs.Screen
-        name="settings"
-        options={{ title: t('settings.title'), tabBarIcon: () => <TabIcon emoji="⚙️" /> }}
+        name="progress"
+        options={{ title: t('progress.title'), tabBarIcon: () => <TabIcon emoji="📈" /> }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{ title: t('profile.title'), tabBarIcon: () => <TabIcon emoji="👤" /> }}
       />
     </Tabs>
   );

@@ -64,7 +64,7 @@ export default function PortionScreen() {
       computed,
       loggedAt: new Date().toISOString(),
     });
-    router.replace('/(tabs)');
+    router.replace('/(tabs)/nutrition');
   };
 
   return (

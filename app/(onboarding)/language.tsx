@@ -25,7 +25,7 @@ export default function LanguageScreen() {
           <LanguageSwitcher value={language} onChange={setLanguage} />
         </View>
 
-        <TouchableOpacity style={styles.nextButton} onPress={() => router.push('/(onboarding)/profile')}>
+        <TouchableOpacity style={styles.nextButton} onPress={() => router.push('/(onboarding)/setup')}>
           <Text style={styles.nextButtonText}>{t('common.next')}</Text>
         </TouchableOpacity>
       </View>

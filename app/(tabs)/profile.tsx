@@ -7,7 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettings } from '../../src/store/SettingsContext';
 import { useProfile } from '../../src/store/ProfileContext';
 import { useLogs } from '../../src/store/LogContext';
+import { useActivity } from '../../src/store/ActivityContext';
 import { resetAllLogs } from '../../src/services/logRepository';
+import { resetAllActivities, resetWeights } from '../../src/services/activityRepository';
 import { LanguageSwitcher } from '../../src/components/LanguageSwitcher';
 import { colors } from '../../src/theme/colors';
 import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
@@ -19,13 +21,14 @@ const RAMADAN_OPTIONS: { value: RamadanOverride; labelKey: string }[] = [
   { value: 'off', labelKey: 'settings.ramadanOff' },
 ];
 
-export default function SettingsScreen() {
+export default function ProfileScreen() {
   const { t } = useTranslation();
   const isRTL = useRTL();
   const router = useRouter();
   const { language, setLanguage, ramadanOverride, setRamadanOverride } = useSettings();
-  const { resetProfile } = useProfile();
+  const { profile, resetProfile } = useProfile();
   const { refresh } = useLogs();
+  const { refresh: refreshActivity } = useActivity();
 
   const handleReset = () => {
     Alert.alert(t('settings.resetData'), t('settings.resetConfirm'), [
@@ -34,8 +37,8 @@ export default function SettingsScreen() {
         text: t('common.confirm'),
         style: 'destructive',
         onPress: async () => {
-          await resetAllLogs();
-          await refresh();
+          await Promise.all([resetAllLogs(), resetAllActivities(), resetWeights()]);
+          await Promise.all([refresh(), refreshActivity()]);
           await resetProfile();
           router.replace('/(onboarding)/language');
         },
@@ -46,7 +49,27 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('settings.title')}</Text>
+        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('profile.title')}</Text>
+
+        {profile ? (
+          <View style={styles.card}>
+            <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('profile.yourTargets')}</Text>
+            <Text style={styles.targetKcal}>
+              {profile.targets.kcal} {t('common.kcal')} / {t('common.perDay')}
+            </Text>
+            <View style={[styles.macroRow, { flexDirection: rowDirection(isRTL) }]}>
+              <Text style={styles.macroText}>
+                {t('common.protein')}: {profile.targets.proteinG}g
+              </Text>
+              <Text style={styles.macroText}>
+                {t('common.carbs')}: {profile.targets.carbsG}g
+              </Text>
+              <Text style={styles.macroText}>
+                {t('common.fat')}: {profile.targets.fatG}g
+              </Text>
+            </View>
+          </View>
+        ) : null}
 
         <Text style={styles.sectionLabel}>{t('settings.language')}</Text>
         <LanguageSwitcher value={language} onChange={setLanguage} />
@@ -78,6 +101,18 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   content: { padding: 20, paddingBottom: 48 },
   title: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 20 },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 8,
+  },
+  cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 10 },
+  targetKcal: { fontSize: 20, fontWeight: '700', color: colors.primary, textAlign: 'center', marginBottom: 8 },
+  macroRow: { justifyContent: 'space-around' },
+  macroText: { fontSize: 12, color: colors.textMuted },
   sectionLabel: { fontSize: 13, fontWeight: '600', color: colors.textMuted, marginBottom: 10, marginTop: 20 },
   optionRow: { gap: 8, flexWrap: 'wrap' },
   option: {
@@ -92,7 +127,7 @@ const styles = StyleSheet.create({
   optionText: { color: colors.text, fontSize: 13 },
   optionTextActive: { color: '#fff', fontWeight: '600' },
   resetButton: {
-    marginTop: 48,
+    marginTop: 40,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',

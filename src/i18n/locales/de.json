@@ -16,7 +16,8 @@
     "carbs": "Kohlenhydrate",
     "fat": "Fett",
     "today": "Heute",
-    "perDay": "pro Tag"
+    "perDay": "pro Tag",
+    "minutes": "Min."
   },
   "onboarding": {
     "languageTitle": "Wähle deine Sprache",
@@ -95,6 +96,101 @@
     "bannerActive": "Ramadan-Modus ist aktiv",
     "suhoorLabel": "Suhoor",
     "iftarLabel": "Iftar"
+  },
+  "nutrition": {
+    "title": "Ernährung"
+  },
+  "home": {
+    "streak": "Tage-Serie",
+    "dailyGoals": "Tagesziele",
+    "goalFood": "Mahlzeiten loggen",
+    "goalWorkout": "Ein Workout abschließen",
+    "goalMobility": "Mobility-Routine machen",
+    "todaysTraining": "Heutiges Training",
+    "goToTraining": "Zum Training",
+    "kcalBurnedToday": "Heute verbrannt",
+    "nutritionToday": "Ernährung heute"
+  },
+  "training": {
+    "title": "Training",
+    "segStrength": "Kraft",
+    "segCardio": "Cardio",
+    "segMobility": "Mobility",
+    "dayA": "Ganzkörper A",
+    "dayB": "Ganzkörper B",
+    "dayC": "Ganzkörper C",
+    "sets": "Sätze",
+    "completeWorkout": "Workout abschließen",
+    "workoutDone": "Heute abgeschlossen ✓",
+    "duration": "Dauer (Min.)",
+    "logCardio": "Aktivität loggen",
+    "completeRoutine": "Routine abschließen",
+    "routineDone": "Routine heute abgeschlossen ✓",
+    "estBurn": "≈ {{kcal}} kcal"
+  },
+  "progress": {
+    "title": "Fortschritt",
+    "weightTitle": "Gewicht",
+    "addWeight": "Gewicht eintragen",
+    "weightPlaceholder": "Gewicht (kg)",
+    "statsTitle": "Statistiken",
+    "totalWorkouts": "Workouts",
+    "totalCardio": "Cardio-Einheiten",
+    "totalMobility": "Mobility-Routinen",
+    "nutritionHistory": "Ernährungsverlauf"
+  },
+  "profile": {
+    "title": "Profil",
+    "yourTargets": "Deine Tagesziele"
+  },
+  "exercise": {
+    "squat": "Kniebeugen",
+    "lunge": "Ausfallschritte",
+    "leg_press": "Beinpresse",
+    "romanian_deadlift": "Rumänisches Kreuzheben",
+    "bench_press": "Bankdrücken",
+    "pushup": "Liegestütze",
+    "incline_dumbbell_press": "Schrägbankdrücken",
+    "pullup": "Klimmzüge",
+    "lat_pulldown": "Latzug",
+    "barbell_row": "Langhantelrudern",
+    "overhead_press": "Schulterdrücken",
+    "lateral_raise": "Seitheben",
+    "biceps_curl": "Bizeps-Curls",
+    "triceps_dip": "Dips",
+    "plank": "Plank",
+    "crunch": "Crunches",
+    "hip_thrust": "Hip Thrusts",
+    "deadlift": "Kreuzheben"
+  },
+  "mobility": {
+    "cat_cow": "Katze-Kuh",
+    "worlds_greatest_stretch": "World's Greatest Stretch",
+    "hip_flexor_stretch": "Hüftbeuger-Dehnung",
+    "shoulder_circles": "Schulterkreisen",
+    "thoracic_rotation": "Brustwirbel-Rotation",
+    "hamstring_stretch": "Beinbeuger-Dehnung",
+    "ankle_mobility": "Sprunggelenk-Mobilität",
+    "deep_squat_hold": "Tiefe Hocke halten",
+    "target_spine": "Wirbelsäule",
+    "target_hips": "Hüfte",
+    "target_shoulders": "Schultern",
+    "target_legs": "Beine",
+    "target_ankles": "Sprunggelenke"
+  },
+  "cardio": {
+    "walking": "Gehen",
+    "running": "Laufen",
+    "cycling": "Radfahren",
+    "swimming": "Schwimmen",
+    "football": "Fußball",
+    "basketball": "Basketball",
+    "boxing": "Boxen",
+    "rope_jumping": "Seilspringen",
+    "rowing": "Rudern",
+    "hiking": "Wandern",
+    "dancing": "Tanzen",
+    "stairs": "Treppensteigen"
   },
   "portion": {
     "plate": "Teller",

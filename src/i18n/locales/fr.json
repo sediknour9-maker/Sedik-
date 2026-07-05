@@ -16,7 +16,8 @@
     "carbs": "Glucides",
     "fat": "Lipides",
     "today": "Aujourd'hui",
-    "perDay": "par jour"
+    "perDay": "par jour",
+    "minutes": "min"
   },
   "onboarding": {
     "languageTitle": "Choisissez votre langue",
@@ -95,6 +96,101 @@
     "bannerActive": "Le mode Ramadan est actif",
     "suhoorLabel": "Suhoor",
     "iftarLabel": "Iftar"
+  },
+  "nutrition": {
+    "title": "Nutrition"
+  },
+  "home": {
+    "streak": "jours de suite",
+    "dailyGoals": "Objectifs du jour",
+    "goalFood": "Enregistrer vos repas",
+    "goalWorkout": "Terminer une séance",
+    "goalMobility": "Faire la routine mobilité",
+    "todaysTraining": "Entraînement du jour",
+    "goToTraining": "Vers l'entraînement",
+    "kcalBurnedToday": "Brûlées aujourd'hui",
+    "nutritionToday": "Nutrition aujourd'hui"
+  },
+  "training": {
+    "title": "Entraînement",
+    "segStrength": "Force",
+    "segCardio": "Cardio",
+    "segMobility": "Mobilité",
+    "dayA": "Corps entier A",
+    "dayB": "Corps entier B",
+    "dayC": "Corps entier C",
+    "sets": "séries",
+    "completeWorkout": "Terminer la séance",
+    "workoutDone": "Terminé aujourd'hui ✓",
+    "duration": "Durée (min)",
+    "logCardio": "Enregistrer l'activité",
+    "completeRoutine": "Terminer la routine",
+    "routineDone": "Routine terminée aujourd'hui ✓",
+    "estBurn": "≈ {{kcal}} kcal"
+  },
+  "progress": {
+    "title": "Progrès",
+    "weightTitle": "Poids",
+    "addWeight": "Enregistrer le poids",
+    "weightPlaceholder": "Poids (kg)",
+    "statsTitle": "Statistiques",
+    "totalWorkouts": "Séances",
+    "totalCardio": "Séances cardio",
+    "totalMobility": "Routines mobilité",
+    "nutritionHistory": "Historique nutrition"
+  },
+  "profile": {
+    "title": "Profil",
+    "yourTargets": "Vos objectifs quotidiens"
+  },
+  "exercise": {
+    "squat": "Squat",
+    "lunge": "Fentes",
+    "leg_press": "Presse à cuisses",
+    "romanian_deadlift": "Soulevé de terre roumain",
+    "bench_press": "Développé couché",
+    "pushup": "Pompes",
+    "incline_dumbbell_press": "Développé incliné haltères",
+    "pullup": "Tractions",
+    "lat_pulldown": "Tirage vertical",
+    "barbell_row": "Rowing barre",
+    "overhead_press": "Développé militaire",
+    "lateral_raise": "Élévations latérales",
+    "biceps_curl": "Curl biceps",
+    "triceps_dip": "Dips",
+    "plank": "Planche",
+    "crunch": "Crunchs",
+    "hip_thrust": "Hip thrust",
+    "deadlift": "Soulevé de terre"
+  },
+  "mobility": {
+    "cat_cow": "Chat-vache",
+    "worlds_greatest_stretch": "World's greatest stretch",
+    "hip_flexor_stretch": "Étirement des fléchisseurs de hanche",
+    "shoulder_circles": "Cercles d'épaules",
+    "thoracic_rotation": "Rotation thoracique",
+    "hamstring_stretch": "Étirement des ischio-jambiers",
+    "ankle_mobility": "Mobilité des chevilles",
+    "deep_squat_hold": "Squat profond maintenu",
+    "target_spine": "Colonne",
+    "target_hips": "Hanches",
+    "target_shoulders": "Épaules",
+    "target_legs": "Jambes",
+    "target_ankles": "Chevilles"
+  },
+  "cardio": {
+    "walking": "Marche",
+    "running": "Course",
+    "cycling": "Vélo",
+    "swimming": "Natation",
+    "football": "Football",
+    "basketball": "Basketball",
+    "boxing": "Boxe",
+    "rope_jumping": "Corde à sauter",
+    "rowing": "Aviron",
+    "hiking": "Randonnée",
+    "dancing": "Danse",
+    "stairs": "Montée d'escaliers"
   },
   "portion": {
     "plate": "assiette",

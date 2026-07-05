@@ -8,6 +8,7 @@ import { SettingsProvider } from '../src/store/SettingsContext';
 import { ProfileProvider } from '../src/store/ProfileContext';
 import { FoodDbProvider } from '../src/store/FoodDbContext';
 import { LogProvider } from '../src/store/LogContext';
+import { ActivityProvider } from '../src/store/ActivityContext';
 
 export default function RootLayout() {
   return (
@@ -17,10 +18,12 @@ export default function RootLayout() {
           <ProfileProvider>
             <FoodDbProvider>
               <LogProvider>
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen name="add-food/index" options={{ presentation: 'modal' }} />
-                  <Stack.Screen name="add-food/[foodId]" options={{ presentation: 'modal' }} />
-                </Stack>
+                <ActivityProvider>
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="add-food/index" options={{ presentation: 'modal' }} />
+                    <Stack.Screen name="add-food/[foodId]" options={{ presentation: 'modal' }} />
+                  </Stack>
+                </ActivityProvider>
               </LogProvider>
             </FoodDbProvider>
           </ProfileProvider>

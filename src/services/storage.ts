@@ -54,4 +54,7 @@ export const STORAGE_KEYS = {
   foodOverrides: 'app:foods:overrides',
   logsIndex: 'app:logs:index',
   logsForDate: (date: string) => `app:logs:${date}`,
+  activityIndex: 'app:activity:index',
+  activityForDate: (date: string) => `app:activity:${date}`,
+  weights: 'app:weights',
 } as const;
