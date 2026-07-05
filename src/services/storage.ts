@@ -7,8 +7,28 @@ interface StoredEnvelope<T> {
   data: T;
 }
 
+// Fallback for environments where persistent storage is unavailable
+// (sandboxed iframes, private browsing). Data then lives for the session only.
+const memoryStore = new Map<string, string>();
+
+async function getRaw(key: string): Promise<string | null> {
+  try {
+    return await AsyncStorage.getItem(key);
+  } catch {
+    return memoryStore.get(key) ?? null;
+  }
+}
+
+async function setRaw(key: string, value: string): Promise<void> {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch {
+    memoryStore.set(key, value);
+  }
+}
+
 export async function readStorage<T>(key: string): Promise<T | null> {
-  const raw = await AsyncStorage.getItem(key);
+  const raw = await getRaw(key);
   if (!raw) return null;
   const parsed: StoredEnvelope<T> = JSON.parse(raw);
   return parsed.data;
@@ -16,11 +36,15 @@ export async function readStorage<T>(key: string): Promise<T | null> {
 
 export async function writeStorage<T>(key: string, data: T): Promise<void> {
   const envelope: StoredEnvelope<T> = { v: STORAGE_VERSION, data };
-  await AsyncStorage.setItem(key, JSON.stringify(envelope));
+  await setRaw(key, JSON.stringify(envelope));
 }
 
 export async function removeStorage(key: string): Promise<void> {
-  await AsyncStorage.removeItem(key);
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch {
+    memoryStore.delete(key);
+  }
 }
 
 export const STORAGE_KEYS = {
