@@ -1,0 +1,402 @@
+{
+  "common": {
+    "appName": "Atlas Fit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "next": "Next",
+    "back": "Back",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "loading": "Loading...",
+    "kcal": "kcal",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "today": "Today",
+    "perDay": "per day",
+    "minutes": "min"
+  },
+  "onboarding": {
+    "languageTitle": "Choose your language",
+    "languageSubtitle": "You can change this later in Settings",
+    "profileTitle": "Tell us about yourself",
+    "sexLabel": "Sex",
+    "male": "Male",
+    "female": "Female",
+    "ageLabel": "Age",
+    "heightLabel": "Height (cm)",
+    "weightLabel": "Weight (kg)",
+    "activityLabel": "Activity level",
+    "activitySedentary": "Sedentary (little to no exercise)",
+    "activityLight": "Light (1-3 days/week)",
+    "activityModerate": "Moderate (3-5 days/week)",
+    "activityActive": "Active (6-7 days/week)",
+    "activityVeryActive": "Very active (physical job or twice a day)",
+    "goalsTitle": "What's your goal?",
+    "goalLose": "Lose weight",
+    "goalMaintain": "Maintain weight",
+    "goalGain": "Gain weight",
+    "reviewTitle": "Your daily targets",
+    "dailyTargetSummary": "Based on your profile, here is your recommended daily target",
+    "finish": "Get started"
+  },
+  "dashboard": {
+    "title": "Today",
+    "caloriesConsumed": "Consumed",
+    "caloriesGoal": "Goal",
+    "remaining": "Remaining",
+    "mealSlotBreakfast": "Breakfast",
+    "mealSlotLunch": "Lunch",
+    "mealSlotDinner": "Dinner",
+    "mealSlotSnack": "Snack",
+    "mealSlotSuhoor": "Suhoor",
+    "mealSlotIftar": "Iftar",
+    "addFood": "Add food",
+    "noEntries": "No food logged yet"
+  },
+  "browse": {
+    "title": "Moroccan foods",
+    "searchPlaceholder": "Search for a dish...",
+    "categoryAll": "All",
+    "categoryTagine": "Tagines",
+    "categorySoup": "Soups",
+    "categoryBreadPastry": "Breads & pastries",
+    "categoryCouscous": "Couscous",
+    "categoryDrink": "Drinks",
+    "categorySweet": "Sweets",
+    "categoryGrill": "Grilled",
+    "categoryOther": "Other"
+  },
+  "addFood": {
+    "title": "Add food",
+    "selectPortion": "Select portion",
+    "quantity": "Quantity",
+    "confirmAdd": "Add to log",
+    "selectMealSlot": "Select meal",
+    "scanBarcode": "Scan barcode",
+    "createCustom": "Create custom food"
+  },
+  "history": {
+    "title": "History",
+    "noHistory": "No history yet",
+    "dayTotal": "Day total"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "ramadanMode": "Ramadan mode",
+    "ramadanAuto": "Auto-detect",
+    "ramadanOn": "Always on",
+    "ramadanOff": "Always off",
+    "resetData": "Reset all data",
+    "resetConfirm": "This will delete your profile and all logged entries. Are you sure?"
+  },
+  "ramadan": {
+    "bannerActive": "Ramadan mode is active",
+    "suhoorLabel": "Suhoor",
+    "iftarLabel": "Iftar"
+  },
+  "nutrition": {
+    "title": "Nutrition"
+  },
+  "home": {
+    "streak": "day streak",
+    "dailyGoals": "Daily goals",
+    "goalFood": "Log your meals",
+    "goalWorkout": "Complete a workout",
+    "goalMobility": "Do your mobility routine",
+    "todaysTraining": "Today's training",
+    "goToTraining": "Go to training",
+    "kcalBurnedToday": "Burned today",
+    "nutritionToday": "Nutrition today"
+  },
+  "training": {
+    "title": "Training",
+    "segStrength": "Strength",
+    "segCardio": "Cardio",
+    "segMobility": "Mobility",
+    "dayA": "Full Body A",
+    "dayB": "Full Body B",
+    "dayC": "Full Body C",
+    "sets": "sets",
+    "completeWorkout": "Complete workout",
+    "workoutDone": "Completed today ✓",
+    "duration": "Duration (min)",
+    "logCardio": "Log activity",
+    "completeRoutine": "Complete routine",
+    "routineDone": "Routine completed today ✓",
+    "estBurn": "≈ {{kcal}} kcal",
+    "smartPlan": "Your smart plan",
+    "regenerate": "Regenerate plan",
+    "equipGym": "Gym",
+    "equipHome": "Home",
+    "day": "Day {{n}}",
+    "focusFull": "Full body",
+    "focusUpper": "Upper body",
+    "focusLower": "Lower body"
+  },
+  "scanner": {
+    "title": "Scan barcode",
+    "manualLabel": "Or enter the barcode manually",
+    "search": "Look up",
+    "notFound": "Product not found or no connection. You can create it manually.",
+    "noCamera": "Camera scanning works in the mobile app — enter the barcode manually here.",
+    "permission": "Grant camera access"
+  },
+  "custom": {
+    "title": "New food",
+    "nameLabel": "Name",
+    "portionGrams": "Portion size (g)"
+  },
+  "progress": {
+    "title": "Progress",
+    "weightTitle": "Weight",
+    "addWeight": "Log weight",
+    "weightPlaceholder": "Weight (kg)",
+    "statsTitle": "Statistics",
+    "totalWorkouts": "Workouts",
+    "totalCardio": "Cardio sessions",
+    "totalMobility": "Mobility routines",
+    "nutritionHistory": "Nutrition history"
+  },
+  "profile": {
+    "title": "Profile",
+    "yourTargets": "Your daily targets",
+    "community": "Community",
+    "joinDiscord": "Join the Discord community"
+  },
+  "exercise": {
+    "squat": "Squat",
+    "lunge": "Lunges",
+    "leg_press": "Leg press",
+    "romanian_deadlift": "Romanian deadlift",
+    "bench_press": "Bench press",
+    "pushup": "Push-ups",
+    "incline_dumbbell_press": "Incline dumbbell press",
+    "pullup": "Pull-ups",
+    "lat_pulldown": "Lat pulldown",
+    "barbell_row": "Barbell row",
+    "overhead_press": "Overhead press",
+    "lateral_raise": "Lateral raises",
+    "biceps_curl": "Biceps curls",
+    "triceps_dip": "Dips",
+    "plank": "Plank",
+    "crunch": "Crunches",
+    "hip_thrust": "Hip thrusts",
+    "deadlift": "Deadlift",
+    "goblet_squat": "Goblet squat",
+    "split_squat": "Split squat",
+    "glute_bridge": "Glute bridge",
+    "dumbbell_row": "Dumbbell row"
+  },
+  "mobility": {
+    "cat_cow": "Cat-cow",
+    "worlds_greatest_stretch": "World's greatest stretch",
+    "hip_flexor_stretch": "Hip flexor stretch",
+    "shoulder_circles": "Shoulder circles",
+    "thoracic_rotation": "Thoracic rotation",
+    "hamstring_stretch": "Hamstring stretch",
+    "ankle_mobility": "Ankle mobility",
+    "deep_squat_hold": "Deep squat hold",
+    "target_spine": "Spine",
+    "target_hips": "Hips",
+    "target_shoulders": "Shoulders",
+    "target_legs": "Legs",
+    "target_ankles": "Ankles"
+  },
+  "cardio": {
+    "walking": "Walking",
+    "running": "Running",
+    "cycling": "Cycling",
+    "swimming": "Swimming",
+    "football": "Football",
+    "basketball": "Basketball",
+    "boxing": "Boxing",
+    "rope_jumping": "Rope jumping",
+    "rowing": "Rowing",
+    "hiking": "Hiking",
+    "dancing": "Dancing",
+    "stairs": "Stair climbing"
+  },
+  "portion": {
+    "plate": "plate",
+    "bowl": "bowl",
+    "small_bowl": "small bowl",
+    "piece": "piece",
+    "piece_pair": "2 pieces",
+    "glass": "glass",
+    "scoop": "scoop",
+    "pieces_three": "3 pieces",
+    "grill_portion": "portion",
+    "g100": "100 g",
+    "g50": "50 g",
+    "g30": "30 g",
+    "tbsp": "tablespoon",
+    "slice": "slice",
+    "custom": "portion"
+  },
+  "food": {
+    "tagine_chicken_olives": {
+      "name": "Chicken tagine with olives"
+    },
+    "tagine_beef_prunes": {
+      "name": "Beef tagine with prunes"
+    },
+    "tagine_kefta": {
+      "name": "Kefta tagine"
+    },
+    "harira": {
+      "name": "Harira soup"
+    },
+    "chorba": {
+      "name": "Chorba soup"
+    },
+    "bissara": {
+      "name": "Bissara (fava bean soup)"
+    },
+    "khobz": {
+      "name": "Khobz (Moroccan bread)"
+    },
+    "msemen": {
+      "name": "Msemen"
+    },
+    "baghrir": {
+      "name": "Baghrir (pancakes)"
+    },
+    "briouates_cheese": {
+      "name": "Briouates with cheese"
+    },
+    "briouates_meat": {
+      "name": "Briouates with meat"
+    },
+    "rghaif": {
+      "name": "Rghaif"
+    },
+    "couscous_vegetable": {
+      "name": "Vegetable couscous"
+    },
+    "couscous_seven_veg": {
+      "name": "Seven-vegetable couscous"
+    },
+    "couscous_tfaya": {
+      "name": "Couscous tfaya"
+    },
+    "atay": {
+      "name": "Atay (mint tea)"
+    },
+    "orange_juice": {
+      "name": "Orange juice"
+    },
+    "avocado_smoothie": {
+      "name": "Avocado smoothie"
+    },
+    "lben": {
+      "name": "Lben (buttermilk)"
+    },
+    "chebakia": {
+      "name": "Chebakia"
+    },
+    "sellou": {
+      "name": "Sellou"
+    },
+    "gazelle_horns": {
+      "name": "Gazelle horns"
+    },
+    "dates": {
+      "name": "Dates"
+    },
+    "grilled_sardines": {
+      "name": "Grilled sardines"
+    },
+    "zaalouk": {
+      "name": "Zaalouk (eggplant salad)"
+    },
+    "rice_cooked": {
+      "name": "Rice (cooked)"
+    },
+    "pasta_cooked": {
+      "name": "Pasta (cooked)"
+    },
+    "chicken_breast": {
+      "name": "Chicken breast"
+    },
+    "egg": {
+      "name": "Egg"
+    },
+    "milk": {
+      "name": "Milk"
+    },
+    "yogurt_plain": {
+      "name": "Plain yogurt"
+    },
+    "banana": {
+      "name": "Banana"
+    },
+    "apple": {
+      "name": "Apple"
+    },
+    "tuna_can": {
+      "name": "Tuna (canned)"
+    },
+    "lentils_cooked": {
+      "name": "Lentils (cooked)"
+    },
+    "chickpeas_cooked": {
+      "name": "Chickpeas (cooked)"
+    },
+    "olive_oil": {
+      "name": "Olive oil"
+    },
+    "butter": {
+      "name": "Butter"
+    },
+    "cheese_slice": {
+      "name": "Cheese slice"
+    },
+    "tomato": {
+      "name": "Tomato"
+    },
+    "potato_boiled": {
+      "name": "Potato (boiled)"
+    },
+    "white_bread_slice": {
+      "name": "White bread"
+    },
+    "oats": {
+      "name": "Oats"
+    },
+    "honey": {
+      "name": "Honey"
+    },
+    "almonds": {
+      "name": "Almonds"
+    }
+  },
+  "exerciseDesc": {
+    "squat": "Stand shoulder-width, brace your core, sit your hips back and down until thighs are parallel, then drive back up through your heels.",
+    "lunge": "Step forward, lower the back knee toward the floor with an upright torso, then push back to standing and switch legs.",
+    "leg_press": "Place feet shoulder-width on the platform, lower the weight until knees reach 90°, then press back up without locking out.",
+    "romanian_deadlift": "With a slight knee bend, hinge at the hips and lower the bar along your legs until you feel the hamstrings stretch, then return upright.",
+    "bench_press": "Lower the bar to mid-chest with elbows at about 45°, then press it back up until arms are extended.",
+    "pushup": "Hands under shoulders, body in a straight line — lower your chest to the floor and press back up.",
+    "incline_dumbbell_press": "On an incline bench, press the dumbbells from shoulder level until arms are extended, then lower with control.",
+    "pullup": "Hang from the bar with an overhand grip and pull your chin above the bar, then lower slowly.",
+    "lat_pulldown": "Grip the bar wide, pull it to your upper chest while keeping the torso upright, then release with control.",
+    "barbell_row": "Hinge forward with a flat back and pull the bar to your lower ribs, squeezing the shoulder blades together.",
+    "overhead_press": "Press the bar from shoulder height straight overhead, keeping your core tight and ribs down.",
+    "lateral_raise": "With a slight elbow bend, raise the dumbbells out to shoulder height and lower slowly.",
+    "biceps_curl": "Keep elbows pinned to your sides and curl the weight up, then lower fully under control.",
+    "triceps_dip": "Support yourself on parallel bars or a bench, bend the elbows to 90°, then press back up.",
+    "plank": "Forearms on the floor, body in one straight line — hold while breathing steadily.",
+    "crunch": "Lie on your back with knees bent, curl your shoulder blades off the floor, then lower slowly.",
+    "hip_thrust": "Upper back on a bench, drive your hips up by squeezing the glutes until your body forms a line, then lower.",
+    "deadlift": "With a flat back, grip the bar and stand up by driving through the legs and hips, then lower it along the same path.",
+    "goblet_squat": "Hold a dumbbell at your chest, squat down keeping your torso upright, then drive back up.",
+    "split_squat": "One foot forward, one behind — lower the back knee toward the floor, then press up through the front heel.",
+    "glute_bridge": "Lie on your back with knees bent and lift your hips by squeezing the glutes, then lower slowly.",
+    "dumbbell_row": "Support one hand on a bench, pull the dumbbell to your hip with a flat back, then lower with control."
+  }
+}

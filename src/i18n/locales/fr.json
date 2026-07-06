@@ -1,0 +1,402 @@
+{
+  "common": {
+    "appName": "Atlas Fit",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "next": "Suivant",
+    "back": "Retour",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "loading": "Chargement...",
+    "kcal": "kcal",
+    "protein": "Protéines",
+    "carbs": "Glucides",
+    "fat": "Lipides",
+    "today": "Aujourd'hui",
+    "perDay": "par jour",
+    "minutes": "min"
+  },
+  "onboarding": {
+    "languageTitle": "Choisissez votre langue",
+    "languageSubtitle": "Vous pourrez la changer plus tard dans les réglages",
+    "profileTitle": "Parlez-nous de vous",
+    "sexLabel": "Sexe",
+    "male": "Homme",
+    "female": "Femme",
+    "ageLabel": "Âge",
+    "heightLabel": "Taille (cm)",
+    "weightLabel": "Poids (kg)",
+    "activityLabel": "Niveau d'activité",
+    "activitySedentary": "Sédentaire (peu ou pas d'exercice)",
+    "activityLight": "Léger (1-3 jours/semaine)",
+    "activityModerate": "Modéré (3-5 jours/semaine)",
+    "activityActive": "Actif (6-7 jours/semaine)",
+    "activityVeryActive": "Très actif (travail physique ou deux fois par jour)",
+    "goalsTitle": "Quel est votre objectif ?",
+    "goalLose": "Perdre du poids",
+    "goalMaintain": "Maintenir le poids",
+    "goalGain": "Prendre du poids",
+    "reviewTitle": "Vos objectifs quotidiens",
+    "dailyTargetSummary": "D'après votre profil, voici votre objectif quotidien recommandé",
+    "finish": "Commencer"
+  },
+  "dashboard": {
+    "title": "Aujourd'hui",
+    "caloriesConsumed": "Consommées",
+    "caloriesGoal": "Objectif",
+    "remaining": "Restant",
+    "mealSlotBreakfast": "Petit-déjeuner",
+    "mealSlotLunch": "Déjeuner",
+    "mealSlotDinner": "Dîner",
+    "mealSlotSnack": "Collation",
+    "mealSlotSuhoor": "Suhoor",
+    "mealSlotIftar": "Iftar",
+    "addFood": "Ajouter un aliment",
+    "noEntries": "Aucun aliment enregistré"
+  },
+  "browse": {
+    "title": "Plats marocains",
+    "searchPlaceholder": "Rechercher un plat...",
+    "categoryAll": "Tous",
+    "categoryTagine": "Tajines",
+    "categorySoup": "Soupes",
+    "categoryBreadPastry": "Pains & pâtisseries",
+    "categoryCouscous": "Couscous",
+    "categoryDrink": "Boissons",
+    "categorySweet": "Sucreries",
+    "categoryGrill": "Grillades",
+    "categoryOther": "Autre"
+  },
+  "addFood": {
+    "title": "Ajouter un aliment",
+    "selectPortion": "Choisir la portion",
+    "quantity": "Quantité",
+    "confirmAdd": "Ajouter au journal",
+    "selectMealSlot": "Choisir le repas",
+    "scanBarcode": "Scanner un code-barres",
+    "createCustom": "Créer un aliment"
+  },
+  "history": {
+    "title": "Historique",
+    "noHistory": "Aucun historique",
+    "dayTotal": "Total du jour"
+  },
+  "settings": {
+    "title": "Réglages",
+    "language": "Langue",
+    "ramadanMode": "Mode Ramadan",
+    "ramadanAuto": "Détection automatique",
+    "ramadanOn": "Toujours activé",
+    "ramadanOff": "Toujours désactivé",
+    "resetData": "Réinitialiser les données",
+    "resetConfirm": "Cela supprimera votre profil et toutes les entrées enregistrées. Êtes-vous sûr ?"
+  },
+  "ramadan": {
+    "bannerActive": "Le mode Ramadan est actif",
+    "suhoorLabel": "Suhoor",
+    "iftarLabel": "Iftar"
+  },
+  "nutrition": {
+    "title": "Nutrition"
+  },
+  "home": {
+    "streak": "jours de suite",
+    "dailyGoals": "Objectifs du jour",
+    "goalFood": "Enregistrer vos repas",
+    "goalWorkout": "Terminer une séance",
+    "goalMobility": "Faire la routine mobilité",
+    "todaysTraining": "Entraînement du jour",
+    "goToTraining": "Vers l'entraînement",
+    "kcalBurnedToday": "Brûlées aujourd'hui",
+    "nutritionToday": "Nutrition aujourd'hui"
+  },
+  "training": {
+    "title": "Entraînement",
+    "segStrength": "Force",
+    "segCardio": "Cardio",
+    "segMobility": "Mobilité",
+    "dayA": "Corps entier A",
+    "dayB": "Corps entier B",
+    "dayC": "Corps entier C",
+    "sets": "séries",
+    "completeWorkout": "Terminer la séance",
+    "workoutDone": "Terminé aujourd'hui ✓",
+    "duration": "Durée (min)",
+    "logCardio": "Enregistrer l'activité",
+    "completeRoutine": "Terminer la routine",
+    "routineDone": "Routine terminée aujourd'hui ✓",
+    "estBurn": "≈ {{kcal}} kcal",
+    "smartPlan": "Votre plan intelligent",
+    "regenerate": "Régénérer le plan",
+    "equipGym": "Salle",
+    "equipHome": "Maison",
+    "day": "Jour {{n}}",
+    "focusFull": "Corps entier",
+    "focusUpper": "Haut du corps",
+    "focusLower": "Bas du corps"
+  },
+  "scanner": {
+    "title": "Scanner le code-barres",
+    "manualLabel": "Ou saisir le code-barres manuellement",
+    "search": "Rechercher",
+    "notFound": "Produit introuvable ou pas de connexion. Vous pouvez le créer manuellement.",
+    "noCamera": "Le scan caméra fonctionne dans l'appli mobile — saisissez le code manuellement ici.",
+    "permission": "Autoriser l'accès à la caméra"
+  },
+  "custom": {
+    "title": "Nouvel aliment",
+    "nameLabel": "Nom",
+    "portionGrams": "Taille de la portion (g)"
+  },
+  "progress": {
+    "title": "Progrès",
+    "weightTitle": "Poids",
+    "addWeight": "Enregistrer le poids",
+    "weightPlaceholder": "Poids (kg)",
+    "statsTitle": "Statistiques",
+    "totalWorkouts": "Séances",
+    "totalCardio": "Séances cardio",
+    "totalMobility": "Routines mobilité",
+    "nutritionHistory": "Historique nutrition"
+  },
+  "profile": {
+    "title": "Profil",
+    "yourTargets": "Vos objectifs quotidiens",
+    "community": "Communauté",
+    "joinDiscord": "Rejoindre la communauté Discord"
+  },
+  "exercise": {
+    "squat": "Squat",
+    "lunge": "Fentes",
+    "leg_press": "Presse à cuisses",
+    "romanian_deadlift": "Soulevé de terre roumain",
+    "bench_press": "Développé couché",
+    "pushup": "Pompes",
+    "incline_dumbbell_press": "Développé incliné haltères",
+    "pullup": "Tractions",
+    "lat_pulldown": "Tirage vertical",
+    "barbell_row": "Rowing barre",
+    "overhead_press": "Développé militaire",
+    "lateral_raise": "Élévations latérales",
+    "biceps_curl": "Curl biceps",
+    "triceps_dip": "Dips",
+    "plank": "Planche",
+    "crunch": "Crunchs",
+    "hip_thrust": "Hip thrust",
+    "deadlift": "Soulevé de terre",
+    "goblet_squat": "Goblet squat",
+    "split_squat": "Squat bulgare",
+    "glute_bridge": "Pont fessier",
+    "dumbbell_row": "Rowing haltère"
+  },
+  "mobility": {
+    "cat_cow": "Chat-vache",
+    "worlds_greatest_stretch": "World's greatest stretch",
+    "hip_flexor_stretch": "Étirement des fléchisseurs de hanche",
+    "shoulder_circles": "Cercles d'épaules",
+    "thoracic_rotation": "Rotation thoracique",
+    "hamstring_stretch": "Étirement des ischio-jambiers",
+    "ankle_mobility": "Mobilité des chevilles",
+    "deep_squat_hold": "Squat profond maintenu",
+    "target_spine": "Colonne",
+    "target_hips": "Hanches",
+    "target_shoulders": "Épaules",
+    "target_legs": "Jambes",
+    "target_ankles": "Chevilles"
+  },
+  "cardio": {
+    "walking": "Marche",
+    "running": "Course",
+    "cycling": "Vélo",
+    "swimming": "Natation",
+    "football": "Football",
+    "basketball": "Basketball",
+    "boxing": "Boxe",
+    "rope_jumping": "Corde à sauter",
+    "rowing": "Aviron",
+    "hiking": "Randonnée",
+    "dancing": "Danse",
+    "stairs": "Montée d'escaliers"
+  },
+  "portion": {
+    "plate": "assiette",
+    "bowl": "bol",
+    "small_bowl": "petit bol",
+    "piece": "pièce",
+    "piece_pair": "2 pièces",
+    "glass": "verre",
+    "scoop": "portion",
+    "pieces_three": "3 pièces",
+    "grill_portion": "portion",
+    "g100": "100 g",
+    "g50": "50 g",
+    "g30": "30 g",
+    "tbsp": "cuillère à soupe",
+    "slice": "tranche",
+    "custom": "portion"
+  },
+  "food": {
+    "tagine_chicken_olives": {
+      "name": "Tajine de poulet aux olives"
+    },
+    "tagine_beef_prunes": {
+      "name": "Tajine de bœuf aux pruneaux"
+    },
+    "tagine_kefta": {
+      "name": "Tajine de kefta"
+    },
+    "harira": {
+      "name": "Soupe harira"
+    },
+    "chorba": {
+      "name": "Chorba"
+    },
+    "bissara": {
+      "name": "Bissara (soupe de fèves)"
+    },
+    "khobz": {
+      "name": "Khobz (pain marocain)"
+    },
+    "msemen": {
+      "name": "Msemen"
+    },
+    "baghrir": {
+      "name": "Baghrir (crêpes mille trous)"
+    },
+    "briouates_cheese": {
+      "name": "Briouates au fromage"
+    },
+    "briouates_meat": {
+      "name": "Briouates à la viande"
+    },
+    "rghaif": {
+      "name": "Rghaif"
+    },
+    "couscous_vegetable": {
+      "name": "Couscous aux légumes"
+    },
+    "couscous_seven_veg": {
+      "name": "Couscous aux sept légumes"
+    },
+    "couscous_tfaya": {
+      "name": "Couscous tfaya"
+    },
+    "atay": {
+      "name": "Atay (thé à la menthe)"
+    },
+    "orange_juice": {
+      "name": "Jus d'orange"
+    },
+    "avocado_smoothie": {
+      "name": "Smoothie à l'avocat"
+    },
+    "lben": {
+      "name": "Lben (lait fermenté)"
+    },
+    "chebakia": {
+      "name": "Chebakia"
+    },
+    "sellou": {
+      "name": "Sellou"
+    },
+    "gazelle_horns": {
+      "name": "Cornes de gazelle"
+    },
+    "dates": {
+      "name": "Dattes"
+    },
+    "grilled_sardines": {
+      "name": "Sardines grillées"
+    },
+    "zaalouk": {
+      "name": "Zaalouk (salade d'aubergines)"
+    },
+    "rice_cooked": {
+      "name": "Riz (cuit)"
+    },
+    "pasta_cooked": {
+      "name": "Pâtes (cuites)"
+    },
+    "chicken_breast": {
+      "name": "Blanc de poulet"
+    },
+    "egg": {
+      "name": "Œuf"
+    },
+    "milk": {
+      "name": "Lait"
+    },
+    "yogurt_plain": {
+      "name": "Yaourt nature"
+    },
+    "banana": {
+      "name": "Banane"
+    },
+    "apple": {
+      "name": "Pomme"
+    },
+    "tuna_can": {
+      "name": "Thon (en boîte)"
+    },
+    "lentils_cooked": {
+      "name": "Lentilles (cuites)"
+    },
+    "chickpeas_cooked": {
+      "name": "Pois chiches (cuits)"
+    },
+    "olive_oil": {
+      "name": "Huile d'olive"
+    },
+    "butter": {
+      "name": "Beurre"
+    },
+    "cheese_slice": {
+      "name": "Tranche de fromage"
+    },
+    "tomato": {
+      "name": "Tomate"
+    },
+    "potato_boiled": {
+      "name": "Pomme de terre (bouillie)"
+    },
+    "white_bread_slice": {
+      "name": "Pain blanc"
+    },
+    "oats": {
+      "name": "Flocons d'avoine"
+    },
+    "honey": {
+      "name": "Miel"
+    },
+    "almonds": {
+      "name": "Amandes"
+    }
+  },
+  "exerciseDesc": {
+    "squat": "Debout largeur d'épaules, gainez le tronc, descendez les hanches en arrière jusqu'à ce que les cuisses soient parallèles, puis remontez en poussant sur les talons.",
+    "lunge": "Faites un pas en avant, descendez le genou arrière vers le sol en gardant le buste droit, puis revenez et changez de jambe.",
+    "leg_press": "Pieds largeur d'épaules sur la plateforme, descendez jusqu'à 90° de flexion puis repoussez sans verrouiller les genoux.",
+    "romanian_deadlift": "Genoux légèrement fléchis, penchez-vous depuis les hanches en gardant la barre près des jambes jusqu'à sentir l'étirement des ischios, puis redressez-vous.",
+    "bench_press": "Descendez la barre au milieu de la poitrine, coudes à environ 45°, puis poussez vers le haut.",
+    "pushup": "Mains sous les épaules, corps aligné — descendez la poitrine vers le sol et repoussez.",
+    "incline_dumbbell_press": "Sur banc incliné, poussez les haltères depuis les épaules jusqu'à l'extension, puis redescendez en contrôle.",
+    "pullup": "Suspendu en pronation, tirez le menton au-dessus de la barre puis redescendez lentement.",
+    "lat_pulldown": "Prise large, tirez la barre vers le haut de la poitrine en gardant le buste droit, relâchez en contrôle.",
+    "barbell_row": "Penché dos plat, tirez la barre vers les côtes basses en serrant les omoplates.",
+    "overhead_press": "Poussez la barre des épaules au-dessus de la tête, tronc gainé.",
+    "lateral_raise": "Coudes légèrement fléchis, levez les haltères sur les côtés jusqu'aux épaules et redescendez lentement.",
+    "biceps_curl": "Coudes collés au corps, montez la charge puis redescendez complètement en contrôle.",
+    "triceps_dip": "En appui sur barres parallèles ou banc, fléchissez les coudes à 90° puis repoussez.",
+    "plank": "Avant-bras au sol, corps en ligne droite — maintenez en respirant calmement.",
+    "crunch": "Allongé genoux fléchis, enroulez les épaules du sol puis redescendez lentement.",
+    "hip_thrust": "Haut du dos sur un banc, poussez les hanches vers le haut en serrant les fessiers jusqu'à l'alignement.",
+    "deadlift": "Dos plat, saisissez la barre et redressez-vous en poussant sur les jambes et les hanches, redescendez sur le même trajet.",
+    "goblet_squat": "Tenez un haltère contre la poitrine, accroupissez-vous en gardant le buste droit, puis remontez.",
+    "split_squat": "Un pied devant, un derrière — descendez le genou arrière vers le sol puis poussez sur le talon avant.",
+    "glute_bridge": "Allongé genoux fléchis, soulevez les hanches en serrant les fessiers puis redescendez lentement.",
+    "dumbbell_row": "Une main en appui sur un banc, tirez l'haltère vers la hanche dos plat, puis redescendez en contrôle."
+  }
+}

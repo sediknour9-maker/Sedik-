@@ -1,0 +1,166 @@
+import React from 'react';
+import { Alert, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useSettings } from '../../src/store/SettingsContext';
+import { useProfile } from '../../src/store/ProfileContext';
+import { useLogs } from '../../src/store/LogContext';
+import { useActivity } from '../../src/store/ActivityContext';
+import { useFoodDb } from '../../src/store/FoodDbContext';
+import { usePlan } from '../../src/store/PlanContext';
+import { resetAllLogs } from '../../src/services/logRepository';
+import { resetAllActivities, resetWeights } from '../../src/services/activityRepository';
+import { LanguageSwitcher } from '../../src/components/LanguageSwitcher';
+import { colors } from '../../src/theme/colors';
+import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
+import type { RamadanOverride } from '../../src/models/user';
+
+// Replace with the real invite link once the community server exists.
+const COMMUNITY_DISCORD_URL = 'https://discord.com';
+
+const RAMADAN_OPTIONS: { value: RamadanOverride; labelKey: string }[] = [
+  { value: 'auto', labelKey: 'settings.ramadanAuto' },
+  { value: 'on', labelKey: 'settings.ramadanOn' },
+  { value: 'off', labelKey: 'settings.ramadanOff' },
+];
+
+export default function ProfileScreen() {
+  const { t } = useTranslation();
+  const isRTL = useRTL();
+  const router = useRouter();
+  const { language, setLanguage, ramadanOverride, setRamadanOverride } = useSettings();
+  const { profile, resetProfile } = useProfile();
+  const { refresh } = useLogs();
+  const { refresh: refreshActivity } = useActivity();
+  const { resetCustomFoods } = useFoodDb();
+  const { resetPlan } = usePlan();
+
+  const performReset = async () => {
+    await Promise.all([resetAllLogs(), resetAllActivities(), resetWeights(), resetCustomFoods(), resetPlan()]);
+    await Promise.all([refresh(), refreshActivity()]);
+    await resetProfile();
+    router.replace('/(onboarding)/language');
+  };
+
+  const handleReset = () => {
+    // Alert.alert buttons are a no-op on react-native-web, so confirm natively there.
+    if (Platform.OS === 'web') {
+      // eslint-disable-next-line no-alert
+      if (window.confirm(t('settings.resetConfirm'))) {
+        performReset();
+      }
+      return;
+    }
+    Alert.alert(t('settings.resetData'), t('settings.resetConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('common.confirm'), style: 'destructive', onPress: performReset },
+    ]);
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('profile.title')}</Text>
+
+        {profile ? (
+          <View style={styles.card}>
+            <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('profile.yourTargets')}</Text>
+            <Text style={styles.targetKcal}>
+              {profile.targets.kcal} {t('common.kcal')} / {t('common.perDay')}
+            </Text>
+            <View style={[styles.macroRow, { flexDirection: rowDirection(isRTL) }]}>
+              <Text style={styles.macroText}>
+                {t('common.protein')}: {profile.targets.proteinG}g
+              </Text>
+              <Text style={styles.macroText}>
+                {t('common.carbs')}: {profile.targets.carbsG}g
+              </Text>
+              <Text style={styles.macroText}>
+                {t('common.fat')}: {profile.targets.fatG}g
+              </Text>
+            </View>
+          </View>
+        ) : null}
+
+        <Text style={styles.sectionLabel}>{t('settings.language')}</Text>
+        <LanguageSwitcher value={language} onChange={setLanguage} />
+
+        <Text style={styles.sectionLabel}>{t('settings.ramadanMode')}</Text>
+        <View style={[styles.optionRow, { flexDirection: rowDirection(isRTL) }]}>
+          {RAMADAN_OPTIONS.map(({ value, labelKey }) => (
+            <TouchableOpacity
+              key={value}
+              style={[styles.option, ramadanOverride === value && styles.optionActive]}
+              onPress={() => setRamadanOverride(value)}
+            >
+              <Text style={[styles.optionText, ramadanOverride === value && styles.optionTextActive]}>
+                {t(labelKey)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <Text style={styles.sectionLabel}>{t('profile.community')}</Text>
+        <TouchableOpacity
+          style={styles.communityButton}
+          onPress={() => Linking.openURL(COMMUNITY_DISCORD_URL)}
+        >
+          <Text style={styles.communityButtonText}>💬 {t('profile.joinDiscord')}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
+          <Text style={styles.resetButtonText}>{t('settings.resetData')}</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+  content: { padding: 20, paddingBottom: 48 },
+  title: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 20 },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 8,
+  },
+  cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 10 },
+  targetKcal: { fontSize: 20, fontWeight: '700', color: colors.primary, textAlign: 'center', marginBottom: 8 },
+  macroRow: { justifyContent: 'space-around' },
+  macroText: { fontSize: 12, color: colors.textMuted },
+  sectionLabel: { fontSize: 13, fontWeight: '600', color: colors.textMuted, marginBottom: 10, marginTop: 20 },
+  optionRow: { gap: 8, flexWrap: 'wrap' },
+  option: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  optionActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  optionText: { color: colors.text, fontSize: 13 },
+  optionTextActive: { color: '#fff', fontWeight: '600' },
+  communityButton: {
+    backgroundColor: colors.secondary,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  communityButtonText: { color: '#fff', fontWeight: '700' },
+  resetButton: {
+    marginTop: 40,
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.danger,
+  },
+  resetButtonText: { color: colors.danger, fontWeight: '700' },
+});

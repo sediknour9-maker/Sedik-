@@ -1,0 +1,402 @@
+{
+  "common": {
+    "appName": "أطلس فيت",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "next": "التالي",
+    "back": "رجوع",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "loading": "جارٍ التحميل...",
+    "kcal": "سعرة",
+    "protein": "بروتين",
+    "carbs": "كربوهيدرات",
+    "fat": "دهون",
+    "today": "اليوم",
+    "perDay": "في اليوم",
+    "minutes": "دقيقة"
+  },
+  "onboarding": {
+    "languageTitle": "اختر لغتك",
+    "languageSubtitle": "يمكنك تغيير هذا لاحقًا في الإعدادات",
+    "profileTitle": "أخبرنا عن نفسك",
+    "sexLabel": "الجنس",
+    "male": "ذكر",
+    "female": "أنثى",
+    "ageLabel": "العمر",
+    "heightLabel": "الطول (سم)",
+    "weightLabel": "الوزن (كغ)",
+    "activityLabel": "مستوى النشاط",
+    "activitySedentary": "خامل (قليل الحركة أو بدون رياضة)",
+    "activityLight": "خفيف (1-3 أيام/أسبوع)",
+    "activityModerate": "متوسط (3-5 أيام/أسبوع)",
+    "activityActive": "نشيط (6-7 أيام/أسبوع)",
+    "activityVeryActive": "نشيط جدًا (عمل بدني أو مرتين يوميًا)",
+    "goalsTitle": "ما هو هدفك؟",
+    "goalLose": "إنقاص الوزن",
+    "goalMaintain": "الحفاظ على الوزن",
+    "goalGain": "زيادة الوزن",
+    "reviewTitle": "أهدافك اليومية",
+    "dailyTargetSummary": "بناءً على ملفك الشخصي، إليك هدفك اليومي الموصى به",
+    "finish": "ابدأ الآن"
+  },
+  "dashboard": {
+    "title": "اليوم",
+    "caloriesConsumed": "المستهلكة",
+    "caloriesGoal": "الهدف",
+    "remaining": "المتبقي",
+    "mealSlotBreakfast": "الفطور",
+    "mealSlotLunch": "الغداء",
+    "mealSlotDinner": "العشاء",
+    "mealSlotSnack": "وجبة خفيفة",
+    "mealSlotSuhoor": "السحور",
+    "mealSlotIftar": "الإفطار",
+    "addFood": "إضافة طعام",
+    "noEntries": "لم يتم تسجيل أي طعام بعد"
+  },
+  "browse": {
+    "title": "أطباق مغربية",
+    "searchPlaceholder": "ابحث عن طبق...",
+    "categoryAll": "الكل",
+    "categoryTagine": "طواجن",
+    "categorySoup": "شوربات",
+    "categoryBreadPastry": "خبز ومعجنات",
+    "categoryCouscous": "كسكس",
+    "categoryDrink": "مشروبات",
+    "categorySweet": "حلويات",
+    "categoryGrill": "مشويات",
+    "categoryOther": "أخرى"
+  },
+  "addFood": {
+    "title": "إضافة طعام",
+    "selectPortion": "اختر الحصة",
+    "quantity": "الكمية",
+    "confirmAdd": "أضف إلى السجل",
+    "selectMealSlot": "اختر الوجبة",
+    "scanBarcode": "مسح الباركود",
+    "createCustom": "إنشاء طعام مخصص"
+  },
+  "history": {
+    "title": "السجل",
+    "noHistory": "لا يوجد سجل بعد",
+    "dayTotal": "مجموع اليوم"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "ramadanMode": "وضع رمضان",
+    "ramadanAuto": "اكتشاف تلقائي",
+    "ramadanOn": "مفعّل دائمًا",
+    "ramadanOff": "معطّل دائمًا",
+    "resetData": "إعادة تعيين جميع البيانات",
+    "resetConfirm": "سيؤدي هذا إلى حذف ملفك الشخصي وجميع السجلات. هل أنت متأكد؟"
+  },
+  "ramadan": {
+    "bannerActive": "وضع رمضان مفعّل",
+    "suhoorLabel": "السحور",
+    "iftarLabel": "الإفطار"
+  },
+  "nutrition": {
+    "title": "التغذية"
+  },
+  "home": {
+    "streak": "أيام متتالية",
+    "dailyGoals": "أهداف اليوم",
+    "goalFood": "سجّل وجباتك",
+    "goalWorkout": "أكمل تمرينًا",
+    "goalMobility": "قم بروتين المرونة",
+    "todaysTraining": "تمرين اليوم",
+    "goToTraining": "إلى التمرين",
+    "kcalBurnedToday": "المحروقة اليوم",
+    "nutritionToday": "التغذية اليوم"
+  },
+  "training": {
+    "title": "التمرين",
+    "segStrength": "قوة",
+    "segCardio": "كارديو",
+    "segMobility": "مرونة",
+    "dayA": "جسم كامل أ",
+    "dayB": "جسم كامل ب",
+    "dayC": "جسم كامل ج",
+    "sets": "مجموعات",
+    "completeWorkout": "إنهاء التمرين",
+    "workoutDone": "اكتمل اليوم ✓",
+    "duration": "المدة (دقيقة)",
+    "logCardio": "تسجيل النشاط",
+    "completeRoutine": "إنهاء الروتين",
+    "routineDone": "اكتمل الروتين اليوم ✓",
+    "estBurn": "≈ {{kcal}} سعرة",
+    "smartPlan": "خطتك الذكية",
+    "regenerate": "إعادة إنشاء الخطة",
+    "equipGym": "نادي",
+    "equipHome": "المنزل",
+    "day": "اليوم {{n}}",
+    "focusFull": "جسم كامل",
+    "focusUpper": "الجزء العلوي",
+    "focusLower": "الجزء السفلي"
+  },
+  "scanner": {
+    "title": "مسح الباركود",
+    "manualLabel": "أو أدخل الباركود يدويًا",
+    "search": "بحث",
+    "notFound": "المنتج غير موجود أو لا يوجد اتصال. يمكنك إنشاؤه يدويًا.",
+    "noCamera": "المسح بالكاميرا يعمل في تطبيق الهاتف — أدخل الباركود يدويًا هنا.",
+    "permission": "السماح بالوصول إلى الكاميرا"
+  },
+  "custom": {
+    "title": "طعام جديد",
+    "nameLabel": "الاسم",
+    "portionGrams": "حجم الحصة (غ)"
+  },
+  "progress": {
+    "title": "التقدم",
+    "weightTitle": "الوزن",
+    "addWeight": "تسجيل الوزن",
+    "weightPlaceholder": "الوزن (كغ)",
+    "statsTitle": "إحصائيات",
+    "totalWorkouts": "تمارين قوة",
+    "totalCardio": "جلسات كارديو",
+    "totalMobility": "روتينات مرونة",
+    "nutritionHistory": "سجل التغذية"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "yourTargets": "أهدافك اليومية",
+    "community": "المجتمع",
+    "joinDiscord": "انضم إلى مجتمع ديسكورد"
+  },
+  "exercise": {
+    "squat": "سكوات",
+    "lunge": "اندفاع أمامي",
+    "leg_press": "ضغط الأرجل",
+    "romanian_deadlift": "رفعة رومانية",
+    "bench_press": "ضغط الصدر بالبار",
+    "pushup": "تمرين الضغط",
+    "incline_dumbbell_press": "ضغط مائل بالدمبل",
+    "pullup": "عقلة",
+    "lat_pulldown": "سحب علوي",
+    "barbell_row": "تجديف بالبار",
+    "overhead_press": "ضغط الكتف",
+    "lateral_raise": "رفرفة جانبية",
+    "biceps_curl": "تمرين البايسبس",
+    "triceps_dip": "متوازي",
+    "plank": "بلانك",
+    "crunch": "تمرين البطن",
+    "hip_thrust": "رفع الورك",
+    "deadlift": "الرفعة الميتة",
+    "goblet_squat": "سكوات بالدمبل",
+    "split_squat": "سكوات بلغاري",
+    "glute_bridge": "جسر الورك",
+    "dumbbell_row": "تجديف بالدمبل"
+  },
+  "mobility": {
+    "cat_cow": "قطة-بقرة",
+    "worlds_greatest_stretch": "أفضل تمدد في العالم",
+    "hip_flexor_stretch": "تمدد عضلة الورك",
+    "shoulder_circles": "دوائر الكتف",
+    "thoracic_rotation": "دوران الظهر",
+    "hamstring_stretch": "تمدد أوتار الركبة",
+    "ankle_mobility": "مرونة الكاحل",
+    "deep_squat_hold": "وضعية القرفصاء العميقة",
+    "target_spine": "العمود الفقري",
+    "target_hips": "الوركان",
+    "target_shoulders": "الكتفان",
+    "target_legs": "الساقان",
+    "target_ankles": "الكاحلان"
+  },
+  "cardio": {
+    "walking": "مشي",
+    "running": "جري",
+    "cycling": "دراجة هوائية",
+    "swimming": "سباحة",
+    "football": "كرة القدم",
+    "basketball": "كرة السلة",
+    "boxing": "ملاكمة",
+    "rope_jumping": "نط الحبل",
+    "rowing": "تجديف",
+    "hiking": "مشي جبلي",
+    "dancing": "رقص",
+    "stairs": "صعود الدرج"
+  },
+  "portion": {
+    "plate": "طبق",
+    "bowl": "كاسة",
+    "small_bowl": "كاسة صغيرة",
+    "piece": "قطعة",
+    "piece_pair": "قطعتان",
+    "glass": "كأس",
+    "scoop": "حصة",
+    "pieces_three": "3 قطع",
+    "grill_portion": "حصة",
+    "g100": "100 غ",
+    "g50": "50 غ",
+    "g30": "30 غ",
+    "tbsp": "ملعقة كبيرة",
+    "slice": "شريحة",
+    "custom": "حصة"
+  },
+  "food": {
+    "tagine_chicken_olives": {
+      "name": "طاجين الدجاج بالزيتون"
+    },
+    "tagine_beef_prunes": {
+      "name": "طاجين اللحم بالبرقوق"
+    },
+    "tagine_kefta": {
+      "name": "طاجين الكفتة"
+    },
+    "harira": {
+      "name": "حريرة"
+    },
+    "chorba": {
+      "name": "شربة"
+    },
+    "bissara": {
+      "name": "بيصارة"
+    },
+    "khobz": {
+      "name": "خبز مغربي"
+    },
+    "msemen": {
+      "name": "مسمن"
+    },
+    "baghrir": {
+      "name": "بغرير"
+    },
+    "briouates_cheese": {
+      "name": "بريوات بالجبن"
+    },
+    "briouates_meat": {
+      "name": "بريوات باللحم"
+    },
+    "rghaif": {
+      "name": "رغايف"
+    },
+    "couscous_vegetable": {
+      "name": "كسكس بالخضر"
+    },
+    "couscous_seven_veg": {
+      "name": "كسكس بسبع خضار"
+    },
+    "couscous_tfaya": {
+      "name": "كسكس التفاية"
+    },
+    "atay": {
+      "name": "أتاي (شاي بالنعناع)"
+    },
+    "orange_juice": {
+      "name": "عصير البرتقال"
+    },
+    "avocado_smoothie": {
+      "name": "عصير الأفوكا"
+    },
+    "lben": {
+      "name": "لبن"
+    },
+    "chebakia": {
+      "name": "شباكية"
+    },
+    "sellou": {
+      "name": "سلو"
+    },
+    "gazelle_horns": {
+      "name": "كعب الغزال"
+    },
+    "dates": {
+      "name": "تمر"
+    },
+    "grilled_sardines": {
+      "name": "سردين مشوي"
+    },
+    "zaalouk": {
+      "name": "زعلوك"
+    },
+    "rice_cooked": {
+      "name": "أرز (مطبوخ)"
+    },
+    "pasta_cooked": {
+      "name": "معكرونة (مطبوخة)"
+    },
+    "chicken_breast": {
+      "name": "صدر دجاج"
+    },
+    "egg": {
+      "name": "بيضة"
+    },
+    "milk": {
+      "name": "حليب"
+    },
+    "yogurt_plain": {
+      "name": "زبادي طبيعي"
+    },
+    "banana": {
+      "name": "موزة"
+    },
+    "apple": {
+      "name": "تفاحة"
+    },
+    "tuna_can": {
+      "name": "تونة (معلبة)"
+    },
+    "lentils_cooked": {
+      "name": "عدس (مطبوخ)"
+    },
+    "chickpeas_cooked": {
+      "name": "حمص (مطبوخ)"
+    },
+    "olive_oil": {
+      "name": "زيت الزيتون"
+    },
+    "butter": {
+      "name": "زبدة"
+    },
+    "cheese_slice": {
+      "name": "شريحة جبن"
+    },
+    "tomato": {
+      "name": "طماطم"
+    },
+    "potato_boiled": {
+      "name": "بطاطس (مسلوقة)"
+    },
+    "white_bread_slice": {
+      "name": "خبز أبيض"
+    },
+    "oats": {
+      "name": "شوفان"
+    },
+    "honey": {
+      "name": "عسل"
+    },
+    "almonds": {
+      "name": "لوز"
+    }
+  },
+  "exerciseDesc": {
+    "squat": "قف بعرض الكتفين، شد جذعك، انزل بالوركين للخلف والأسفل حتى يتوازى الفخذان مع الأرض ثم ادفع للأعلى عبر الكعبين.",
+    "lunge": "اخطُ للأمام وانزل بالركبة الخلفية نحو الأرض مع جذع مستقيم، ثم ادفع للعودة وبدّل الساقين.",
+    "leg_press": "ضع القدمين بعرض الكتفين على المنصة، انزل حتى زاوية 90° في الركبتين ثم ادفع دون قفل الركبتين.",
+    "romanian_deadlift": "مع ثني خفيف في الركبتين، انحنِ من الوركين وأنزل البار قريبًا من الساقين حتى تشعر بشد الخلفية ثم اعتدل.",
+    "bench_press": "أنزل البار إلى منتصف الصدر والمرفقان بزاوية 45° تقريبًا ثم ادفع للأعلى حتى تمتد الذراعان.",
+    "pushup": "اليدان تحت الكتفين والجسم في خط مستقيم — انزل بالصدر نحو الأرض ثم ادفع للأعلى.",
+    "incline_dumbbell_press": "على مقعد مائل، ادفع الدمبل من مستوى الكتفين حتى تمتد الذراعان ثم انزل ببطء.",
+    "pullup": "تعلق بالبار بقبضة علوية واسحب ذقنك فوق البار ثم انزل ببطء.",
+    "lat_pulldown": "أمسك البار بقبضة واسعة واسحبه نحو أعلى الصدر مع جذع مستقيم ثم أعده بتحكم.",
+    "barbell_row": "انحنِ بظهر مستقيم واسحب البار نحو أسفل الأضلاع مع ضم لوحي الكتف.",
+    "overhead_press": "ادفع البار من مستوى الكتفين فوق الرأس مباشرة مع شد الجذع.",
+    "lateral_raise": "مع ثني خفيف في المرفقين، ارفع الدمبل جانبًا حتى مستوى الكتفين وانزل ببطء.",
+    "biceps_curl": "ثبّت المرفقين على الجانبين وارفع الوزن ثم أنزله بالكامل بتحكم.",
+    "triceps_dip": "استند على المتوازي أو مقعد، اثنِ المرفقين حتى 90° ثم ادفع للأعلى.",
+    "plank": "الساعدان على الأرض والجسم في خط واحد — حافظ على الوضعية مع تنفس هادئ.",
+    "crunch": "استلقِ على ظهرك مع ثني الركبتين، ارفع لوحي الكتف عن الأرض ثم انزل ببطء.",
+    "hip_thrust": "أعلى الظهر على مقعد، ادفع الوركين للأعلى بشد المؤخرة حتى يستقيم الجسم ثم انزل.",
+    "deadlift": "بظهر مستقيم أمسك البار وقف بدفع الساقين والوركين ثم أنزله على نفس المسار.",
+    "goblet_squat": "أمسك دمبل أمام صدرك وانزل في وضع السكوات مع جذع مستقيم ثم ادفع للأعلى.",
+    "split_squat": "قدم أمامية وأخرى خلفية — انزل بالركبة الخلفية نحو الأرض ثم ادفع عبر كعب القدم الأمامية.",
+    "glute_bridge": "استلقِ على ظهرك مع ثني الركبتين وارفع الوركين بشد المؤخرة ثم انزل ببطء.",
+    "dumbbell_row": "استند بيد على مقعد واسحب الدمبل نحو الورك بظهر مستقيم ثم أنزله بتحكم."
+  }
+}
