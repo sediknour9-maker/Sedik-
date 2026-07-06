@@ -27,7 +27,13 @@ export default function NutritionScreen() {
   const { foods } = useFoodDb();
 
   const ramadanActive = isRamadanActive(selectedDate, ramadanOverride);
-  const mealSlots = useMemo(() => getMealSlotsFor(selectedDate, ramadanOverride), [selectedDate, ramadanOverride]);
+  // Show the active slot set plus any slot that already has entries, so
+  // toggling Ramadan mode never hides logged food from view.
+  const mealSlots = useMemo(() => {
+    const active = getMealSlotsFor(selectedDate, ramadanOverride);
+    const withEntries = entries.map((entry) => entry.mealSlot).filter((slot) => !active.includes(slot));
+    return [...active, ...Array.from(new Set(withEntries))];
+  }, [selectedDate, ramadanOverride, entries]);
   const consumed = useMemo(() => aggregateMacros(entries), [entries]);
 
   if (!profile) return null;

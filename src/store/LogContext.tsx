@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { AppState } from 'react-native';
 
 import { addLogEntry, getLogDates, getLogsForDate, removeLogEntry } from '../services/logRepository';
 import { todayString } from '../services/date';
@@ -35,6 +36,20 @@ export function LogProvider({ children }: { children: ReactNode }) {
     reload(selectedDate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
+
+  // Re-sync "today" when the app returns to the foreground (e.g. past midnight),
+  // so entries aren't silently logged to yesterday's date.
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        setSelectedDate((current) => {
+          const today = todayString();
+          return current === today ? current : today;
+        });
+      }
+    });
+    return () => subscription.remove();
+  }, []);
 
   const addEntry = async (entry: LogEntry) => {
     await addLogEntry(entry);

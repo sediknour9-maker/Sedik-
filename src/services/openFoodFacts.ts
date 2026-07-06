@@ -23,7 +23,7 @@ export async function lookupBarcode(barcode: string): Promise<{ name: string; fo
     if (!product?.product_name || !nutriments) return null;
 
     const kcal = Number(nutriments['energy-kcal_100g']);
-    if (!kcal || Number.isNaN(kcal)) return null;
+    if (!Number.isFinite(kcal) || kcal < 0) return null;
 
     const food: FoodItem = {
       id: `barcode_${barcode}`,

@@ -75,7 +75,9 @@
     "selectPortion": "Choisir la portion",
     "quantity": "Quantité",
     "confirmAdd": "Ajouter au journal",
-    "selectMealSlot": "Choisir le repas"
+    "selectMealSlot": "Choisir le repas",
+    "scanBarcode": "Scanner un code-barres",
+    "createCustom": "Créer un aliment"
   },
   "history": {
     "title": "Historique",
@@ -184,7 +186,11 @@
     "plank": "Planche",
     "crunch": "Crunchs",
     "hip_thrust": "Hip thrust",
-    "deadlift": "Soulevé de terre"
+    "deadlift": "Soulevé de terre",
+    "goblet_squat": "Goblet squat",
+    "split_squat": "Squat bulgare",
+    "glute_bridge": "Pont fessier",
+    "dumbbell_row": "Rowing haltère"
   },
   "mobility": {
     "cat_cow": "Chat-vache",
@@ -233,51 +239,141 @@
     "custom": "portion"
   },
   "food": {
-    "tagine_chicken_olives": { "name": "Tajine de poulet aux olives" },
-    "tagine_beef_prunes": { "name": "Tajine de bœuf aux pruneaux" },
-    "tagine_kefta": { "name": "Tajine de kefta" },
-    "harira": { "name": "Soupe harira" },
-    "chorba": { "name": "Chorba" },
-    "bissara": { "name": "Bissara (soupe de fèves)" },
-    "khobz": { "name": "Khobz (pain marocain)" },
-    "msemen": { "name": "Msemen" },
-    "baghrir": { "name": "Baghrir (crêpes mille trous)" },
-    "briouates_cheese": { "name": "Briouates au fromage" },
-    "briouates_meat": { "name": "Briouates à la viande" },
-    "rghaif": { "name": "Rghaif" },
-    "couscous_vegetable": { "name": "Couscous aux légumes" },
-    "couscous_seven_veg": { "name": "Couscous aux sept légumes" },
-    "couscous_tfaya": { "name": "Couscous tfaya" },
-    "atay": { "name": "Atay (thé à la menthe)" },
-    "orange_juice": { "name": "Jus d'orange" },
-    "avocado_smoothie": { "name": "Smoothie à l'avocat" },
-    "lben": { "name": "Lben (lait fermenté)" },
-    "chebakia": { "name": "Chebakia" },
-    "sellou": { "name": "Sellou" },
-    "gazelle_horns": { "name": "Cornes de gazelle" },
-    "dates": { "name": "Dattes" },
-    "grilled_sardines": { "name": "Sardines grillées" },
-    "zaalouk": { "name": "Zaalouk (salade d'aubergines)" },
-    "rice_cooked": { "name": "Riz (cuit)" },
-    "pasta_cooked": { "name": "Pâtes (cuites)" },
-    "chicken_breast": { "name": "Blanc de poulet" },
-    "egg": { "name": "Œuf" },
-    "milk": { "name": "Lait" },
-    "yogurt_plain": { "name": "Yaourt nature" },
-    "banana": { "name": "Banane" },
-    "apple": { "name": "Pomme" },
-    "tuna_can": { "name": "Thon (en boîte)" },
-    "lentils_cooked": { "name": "Lentilles (cuites)" },
-    "chickpeas_cooked": { "name": "Pois chiches (cuits)" },
-    "olive_oil": { "name": "Huile d'olive" },
-    "butter": { "name": "Beurre" },
-    "cheese_slice": { "name": "Tranche de fromage" },
-    "tomato": { "name": "Tomate" },
-    "potato_boiled": { "name": "Pomme de terre (bouillie)" },
-    "white_bread_slice": { "name": "Pain blanc" },
-    "oats": { "name": "Flocons d'avoine" },
-    "honey": { "name": "Miel" },
-    "almonds": { "name": "Amandes" }
+    "tagine_chicken_olives": {
+      "name": "Tajine de poulet aux olives"
+    },
+    "tagine_beef_prunes": {
+      "name": "Tajine de bœuf aux pruneaux"
+    },
+    "tagine_kefta": {
+      "name": "Tajine de kefta"
+    },
+    "harira": {
+      "name": "Soupe harira"
+    },
+    "chorba": {
+      "name": "Chorba"
+    },
+    "bissara": {
+      "name": "Bissara (soupe de fèves)"
+    },
+    "khobz": {
+      "name": "Khobz (pain marocain)"
+    },
+    "msemen": {
+      "name": "Msemen"
+    },
+    "baghrir": {
+      "name": "Baghrir (crêpes mille trous)"
+    },
+    "briouates_cheese": {
+      "name": "Briouates au fromage"
+    },
+    "briouates_meat": {
+      "name": "Briouates à la viande"
+    },
+    "rghaif": {
+      "name": "Rghaif"
+    },
+    "couscous_vegetable": {
+      "name": "Couscous aux légumes"
+    },
+    "couscous_seven_veg": {
+      "name": "Couscous aux sept légumes"
+    },
+    "couscous_tfaya": {
+      "name": "Couscous tfaya"
+    },
+    "atay": {
+      "name": "Atay (thé à la menthe)"
+    },
+    "orange_juice": {
+      "name": "Jus d'orange"
+    },
+    "avocado_smoothie": {
+      "name": "Smoothie à l'avocat"
+    },
+    "lben": {
+      "name": "Lben (lait fermenté)"
+    },
+    "chebakia": {
+      "name": "Chebakia"
+    },
+    "sellou": {
+      "name": "Sellou"
+    },
+    "gazelle_horns": {
+      "name": "Cornes de gazelle"
+    },
+    "dates": {
+      "name": "Dattes"
+    },
+    "grilled_sardines": {
+      "name": "Sardines grillées"
+    },
+    "zaalouk": {
+      "name": "Zaalouk (salade d'aubergines)"
+    },
+    "rice_cooked": {
+      "name": "Riz (cuit)"
+    },
+    "pasta_cooked": {
+      "name": "Pâtes (cuites)"
+    },
+    "chicken_breast": {
+      "name": "Blanc de poulet"
+    },
+    "egg": {
+      "name": "Œuf"
+    },
+    "milk": {
+      "name": "Lait"
+    },
+    "yogurt_plain": {
+      "name": "Yaourt nature"
+    },
+    "banana": {
+      "name": "Banane"
+    },
+    "apple": {
+      "name": "Pomme"
+    },
+    "tuna_can": {
+      "name": "Thon (en boîte)"
+    },
+    "lentils_cooked": {
+      "name": "Lentilles (cuites)"
+    },
+    "chickpeas_cooked": {
+      "name": "Pois chiches (cuits)"
+    },
+    "olive_oil": {
+      "name": "Huile d'olive"
+    },
+    "butter": {
+      "name": "Beurre"
+    },
+    "cheese_slice": {
+      "name": "Tranche de fromage"
+    },
+    "tomato": {
+      "name": "Tomate"
+    },
+    "potato_boiled": {
+      "name": "Pomme de terre (bouillie)"
+    },
+    "white_bread_slice": {
+      "name": "Pain blanc"
+    },
+    "oats": {
+      "name": "Flocons d'avoine"
+    },
+    "honey": {
+      "name": "Miel"
+    },
+    "almonds": {
+      "name": "Amandes"
+    }
   },
   "exerciseDesc": {
     "squat": "Debout largeur d'épaules, gainez le tronc, descendez les hanches en arrière jusqu'à ce que les cuisses soient parallèles, puis remontez en poussant sur les talons.",
@@ -297,6 +393,10 @@
     "plank": "Avant-bras au sol, corps en ligne droite — maintenez en respirant calmement.",
     "crunch": "Allongé genoux fléchis, enroulez les épaules du sol puis redescendez lentement.",
     "hip_thrust": "Haut du dos sur un banc, poussez les hanches vers le haut en serrant les fessiers jusqu'à l'alignement.",
-    "deadlift": "Dos plat, saisissez la barre et redressez-vous en poussant sur les jambes et les hanches, redescendez sur le même trajet."
+    "deadlift": "Dos plat, saisissez la barre et redressez-vous en poussant sur les jambes et les hanches, redescendez sur le même trajet.",
+    "goblet_squat": "Tenez un haltère contre la poitrine, accroupissez-vous en gardant le buste droit, puis remontez.",
+    "split_squat": "Un pied devant, un derrière — descendez le genou arrière vers le sol puis poussez sur le talon avant.",
+    "glute_bridge": "Allongé genoux fléchis, soulevez les hanches en serrant les fessiers puis redescendez lentement.",
+    "dumbbell_row": "Une main en appui sur un banc, tirez l'haltère vers la hanche dos plat, puis redescendez en contrôle."
   }
 }

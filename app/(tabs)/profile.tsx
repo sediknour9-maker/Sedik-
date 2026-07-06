@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +8,8 @@ import { useSettings } from '../../src/store/SettingsContext';
 import { useProfile } from '../../src/store/ProfileContext';
 import { useLogs } from '../../src/store/LogContext';
 import { useActivity } from '../../src/store/ActivityContext';
+import { useFoodDb } from '../../src/store/FoodDbContext';
+import { usePlan } from '../../src/store/PlanContext';
 import { resetAllLogs } from '../../src/services/logRepository';
 import { resetAllActivities, resetWeights } from '../../src/services/activityRepository';
 import { LanguageSwitcher } from '../../src/components/LanguageSwitcher';
@@ -32,20 +34,28 @@ export default function ProfileScreen() {
   const { profile, resetProfile } = useProfile();
   const { refresh } = useLogs();
   const { refresh: refreshActivity } = useActivity();
+  const { resetCustomFoods } = useFoodDb();
+  const { resetPlan } = usePlan();
+
+  const performReset = async () => {
+    await Promise.all([resetAllLogs(), resetAllActivities(), resetWeights(), resetCustomFoods(), resetPlan()]);
+    await Promise.all([refresh(), refreshActivity()]);
+    await resetProfile();
+    router.replace('/(onboarding)/language');
+  };
 
   const handleReset = () => {
+    // Alert.alert buttons are a no-op on react-native-web, so confirm natively there.
+    if (Platform.OS === 'web') {
+      // eslint-disable-next-line no-alert
+      if (window.confirm(t('settings.resetConfirm'))) {
+        performReset();
+      }
+      return;
+    }
     Alert.alert(t('settings.resetData'), t('settings.resetConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('common.confirm'),
-        style: 'destructive',
-        onPress: async () => {
-          await Promise.all([resetAllLogs(), resetAllActivities(), resetWeights()]);
-          await Promise.all([refresh(), refreshActivity()]);
-          await resetProfile();
-          router.replace('/(onboarding)/language');
-        },
-      },
+      { text: t('common.confirm'), style: 'destructive', onPress: performReset },
     ]);
   };
 

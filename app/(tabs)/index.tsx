@@ -31,7 +31,7 @@ export default function HomeScreen() {
   const isRTL = useRTL();
   const { profile } = useProfile();
   const { entries, logDates } = useLogs();
-  const { todayActivities, activityDates } = useActivity();
+  const { todayActivities, activityDates, strengthSessionCount } = useActivity();
   const { plan } = usePlan();
 
   const today = todayString();
@@ -47,8 +47,8 @@ export default function HomeScreen() {
   const mobilityDone = todayActivities.some((a) => a.type === 'mobility');
   const kcalBurned = todayActivities.reduce((sum, a) => sum + (a.kcalBurned ?? 0), 0);
 
-  // Rotate through the generated plan based on days with logged activity
-  const suggestedDay = plan?.days.length ? plan.days[activityDates.length % plan.days.length] : null;
+  // Rotate through the generated plan based on completed strength workouts
+  const suggestedDay = plan?.days.length ? plan.days[strengthSessionCount % plan.days.length] : null;
 
   if (!profile) return null;
 

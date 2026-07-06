@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { AppState } from 'react-native';
 
 import {
   addActivity,
@@ -15,6 +16,8 @@ interface ActivityContextValue {
   todayActivities: ActivityLogEntry[];
   activityDates: string[];
   weights: WeightEntry[];
+  /** Total number of completed strength workouts, used to rotate the plan. */
+  strengthSessionCount: number;
   isLoading: boolean;
   logActivity: (entry: ActivityLogEntry) => Promise<void>;
   removeActivityEntry: (date: string, entryId: string) => Promise<void>;
@@ -28,6 +31,7 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
   const [todayActivities, setTodayActivities] = useState<ActivityLogEntry[]>([]);
   const [activityDates, setActivityDates] = useState<string[]>([]);
   const [weights, setWeights] = useState<WeightEntry[]>([]);
+  const [strengthSessionCount, setStrengthSessionCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const reload = async () => {
@@ -37,6 +41,8 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       getActivityDates(),
       getWeightEntries(),
     ]);
+    const allEntries = await Promise.all(dates.map((date) => getActivitiesForDate(date)));
+    setStrengthSessionCount(allEntries.flat().filter((entry) => entry.type === 'strength').length);
     setTodayActivities(entries);
     setActivityDates(dates);
     setWeights(weightEntries);
@@ -45,6 +51,15 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     reload();
+  }, []);
+
+  // Reload "today's" activities when the app returns to the foreground,
+  // so a date change past midnight is picked up.
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') reload();
+    });
+    return () => subscription.remove();
   }, []);
 
   const logActivity = async (entry: ActivityLogEntry) => {
@@ -67,13 +82,14 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       todayActivities,
       activityDates,
       weights,
+      strengthSessionCount,
       isLoading,
       logActivity,
       removeActivityEntry,
       logWeight,
       refresh: reload,
     }),
-    [todayActivities, activityDates, weights, isLoading]
+    [todayActivities, activityDates, weights, strengthSessionCount, isLoading]
   );
 
   return <ActivityContext.Provider value={value}>{children}</ActivityContext.Provider>;

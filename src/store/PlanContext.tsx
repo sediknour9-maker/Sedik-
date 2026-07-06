@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { generatePlan } from '../services/planGenerator';
-import { readStorage, writeStorage, STORAGE_KEYS } from '../services/storage';
+import { readStorage, writeStorage, removeStorage, STORAGE_KEYS } from '../services/storage';
 import { useProfile } from './ProfileContext';
 import type { EquipmentPreference, GeneratedPlan } from '../models/training';
 
@@ -9,6 +9,7 @@ interface PlanContextValue {
   plan: GeneratedPlan | null;
   isLoading: boolean;
   regenerate: (equipment: EquipmentPreference) => Promise<void>;
+  resetPlan: () => Promise<void>;
 }
 
 const PlanContext = createContext<PlanContextValue | undefined>(undefined);
@@ -39,7 +40,12 @@ export function PlanProvider({ children }: { children: ReactNode }) {
     await writeStorage(STORAGE_KEYS.plan, next);
   };
 
-  const value = useMemo(() => ({ plan, isLoading, regenerate }), [plan, isLoading, profile]);
+  const resetPlan = async () => {
+    setPlan(null);
+    await removeStorage(STORAGE_KEYS.plan);
+  };
+
+  const value = useMemo(() => ({ plan, isLoading, regenerate, resetPlan }), [plan, isLoading, profile]);
 
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 }

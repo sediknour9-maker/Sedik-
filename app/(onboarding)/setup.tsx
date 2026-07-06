@@ -23,7 +23,14 @@ export default function ProfileScreen() {
   const router = useRouter();
   const isRTL = useRTL();
 
-  const canContinue = draft.age.trim() !== '' && draft.heightCm.trim() !== '' && draft.weightKg.trim() !== '';
+  // Plausible human ranges; blocks zero/garbage input that would produce
+  // nonsense (or negative) calorie targets downstream.
+  const parseNumber = (value: string) => Number(value.replace(',', '.'));
+  const age = parseNumber(draft.age);
+  const heightCm = parseNumber(draft.heightCm);
+  const weightKg = parseNumber(draft.weightKg);
+  const canContinue =
+    age >= 10 && age <= 100 && heightCm >= 100 && heightCm <= 250 && weightKg >= 25 && weightKg <= 300;
 
   return (
     <SafeAreaView style={styles.container}>

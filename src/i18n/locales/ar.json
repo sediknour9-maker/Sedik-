@@ -75,7 +75,9 @@
     "selectPortion": "اختر الحصة",
     "quantity": "الكمية",
     "confirmAdd": "أضف إلى السجل",
-    "selectMealSlot": "اختر الوجبة"
+    "selectMealSlot": "اختر الوجبة",
+    "scanBarcode": "مسح الباركود",
+    "createCustom": "إنشاء طعام مخصص"
   },
   "history": {
     "title": "السجل",
@@ -184,7 +186,11 @@
     "plank": "بلانك",
     "crunch": "تمرين البطن",
     "hip_thrust": "رفع الورك",
-    "deadlift": "الرفعة الميتة"
+    "deadlift": "الرفعة الميتة",
+    "goblet_squat": "سكوات بالدمبل",
+    "split_squat": "سكوات بلغاري",
+    "glute_bridge": "جسر الورك",
+    "dumbbell_row": "تجديف بالدمبل"
   },
   "mobility": {
     "cat_cow": "قطة-بقرة",
@@ -233,51 +239,141 @@
     "custom": "حصة"
   },
   "food": {
-    "tagine_chicken_olives": { "name": "طاجين الدجاج بالزيتون" },
-    "tagine_beef_prunes": { "name": "طاجين اللحم بالبرقوق" },
-    "tagine_kefta": { "name": "طاجين الكفتة" },
-    "harira": { "name": "حريرة" },
-    "chorba": { "name": "شربة" },
-    "bissara": { "name": "بيصارة" },
-    "khobz": { "name": "خبز مغربي" },
-    "msemen": { "name": "مسمن" },
-    "baghrir": { "name": "بغرير" },
-    "briouates_cheese": { "name": "بريوات بالجبن" },
-    "briouates_meat": { "name": "بريوات باللحم" },
-    "rghaif": { "name": "رغايف" },
-    "couscous_vegetable": { "name": "كسكس بالخضر" },
-    "couscous_seven_veg": { "name": "كسكس بسبع خضار" },
-    "couscous_tfaya": { "name": "كسكس التفاية" },
-    "atay": { "name": "أتاي (شاي بالنعناع)" },
-    "orange_juice": { "name": "عصير البرتقال" },
-    "avocado_smoothie": { "name": "عصير الأفوكا" },
-    "lben": { "name": "لبن" },
-    "chebakia": { "name": "شباكية" },
-    "sellou": { "name": "سلو" },
-    "gazelle_horns": { "name": "كعب الغزال" },
-    "dates": { "name": "تمر" },
-    "grilled_sardines": { "name": "سردين مشوي" },
-    "zaalouk": { "name": "زعلوك" },
-    "rice_cooked": { "name": "أرز (مطبوخ)" },
-    "pasta_cooked": { "name": "معكرونة (مطبوخة)" },
-    "chicken_breast": { "name": "صدر دجاج" },
-    "egg": { "name": "بيضة" },
-    "milk": { "name": "حليب" },
-    "yogurt_plain": { "name": "زبادي طبيعي" },
-    "banana": { "name": "موزة" },
-    "apple": { "name": "تفاحة" },
-    "tuna_can": { "name": "تونة (معلبة)" },
-    "lentils_cooked": { "name": "عدس (مطبوخ)" },
-    "chickpeas_cooked": { "name": "حمص (مطبوخ)" },
-    "olive_oil": { "name": "زيت الزيتون" },
-    "butter": { "name": "زبدة" },
-    "cheese_slice": { "name": "شريحة جبن" },
-    "tomato": { "name": "طماطم" },
-    "potato_boiled": { "name": "بطاطس (مسلوقة)" },
-    "white_bread_slice": { "name": "خبز أبيض" },
-    "oats": { "name": "شوفان" },
-    "honey": { "name": "عسل" },
-    "almonds": { "name": "لوز" }
+    "tagine_chicken_olives": {
+      "name": "طاجين الدجاج بالزيتون"
+    },
+    "tagine_beef_prunes": {
+      "name": "طاجين اللحم بالبرقوق"
+    },
+    "tagine_kefta": {
+      "name": "طاجين الكفتة"
+    },
+    "harira": {
+      "name": "حريرة"
+    },
+    "chorba": {
+      "name": "شربة"
+    },
+    "bissara": {
+      "name": "بيصارة"
+    },
+    "khobz": {
+      "name": "خبز مغربي"
+    },
+    "msemen": {
+      "name": "مسمن"
+    },
+    "baghrir": {
+      "name": "بغرير"
+    },
+    "briouates_cheese": {
+      "name": "بريوات بالجبن"
+    },
+    "briouates_meat": {
+      "name": "بريوات باللحم"
+    },
+    "rghaif": {
+      "name": "رغايف"
+    },
+    "couscous_vegetable": {
+      "name": "كسكس بالخضر"
+    },
+    "couscous_seven_veg": {
+      "name": "كسكس بسبع خضار"
+    },
+    "couscous_tfaya": {
+      "name": "كسكس التفاية"
+    },
+    "atay": {
+      "name": "أتاي (شاي بالنعناع)"
+    },
+    "orange_juice": {
+      "name": "عصير البرتقال"
+    },
+    "avocado_smoothie": {
+      "name": "عصير الأفوكا"
+    },
+    "lben": {
+      "name": "لبن"
+    },
+    "chebakia": {
+      "name": "شباكية"
+    },
+    "sellou": {
+      "name": "سلو"
+    },
+    "gazelle_horns": {
+      "name": "كعب الغزال"
+    },
+    "dates": {
+      "name": "تمر"
+    },
+    "grilled_sardines": {
+      "name": "سردين مشوي"
+    },
+    "zaalouk": {
+      "name": "زعلوك"
+    },
+    "rice_cooked": {
+      "name": "أرز (مطبوخ)"
+    },
+    "pasta_cooked": {
+      "name": "معكرونة (مطبوخة)"
+    },
+    "chicken_breast": {
+      "name": "صدر دجاج"
+    },
+    "egg": {
+      "name": "بيضة"
+    },
+    "milk": {
+      "name": "حليب"
+    },
+    "yogurt_plain": {
+      "name": "زبادي طبيعي"
+    },
+    "banana": {
+      "name": "موزة"
+    },
+    "apple": {
+      "name": "تفاحة"
+    },
+    "tuna_can": {
+      "name": "تونة (معلبة)"
+    },
+    "lentils_cooked": {
+      "name": "عدس (مطبوخ)"
+    },
+    "chickpeas_cooked": {
+      "name": "حمص (مطبوخ)"
+    },
+    "olive_oil": {
+      "name": "زيت الزيتون"
+    },
+    "butter": {
+      "name": "زبدة"
+    },
+    "cheese_slice": {
+      "name": "شريحة جبن"
+    },
+    "tomato": {
+      "name": "طماطم"
+    },
+    "potato_boiled": {
+      "name": "بطاطس (مسلوقة)"
+    },
+    "white_bread_slice": {
+      "name": "خبز أبيض"
+    },
+    "oats": {
+      "name": "شوفان"
+    },
+    "honey": {
+      "name": "عسل"
+    },
+    "almonds": {
+      "name": "لوز"
+    }
   },
   "exerciseDesc": {
     "squat": "قف بعرض الكتفين، شد جذعك، انزل بالوركين للخلف والأسفل حتى يتوازى الفخذان مع الأرض ثم ادفع للأعلى عبر الكعبين.",
@@ -297,6 +393,10 @@
     "plank": "الساعدان على الأرض والجسم في خط واحد — حافظ على الوضعية مع تنفس هادئ.",
     "crunch": "استلقِ على ظهرك مع ثني الركبتين، ارفع لوحي الكتف عن الأرض ثم انزل ببطء.",
     "hip_thrust": "أعلى الظهر على مقعد، ادفع الوركين للأعلى بشد المؤخرة حتى يستقيم الجسم ثم انزل.",
-    "deadlift": "بظهر مستقيم أمسك البار وقف بدفع الساقين والوركين ثم أنزله على نفس المسار."
+    "deadlift": "بظهر مستقيم أمسك البار وقف بدفع الساقين والوركين ثم أنزله على نفس المسار.",
+    "goblet_squat": "أمسك دمبل أمام صدرك وانزل في وضع السكوات مع جذع مستقيم ثم ادفع للأعلى.",
+    "split_squat": "قدم أمامية وأخرى خلفية — انزل بالركبة الخلفية نحو الأرض ثم ادفع عبر كعب القدم الأمامية.",
+    "glute_bridge": "استلقِ على ظهرك مع ثني الركبتين وارفع الوركين بشد المؤخرة ثم انزل ببطء.",
+    "dumbbell_row": "استند بيد على مقعد واسحب الدمبل نحو الورك بظهر مستقيم ثم أنزله بتحكم."
   }
 }

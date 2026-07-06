@@ -75,7 +75,9 @@
     "selectPortion": "Select portion",
     "quantity": "Quantity",
     "confirmAdd": "Add to log",
-    "selectMealSlot": "Select meal"
+    "selectMealSlot": "Select meal",
+    "scanBarcode": "Scan barcode",
+    "createCustom": "Create custom food"
   },
   "history": {
     "title": "History",
@@ -184,7 +186,11 @@
     "plank": "Plank",
     "crunch": "Crunches",
     "hip_thrust": "Hip thrusts",
-    "deadlift": "Deadlift"
+    "deadlift": "Deadlift",
+    "goblet_squat": "Goblet squat",
+    "split_squat": "Split squat",
+    "glute_bridge": "Glute bridge",
+    "dumbbell_row": "Dumbbell row"
   },
   "mobility": {
     "cat_cow": "Cat-cow",
@@ -233,51 +239,141 @@
     "custom": "portion"
   },
   "food": {
-    "tagine_chicken_olives": { "name": "Chicken tagine with olives" },
-    "tagine_beef_prunes": { "name": "Beef tagine with prunes" },
-    "tagine_kefta": { "name": "Kefta tagine" },
-    "harira": { "name": "Harira soup" },
-    "chorba": { "name": "Chorba soup" },
-    "bissara": { "name": "Bissara (fava bean soup)" },
-    "khobz": { "name": "Khobz (Moroccan bread)" },
-    "msemen": { "name": "Msemen" },
-    "baghrir": { "name": "Baghrir (pancakes)" },
-    "briouates_cheese": { "name": "Briouates with cheese" },
-    "briouates_meat": { "name": "Briouates with meat" },
-    "rghaif": { "name": "Rghaif" },
-    "couscous_vegetable": { "name": "Vegetable couscous" },
-    "couscous_seven_veg": { "name": "Seven-vegetable couscous" },
-    "couscous_tfaya": { "name": "Couscous tfaya" },
-    "atay": { "name": "Atay (mint tea)" },
-    "orange_juice": { "name": "Orange juice" },
-    "avocado_smoothie": { "name": "Avocado smoothie" },
-    "lben": { "name": "Lben (buttermilk)" },
-    "chebakia": { "name": "Chebakia" },
-    "sellou": { "name": "Sellou" },
-    "gazelle_horns": { "name": "Gazelle horns" },
-    "dates": { "name": "Dates" },
-    "grilled_sardines": { "name": "Grilled sardines" },
-    "zaalouk": { "name": "Zaalouk (eggplant salad)" },
-    "rice_cooked": { "name": "Rice (cooked)" },
-    "pasta_cooked": { "name": "Pasta (cooked)" },
-    "chicken_breast": { "name": "Chicken breast" },
-    "egg": { "name": "Egg" },
-    "milk": { "name": "Milk" },
-    "yogurt_plain": { "name": "Plain yogurt" },
-    "banana": { "name": "Banana" },
-    "apple": { "name": "Apple" },
-    "tuna_can": { "name": "Tuna (canned)" },
-    "lentils_cooked": { "name": "Lentils (cooked)" },
-    "chickpeas_cooked": { "name": "Chickpeas (cooked)" },
-    "olive_oil": { "name": "Olive oil" },
-    "butter": { "name": "Butter" },
-    "cheese_slice": { "name": "Cheese slice" },
-    "tomato": { "name": "Tomato" },
-    "potato_boiled": { "name": "Potato (boiled)" },
-    "white_bread_slice": { "name": "White bread" },
-    "oats": { "name": "Oats" },
-    "honey": { "name": "Honey" },
-    "almonds": { "name": "Almonds" }
+    "tagine_chicken_olives": {
+      "name": "Chicken tagine with olives"
+    },
+    "tagine_beef_prunes": {
+      "name": "Beef tagine with prunes"
+    },
+    "tagine_kefta": {
+      "name": "Kefta tagine"
+    },
+    "harira": {
+      "name": "Harira soup"
+    },
+    "chorba": {
+      "name": "Chorba soup"
+    },
+    "bissara": {
+      "name": "Bissara (fava bean soup)"
+    },
+    "khobz": {
+      "name": "Khobz (Moroccan bread)"
+    },
+    "msemen": {
+      "name": "Msemen"
+    },
+    "baghrir": {
+      "name": "Baghrir (pancakes)"
+    },
+    "briouates_cheese": {
+      "name": "Briouates with cheese"
+    },
+    "briouates_meat": {
+      "name": "Briouates with meat"
+    },
+    "rghaif": {
+      "name": "Rghaif"
+    },
+    "couscous_vegetable": {
+      "name": "Vegetable couscous"
+    },
+    "couscous_seven_veg": {
+      "name": "Seven-vegetable couscous"
+    },
+    "couscous_tfaya": {
+      "name": "Couscous tfaya"
+    },
+    "atay": {
+      "name": "Atay (mint tea)"
+    },
+    "orange_juice": {
+      "name": "Orange juice"
+    },
+    "avocado_smoothie": {
+      "name": "Avocado smoothie"
+    },
+    "lben": {
+      "name": "Lben (buttermilk)"
+    },
+    "chebakia": {
+      "name": "Chebakia"
+    },
+    "sellou": {
+      "name": "Sellou"
+    },
+    "gazelle_horns": {
+      "name": "Gazelle horns"
+    },
+    "dates": {
+      "name": "Dates"
+    },
+    "grilled_sardines": {
+      "name": "Grilled sardines"
+    },
+    "zaalouk": {
+      "name": "Zaalouk (eggplant salad)"
+    },
+    "rice_cooked": {
+      "name": "Rice (cooked)"
+    },
+    "pasta_cooked": {
+      "name": "Pasta (cooked)"
+    },
+    "chicken_breast": {
+      "name": "Chicken breast"
+    },
+    "egg": {
+      "name": "Egg"
+    },
+    "milk": {
+      "name": "Milk"
+    },
+    "yogurt_plain": {
+      "name": "Plain yogurt"
+    },
+    "banana": {
+      "name": "Banana"
+    },
+    "apple": {
+      "name": "Apple"
+    },
+    "tuna_can": {
+      "name": "Tuna (canned)"
+    },
+    "lentils_cooked": {
+      "name": "Lentils (cooked)"
+    },
+    "chickpeas_cooked": {
+      "name": "Chickpeas (cooked)"
+    },
+    "olive_oil": {
+      "name": "Olive oil"
+    },
+    "butter": {
+      "name": "Butter"
+    },
+    "cheese_slice": {
+      "name": "Cheese slice"
+    },
+    "tomato": {
+      "name": "Tomato"
+    },
+    "potato_boiled": {
+      "name": "Potato (boiled)"
+    },
+    "white_bread_slice": {
+      "name": "White bread"
+    },
+    "oats": {
+      "name": "Oats"
+    },
+    "honey": {
+      "name": "Honey"
+    },
+    "almonds": {
+      "name": "Almonds"
+    }
   },
   "exerciseDesc": {
     "squat": "Stand shoulder-width, brace your core, sit your hips back and down until thighs are parallel, then drive back up through your heels.",
@@ -297,6 +393,10 @@
     "plank": "Forearms on the floor, body in one straight line — hold while breathing steadily.",
     "crunch": "Lie on your back with knees bent, curl your shoulder blades off the floor, then lower slowly.",
     "hip_thrust": "Upper back on a bench, drive your hips up by squeezing the glutes until your body forms a line, then lower.",
-    "deadlift": "With a flat back, grip the bar and stand up by driving through the legs and hips, then lower it along the same path."
+    "deadlift": "With a flat back, grip the bar and stand up by driving through the legs and hips, then lower it along the same path.",
+    "goblet_squat": "Hold a dumbbell at your chest, squat down keeping your torso upright, then drive back up.",
+    "split_squat": "One foot forward, one behind — lower the back knee toward the floor, then press up through the front heel.",
+    "glute_bridge": "Lie on your back with knees bent and lift your hips by squeezing the glutes, then lower slowly.",
+    "dumbbell_row": "Support one hand on a bench, pull the dumbbell to your hip with a flat back, then lower with control."
   }
 }

@@ -75,7 +75,9 @@
     "selectPortion": "Portion wählen",
     "quantity": "Menge",
     "confirmAdd": "Zum Tagebuch hinzufügen",
-    "selectMealSlot": "Mahlzeit wählen"
+    "selectMealSlot": "Mahlzeit wählen",
+    "scanBarcode": "Barcode scannen",
+    "createCustom": "Eigenes Lebensmittel"
   },
   "history": {
     "title": "Verlauf",
@@ -184,7 +186,11 @@
     "plank": "Plank",
     "crunch": "Crunches",
     "hip_thrust": "Hip Thrusts",
-    "deadlift": "Kreuzheben"
+    "deadlift": "Kreuzheben",
+    "goblet_squat": "Goblet Squat",
+    "split_squat": "Split Squat",
+    "glute_bridge": "Beckenheben",
+    "dumbbell_row": "Kurzhantelrudern"
   },
   "mobility": {
     "cat_cow": "Katze-Kuh",
@@ -233,51 +239,141 @@
     "custom": "Portion"
   },
   "food": {
-    "tagine_chicken_olives": { "name": "Hähnchen-Tajine mit Oliven" },
-    "tagine_beef_prunes": { "name": "Rind-Tajine mit Trockenpflaumen" },
-    "tagine_kefta": { "name": "Kefta-Tajine" },
-    "harira": { "name": "Harira-Suppe" },
-    "chorba": { "name": "Chorba-Suppe" },
-    "bissara": { "name": "Bissara (Saubohnensuppe)" },
-    "khobz": { "name": "Khobz (marokkanisches Brot)" },
-    "msemen": { "name": "Msemen" },
-    "baghrir": { "name": "Baghrir (Tausend-Loch-Pfannkuchen)" },
-    "briouates_cheese": { "name": "Briouates mit Käse" },
-    "briouates_meat": { "name": "Briouates mit Fleisch" },
-    "rghaif": { "name": "Rghaif" },
-    "couscous_vegetable": { "name": "Gemüse-Couscous" },
-    "couscous_seven_veg": { "name": "Sieben-Gemüse-Couscous" },
-    "couscous_tfaya": { "name": "Couscous Tfaya" },
-    "atay": { "name": "Atay (Minztee)" },
-    "orange_juice": { "name": "Orangensaft" },
-    "avocado_smoothie": { "name": "Avocado-Smoothie" },
-    "lben": { "name": "Lben (Buttermilch)" },
-    "chebakia": { "name": "Chebakia" },
-    "sellou": { "name": "Sellou" },
-    "gazelle_horns": { "name": "Gazellenhörnchen" },
-    "dates": { "name": "Datteln" },
-    "grilled_sardines": { "name": "Gegrillte Sardinen" },
-    "zaalouk": { "name": "Zaalouk (Auberginensalat)" },
-    "rice_cooked": { "name": "Reis (gekocht)" },
-    "pasta_cooked": { "name": "Nudeln (gekocht)" },
-    "chicken_breast": { "name": "Hähnchenbrust" },
-    "egg": { "name": "Ei" },
-    "milk": { "name": "Milch" },
-    "yogurt_plain": { "name": "Naturjoghurt" },
-    "banana": { "name": "Banane" },
-    "apple": { "name": "Apfel" },
-    "tuna_can": { "name": "Thunfisch (Dose)" },
-    "lentils_cooked": { "name": "Linsen (gekocht)" },
-    "chickpeas_cooked": { "name": "Kichererbsen (gekocht)" },
-    "olive_oil": { "name": "Olivenöl" },
-    "butter": { "name": "Butter" },
-    "cheese_slice": { "name": "Käsescheibe" },
-    "tomato": { "name": "Tomate" },
-    "potato_boiled": { "name": "Kartoffel (gekocht)" },
-    "white_bread_slice": { "name": "Weißbrot" },
-    "oats": { "name": "Haferflocken" },
-    "honey": { "name": "Honig" },
-    "almonds": { "name": "Mandeln" }
+    "tagine_chicken_olives": {
+      "name": "Hähnchen-Tajine mit Oliven"
+    },
+    "tagine_beef_prunes": {
+      "name": "Rind-Tajine mit Trockenpflaumen"
+    },
+    "tagine_kefta": {
+      "name": "Kefta-Tajine"
+    },
+    "harira": {
+      "name": "Harira-Suppe"
+    },
+    "chorba": {
+      "name": "Chorba-Suppe"
+    },
+    "bissara": {
+      "name": "Bissara (Saubohnensuppe)"
+    },
+    "khobz": {
+      "name": "Khobz (marokkanisches Brot)"
+    },
+    "msemen": {
+      "name": "Msemen"
+    },
+    "baghrir": {
+      "name": "Baghrir (Tausend-Loch-Pfannkuchen)"
+    },
+    "briouates_cheese": {
+      "name": "Briouates mit Käse"
+    },
+    "briouates_meat": {
+      "name": "Briouates mit Fleisch"
+    },
+    "rghaif": {
+      "name": "Rghaif"
+    },
+    "couscous_vegetable": {
+      "name": "Gemüse-Couscous"
+    },
+    "couscous_seven_veg": {
+      "name": "Sieben-Gemüse-Couscous"
+    },
+    "couscous_tfaya": {
+      "name": "Couscous Tfaya"
+    },
+    "atay": {
+      "name": "Atay (Minztee)"
+    },
+    "orange_juice": {
+      "name": "Orangensaft"
+    },
+    "avocado_smoothie": {
+      "name": "Avocado-Smoothie"
+    },
+    "lben": {
+      "name": "Lben (Buttermilch)"
+    },
+    "chebakia": {
+      "name": "Chebakia"
+    },
+    "sellou": {
+      "name": "Sellou"
+    },
+    "gazelle_horns": {
+      "name": "Gazellenhörnchen"
+    },
+    "dates": {
+      "name": "Datteln"
+    },
+    "grilled_sardines": {
+      "name": "Gegrillte Sardinen"
+    },
+    "zaalouk": {
+      "name": "Zaalouk (Auberginensalat)"
+    },
+    "rice_cooked": {
+      "name": "Reis (gekocht)"
+    },
+    "pasta_cooked": {
+      "name": "Nudeln (gekocht)"
+    },
+    "chicken_breast": {
+      "name": "Hähnchenbrust"
+    },
+    "egg": {
+      "name": "Ei"
+    },
+    "milk": {
+      "name": "Milch"
+    },
+    "yogurt_plain": {
+      "name": "Naturjoghurt"
+    },
+    "banana": {
+      "name": "Banane"
+    },
+    "apple": {
+      "name": "Apfel"
+    },
+    "tuna_can": {
+      "name": "Thunfisch (Dose)"
+    },
+    "lentils_cooked": {
+      "name": "Linsen (gekocht)"
+    },
+    "chickpeas_cooked": {
+      "name": "Kichererbsen (gekocht)"
+    },
+    "olive_oil": {
+      "name": "Olivenöl"
+    },
+    "butter": {
+      "name": "Butter"
+    },
+    "cheese_slice": {
+      "name": "Käsescheibe"
+    },
+    "tomato": {
+      "name": "Tomate"
+    },
+    "potato_boiled": {
+      "name": "Kartoffel (gekocht)"
+    },
+    "white_bread_slice": {
+      "name": "Weißbrot"
+    },
+    "oats": {
+      "name": "Haferflocken"
+    },
+    "honey": {
+      "name": "Honig"
+    },
+    "almonds": {
+      "name": "Mandeln"
+    }
   },
   "exerciseDesc": {
     "squat": "Schulterbreit stehen, Rumpf anspannen, Hüfte nach hinten-unten absenken bis die Oberschenkel parallel sind, dann über die Fersen wieder hochdrücken.",
@@ -297,6 +393,10 @@
     "plank": "Unterarme am Boden, Körper in einer geraden Linie — Position halten und ruhig atmen.",
     "crunch": "Rückenlage mit angewinkelten Beinen, Schulterblätter vom Boden abrollen und langsam absenken.",
     "hip_thrust": "Oberer Rücken auf der Bank, Hüfte durch Anspannen des Gesäßes nach oben drücken bis der Körper eine Linie bildet.",
-    "deadlift": "Mit geradem Rücken die Stange greifen und durch Bein- und Hüftstreckung aufstehen, auf gleichem Weg absenken."
+    "deadlift": "Mit geradem Rücken die Stange greifen und durch Bein- und Hüftstreckung aufstehen, auf gleichem Weg absenken.",
+    "goblet_squat": "Kurzhantel vor der Brust halten, mit aufrechtem Oberkörper in die Hocke gehen und wieder hochdrücken.",
+    "split_squat": "Ein Fuß vorn, einer hinten — das hintere Knie Richtung Boden senken und über die vordere Ferse hochdrücken.",
+    "glute_bridge": "Rückenlage mit angewinkelten Beinen, Hüfte durch Anspannen des Gesäßes anheben und langsam senken.",
+    "dumbbell_row": "Mit einer Hand auf der Bank abstützen, die Kurzhantel mit geradem Rücken zur Hüfte ziehen und kontrolliert absenken."
   }
 }

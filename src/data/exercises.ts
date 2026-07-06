@@ -20,6 +20,10 @@ export const EXERCISES: Exercise[] = [
   { id: 'crunch', nameKey: 'exercise.crunch', muscleGroup: 'core', equipment: 'bodyweight', sets: 3, reps: '15-20' },
   { id: 'hip_thrust', nameKey: 'exercise.hip_thrust', muscleGroup: 'legs', equipment: 'barbell', sets: 3, reps: '10-12' },
   { id: 'deadlift', nameKey: 'exercise.deadlift', muscleGroup: 'fullBody', equipment: 'barbell', sets: 3, reps: '5-8' },
+  { id: 'goblet_squat', nameKey: 'exercise.goblet_squat', muscleGroup: 'legs', equipment: 'dumbbell', sets: 3, reps: '10-12' },
+  { id: 'split_squat', nameKey: 'exercise.split_squat', muscleGroup: 'legs', equipment: 'bodyweight', sets: 3, reps: '10-12' },
+  { id: 'glute_bridge', nameKey: 'exercise.glute_bridge', muscleGroup: 'legs', equipment: 'bodyweight', sets: 3, reps: '12-15' },
+  { id: 'dumbbell_row', nameKey: 'exercise.dumbbell_row', muscleGroup: 'back', equipment: 'dumbbell', sets: 3, reps: '8-12' },
 ];
 
 /** Simple 3-day full-body split. */

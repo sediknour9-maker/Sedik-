@@ -24,17 +24,17 @@ export default function GoalsScreen() {
   const router = useRouter();
   const isRTL = useRTL();
 
-  const parsedDraft = useMemo(
-    () => ({
+  const parsedDraft = useMemo(() => {
+    const parseNumber = (value: string) => Number(value.replace(',', '.')) || 0;
+    return {
       sex: draft.sex,
-      age: Number(draft.age) || 0,
-      heightCm: Number(draft.heightCm) || 0,
-      weightKg: Number(draft.weightKg) || 0,
+      age: parseNumber(draft.age),
+      heightCm: parseNumber(draft.heightCm),
+      weightKg: parseNumber(draft.weightKg),
       activityLevel: draft.activityLevel,
       goal: draft.goal,
-    }),
-    [draft]
-  );
+    };
+  }, [draft]);
 
   const targets = useMemo(() => computeTargets(parsedDraft), [parsedDraft]);
 
