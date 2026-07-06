@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Sedik Fit",
-    "slug": "sedik-fit",
-    "scheme": "sedikfit",
+    "name": "Atlas Fit",
+    "slug": "atlas-fit",
+    "scheme": "atlasfit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Sedik Fit to access the camera to scan food barcodes."
+          "cameraPermission": "Allow Atlas Fit to access the camera to scan food barcodes."
         }
       ]
     ],
