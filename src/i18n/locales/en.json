@@ -126,7 +126,28 @@
     "logCardio": "Log activity",
     "completeRoutine": "Complete routine",
     "routineDone": "Routine completed today ✓",
-    "estBurn": "≈ {{kcal}} kcal"
+    "estBurn": "≈ {{kcal}} kcal",
+    "smartPlan": "Your smart plan",
+    "regenerate": "Regenerate plan",
+    "equipGym": "Gym",
+    "equipHome": "Home",
+    "day": "Day {{n}}",
+    "focusFull": "Full body",
+    "focusUpper": "Upper body",
+    "focusLower": "Lower body"
+  },
+  "scanner": {
+    "title": "Scan barcode",
+    "manualLabel": "Or enter the barcode manually",
+    "search": "Look up",
+    "notFound": "Product not found or no connection. You can create it manually.",
+    "noCamera": "Camera scanning works in the mobile app — enter the barcode manually here.",
+    "permission": "Grant camera access"
+  },
+  "custom": {
+    "title": "New food",
+    "nameLabel": "Name",
+    "portionGrams": "Portion size (g)"
   },
   "progress": {
     "title": "Progress",
@@ -141,7 +162,9 @@
   },
   "profile": {
     "title": "Profile",
-    "yourTargets": "Your daily targets"
+    "yourTargets": "Your daily targets",
+    "community": "Community",
+    "joinDiscord": "Join the Discord community"
   },
   "exercise": {
     "squat": "Squat",
@@ -201,7 +224,13 @@
     "glass": "glass",
     "scoop": "scoop",
     "pieces_three": "3 pieces",
-    "grill_portion": "portion"
+    "grill_portion": "portion",
+    "g100": "100 g",
+    "g50": "50 g",
+    "g30": "30 g",
+    "tbsp": "tablespoon",
+    "slice": "slice",
+    "custom": "portion"
   },
   "food": {
     "tagine_chicken_olives": { "name": "Chicken tagine with olives" },
@@ -228,6 +257,46 @@
     "gazelle_horns": { "name": "Gazelle horns" },
     "dates": { "name": "Dates" },
     "grilled_sardines": { "name": "Grilled sardines" },
-    "zaalouk": { "name": "Zaalouk (eggplant salad)" }
+    "zaalouk": { "name": "Zaalouk (eggplant salad)" },
+    "rice_cooked": { "name": "Rice (cooked)" },
+    "pasta_cooked": { "name": "Pasta (cooked)" },
+    "chicken_breast": { "name": "Chicken breast" },
+    "egg": { "name": "Egg" },
+    "milk": { "name": "Milk" },
+    "yogurt_plain": { "name": "Plain yogurt" },
+    "banana": { "name": "Banana" },
+    "apple": { "name": "Apple" },
+    "tuna_can": { "name": "Tuna (canned)" },
+    "lentils_cooked": { "name": "Lentils (cooked)" },
+    "chickpeas_cooked": { "name": "Chickpeas (cooked)" },
+    "olive_oil": { "name": "Olive oil" },
+    "butter": { "name": "Butter" },
+    "cheese_slice": { "name": "Cheese slice" },
+    "tomato": { "name": "Tomato" },
+    "potato_boiled": { "name": "Potato (boiled)" },
+    "white_bread_slice": { "name": "White bread" },
+    "oats": { "name": "Oats" },
+    "honey": { "name": "Honey" },
+    "almonds": { "name": "Almonds" }
+  },
+  "exerciseDesc": {
+    "squat": "Stand shoulder-width, brace your core, sit your hips back and down until thighs are parallel, then drive back up through your heels.",
+    "lunge": "Step forward, lower the back knee toward the floor with an upright torso, then push back to standing and switch legs.",
+    "leg_press": "Place feet shoulder-width on the platform, lower the weight until knees reach 90°, then press back up without locking out.",
+    "romanian_deadlift": "With a slight knee bend, hinge at the hips and lower the bar along your legs until you feel the hamstrings stretch, then return upright.",
+    "bench_press": "Lower the bar to mid-chest with elbows at about 45°, then press it back up until arms are extended.",
+    "pushup": "Hands under shoulders, body in a straight line — lower your chest to the floor and press back up.",
+    "incline_dumbbell_press": "On an incline bench, press the dumbbells from shoulder level until arms are extended, then lower with control.",
+    "pullup": "Hang from the bar with an overhand grip and pull your chin above the bar, then lower slowly.",
+    "lat_pulldown": "Grip the bar wide, pull it to your upper chest while keeping the torso upright, then release with control.",
+    "barbell_row": "Hinge forward with a flat back and pull the bar to your lower ribs, squeezing the shoulder blades together.",
+    "overhead_press": "Press the bar from shoulder height straight overhead, keeping your core tight and ribs down.",
+    "lateral_raise": "With a slight elbow bend, raise the dumbbells out to shoulder height and lower slowly.",
+    "biceps_curl": "Keep elbows pinned to your sides and curl the weight up, then lower fully under control.",
+    "triceps_dip": "Support yourself on parallel bars or a bench, bend the elbows to 90°, then press back up.",
+    "plank": "Forearms on the floor, body in one straight line — hold while breathing steadily.",
+    "crunch": "Lie on your back with knees bent, curl your shoulder blades off the floor, then lower slowly.",
+    "hip_thrust": "Upper back on a bench, drive your hips up by squeezing the glutes until your body forms a line, then lower.",
+    "deadlift": "With a flat back, grip the bar and stand up by driving through the legs and hips, then lower it along the same path."
   }
 }

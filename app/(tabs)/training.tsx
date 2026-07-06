@@ -5,11 +5,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useProfile } from '../../src/store/ProfileContext';
 import { useActivity } from '../../src/store/ActivityContext';
+import { usePlan } from '../../src/store/PlanContext';
 import { computeCardioKcal } from '../../src/services/cardioCalculator';
 import { todayString } from '../../src/services/date';
-import { CARDIO_ACTIVITIES, EXERCISES, MOBILITY_ROUTINE, WORKOUT_PLAN } from '../../src/data/exercises';
+import { CARDIO_ACTIVITIES, EXERCISES, MOBILITY_ROUTINE } from '../../src/data/exercises';
 import { colors } from '../../src/theme/colors';
 import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
+import type { EquipmentPreference } from '../../src/models/training';
 
 type Segment = 'strength' | 'cardio' | 'mobility';
 
@@ -18,15 +20,18 @@ export default function TrainingScreen() {
   const isRTL = useRTL();
   const { profile } = useProfile();
   const { todayActivities, logActivity } = useActivity();
+  const { plan, regenerate } = usePlan();
   const [segment, setSegment] = useState<Segment>('strength');
   const [selectedCardio, setSelectedCardio] = useState(CARDIO_ACTIVITIES[0].id);
   const [durationMin, setDurationMin] = useState(30);
+  const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
 
   if (!profile) return null;
 
   const cardioActivity = CARDIO_ACTIVITIES.find((a) => a.id === selectedCardio) ?? CARDIO_ACTIVITIES[0];
   const estKcal = computeCardioKcal(cardioActivity.met, profile.weightKg, durationMin);
   const mobilityDoneToday = todayActivities.some((a) => a.type === 'mobility');
+  const equipment = plan?.equipment ?? 'gym';
 
   const logStrength = (dayId: string) =>
     logActivity({
@@ -80,23 +85,61 @@ export default function TrainingScreen() {
           ))}
         </View>
 
-        {segment === 'strength'
-          ? WORKOUT_PLAN.map((day) => {
+        {segment === 'strength' ? (
+          <>
+            <View style={[styles.planHeader, { flexDirection: rowDirection(isRTL) }]}>
+              <Text style={[styles.planTitle, { textAlign: textAlign(isRTL) }]}>{t('training.smartPlan')}</Text>
+              <View style={[styles.equipRow, { flexDirection: rowDirection(isRTL) }]}>
+                {(
+                  [
+                    { value: 'gym', labelKey: 'training.equipGym' },
+                    { value: 'home', labelKey: 'training.equipHome' },
+                  ] as { value: EquipmentPreference; labelKey: string }[]
+                ).map(({ value, labelKey }) => (
+                  <TouchableOpacity
+                    key={value}
+                    style={[styles.equipChip, equipment === value && styles.equipChipActive]}
+                    onPress={() => regenerate(value)}
+                  >
+                    <Text style={[styles.equipChipText, equipment === value && styles.equipChipTextActive]}>
+                      {t(labelKey)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {plan?.days.map((day) => {
               const doneToday = todayActivities.some((a) => a.type === 'strength' && a.refId === day.id);
               return (
                 <View key={day.id} style={styles.card}>
-                  <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t(day.nameKey)}</Text>
-                  {day.exerciseIds.map((id) => {
-                    const exercise = EXERCISES.find((e) => e.id === id);
+                  <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>
+                    {t('training.day', { n: day.dayNumber })} · {t(day.focusKey)}
+                  </Text>
+                  {day.items.map((item) => {
+                    const exercise = EXERCISES.find((e) => e.id === item.exerciseId);
                     if (!exercise) return null;
+                    const isExpanded = expandedExercise === `${day.id}_${item.exerciseId}`;
                     return (
-                      <View key={id} style={[styles.exerciseRow, { flexDirection: rowDirection(isRTL) }]}>
-                        <Text style={[styles.exerciseName, { textAlign: textAlign(isRTL) }]}>
-                          {t(exercise.nameKey)}
-                        </Text>
-                        <Text style={styles.exerciseDetail}>
-                          {exercise.sets} × {exercise.reps}
-                        </Text>
+                      <View key={item.exerciseId}>
+                        <TouchableOpacity
+                          style={[styles.exerciseRow, { flexDirection: rowDirection(isRTL) }]}
+                          onPress={() =>
+                            setExpandedExercise(isExpanded ? null : `${day.id}_${item.exerciseId}`)
+                          }
+                        >
+                          <Text style={[styles.exerciseName, { textAlign: textAlign(isRTL) }]}>
+                            {t(exercise.nameKey)}
+                          </Text>
+                          <Text style={styles.exerciseDetail}>
+                            {item.sets} × {item.reps}
+                          </Text>
+                        </TouchableOpacity>
+                        {isExpanded ? (
+                          <Text style={[styles.exerciseDesc, { textAlign: textAlign(isRTL) }]}>
+                            {t(`exerciseDesc.${exercise.id}`)}
+                          </Text>
+                        ) : null}
                       </View>
                     );
                   })}
@@ -109,8 +152,13 @@ export default function TrainingScreen() {
                   )}
                 </View>
               );
-            })
-          : null}
+            })}
+
+            <TouchableOpacity style={styles.regenerateButton} onPress={() => regenerate(equipment)}>
+              <Text style={styles.regenerateButtonText}>↻ {t('training.regenerate')}</Text>
+            </TouchableOpacity>
+          </>
+        ) : null}
 
         {segment === 'cardio' ? (
           <View style={styles.card}>
@@ -194,6 +242,20 @@ const styles = StyleSheet.create({
   segmentActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   segmentText: { color: colors.text, fontSize: 13, fontWeight: '600' },
   segmentTextActive: { color: '#fff' },
+  planHeader: { justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  planTitle: { fontSize: 15, fontWeight: '700', color: colors.text },
+  equipRow: { gap: 6 },
+  equipChip: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  equipChipActive: { backgroundColor: colors.secondary, borderColor: colors.secondary },
+  equipChipText: { color: colors.text, fontSize: 12 },
+  equipChipTextActive: { color: '#fff', fontWeight: '600' },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 14,
@@ -206,6 +268,15 @@ const styles = StyleSheet.create({
   exerciseRow: { justifyContent: 'space-between', alignItems: 'center', paddingVertical: 7 },
   exerciseName: { fontSize: 14, color: colors.text, flex: 1 },
   exerciseDetail: { fontSize: 13, color: colors.textMuted, fontVariant: ['tabular-nums'] },
+  exerciseDesc: {
+    fontSize: 12,
+    color: colors.textMuted,
+    backgroundColor: colors.background,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 6,
+    lineHeight: 17,
+  },
   mobilityTextBlock: { flex: 1 },
   mobilityTarget: { fontSize: 11, color: colors.textMuted, marginTop: 1 },
   doneText: { marginTop: 12, textAlign: 'center', color: colors.secondary, fontWeight: '700' },
@@ -217,6 +288,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionButtonText: { color: '#fff', fontWeight: '700' },
+  regenerateButton: { alignItems: 'center', paddingVertical: 10 },
+  regenerateButtonText: { color: colors.primaryDark, fontWeight: '600', fontSize: 13 },
   chipWrap: { flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   chip: {
     paddingVertical: 7,

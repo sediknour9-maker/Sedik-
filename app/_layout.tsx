@@ -9,6 +9,8 @@ import { ProfileProvider } from '../src/store/ProfileContext';
 import { FoodDbProvider } from '../src/store/FoodDbContext';
 import { LogProvider } from '../src/store/LogContext';
 import { ActivityProvider } from '../src/store/ActivityContext';
+import { PlanProvider } from '../src/store/PlanContext';
+import { colors } from '../src/theme/colors';
 
 export default function RootLayout() {
   return (
@@ -19,10 +21,19 @@ export default function RootLayout() {
             <FoodDbProvider>
               <LogProvider>
                 <ActivityProvider>
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="add-food/index" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="add-food/[foodId]" options={{ presentation: 'modal' }} />
-                  </Stack>
+                  <PlanProvider>
+                    <Stack
+                      screenOptions={{
+                        headerShown: false,
+                        contentStyle: { backgroundColor: colors.background },
+                      }}
+                    >
+                      <Stack.Screen name="add-food/index" options={{ presentation: 'modal' }} />
+                      <Stack.Screen name="add-food/[foodId]" options={{ presentation: 'modal' }} />
+                      <Stack.Screen name="add-food/custom" options={{ presentation: 'modal' }} />
+                      <Stack.Screen name="scan-barcode" options={{ presentation: 'modal' }} />
+                    </Stack>
+                  </PlanProvider>
                 </ActivityProvider>
               </LogProvider>
             </FoodDbProvider>

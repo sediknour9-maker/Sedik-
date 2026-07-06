@@ -57,4 +57,5 @@ export const STORAGE_KEYS = {
   activityIndex: 'app:activity:index',
   activityForDate: (date: string) => `app:activity:${date}`,
   weights: 'app:weights',
+  plan: 'app:plan',
 } as const;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +14,9 @@ import { LanguageSwitcher } from '../../src/components/LanguageSwitcher';
 import { colors } from '../../src/theme/colors';
 import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
 import type { RamadanOverride } from '../../src/models/user';
+
+// Replace with the real invite link once the community server exists.
+const COMMUNITY_DISCORD_URL = 'https://discord.com';
 
 const RAMADAN_OPTIONS: { value: RamadanOverride; labelKey: string }[] = [
   { value: 'auto', labelKey: 'settings.ramadanAuto' },
@@ -89,6 +92,14 @@ export default function ProfileScreen() {
           ))}
         </View>
 
+        <Text style={styles.sectionLabel}>{t('profile.community')}</Text>
+        <TouchableOpacity
+          style={styles.communityButton}
+          onPress={() => Linking.openURL(COMMUNITY_DISCORD_URL)}
+        >
+          <Text style={styles.communityButtonText}>💬 {t('profile.joinDiscord')}</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
           <Text style={styles.resetButtonText}>{t('settings.resetData')}</Text>
         </TouchableOpacity>
@@ -126,6 +137,13 @@ const styles = StyleSheet.create({
   optionActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   optionText: { color: colors.text, fontSize: 13 },
   optionTextActive: { color: '#fff', fontWeight: '600' },
+  communityButton: {
+    backgroundColor: colors.secondary,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  communityButtonText: { color: '#fff', fontWeight: '700' },
   resetButton: {
     marginTop: 40,
     borderRadius: 12,

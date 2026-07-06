@@ -126,7 +126,28 @@
     "logCardio": "Aktivität loggen",
     "completeRoutine": "Routine abschließen",
     "routineDone": "Routine heute abgeschlossen ✓",
-    "estBurn": "≈ {{kcal}} kcal"
+    "estBurn": "≈ {{kcal}} kcal",
+    "smartPlan": "Dein Smart-Plan",
+    "regenerate": "Plan neu generieren",
+    "equipGym": "Studio",
+    "equipHome": "Zuhause",
+    "day": "Tag {{n}}",
+    "focusFull": "Ganzkörper",
+    "focusUpper": "Oberkörper",
+    "focusLower": "Unterkörper"
+  },
+  "scanner": {
+    "title": "Barcode scannen",
+    "manualLabel": "Oder Barcode manuell eingeben",
+    "search": "Suchen",
+    "notFound": "Produkt nicht gefunden oder keine Verbindung. Du kannst es manuell anlegen.",
+    "noCamera": "Kamera-Scan funktioniert in der Handy-App — hier den Barcode manuell eingeben.",
+    "permission": "Kamerazugriff erlauben"
+  },
+  "custom": {
+    "title": "Neues Lebensmittel",
+    "nameLabel": "Name",
+    "portionGrams": "Portionsgröße (g)"
   },
   "progress": {
     "title": "Fortschritt",
@@ -141,7 +162,9 @@
   },
   "profile": {
     "title": "Profil",
-    "yourTargets": "Deine Tagesziele"
+    "yourTargets": "Deine Tagesziele",
+    "community": "Community",
+    "joinDiscord": "Discord-Community beitreten"
   },
   "exercise": {
     "squat": "Kniebeugen",
@@ -201,7 +224,13 @@
     "glass": "Glas",
     "scoop": "Portion",
     "pieces_three": "3 Stück",
-    "grill_portion": "Portion"
+    "grill_portion": "Portion",
+    "g100": "100 g",
+    "g50": "50 g",
+    "g30": "30 g",
+    "tbsp": "Esslöffel",
+    "slice": "Scheibe",
+    "custom": "Portion"
   },
   "food": {
     "tagine_chicken_olives": { "name": "Hähnchen-Tajine mit Oliven" },
@@ -228,6 +257,46 @@
     "gazelle_horns": { "name": "Gazellenhörnchen" },
     "dates": { "name": "Datteln" },
     "grilled_sardines": { "name": "Gegrillte Sardinen" },
-    "zaalouk": { "name": "Zaalouk (Auberginensalat)" }
+    "zaalouk": { "name": "Zaalouk (Auberginensalat)" },
+    "rice_cooked": { "name": "Reis (gekocht)" },
+    "pasta_cooked": { "name": "Nudeln (gekocht)" },
+    "chicken_breast": { "name": "Hähnchenbrust" },
+    "egg": { "name": "Ei" },
+    "milk": { "name": "Milch" },
+    "yogurt_plain": { "name": "Naturjoghurt" },
+    "banana": { "name": "Banane" },
+    "apple": { "name": "Apfel" },
+    "tuna_can": { "name": "Thunfisch (Dose)" },
+    "lentils_cooked": { "name": "Linsen (gekocht)" },
+    "chickpeas_cooked": { "name": "Kichererbsen (gekocht)" },
+    "olive_oil": { "name": "Olivenöl" },
+    "butter": { "name": "Butter" },
+    "cheese_slice": { "name": "Käsescheibe" },
+    "tomato": { "name": "Tomate" },
+    "potato_boiled": { "name": "Kartoffel (gekocht)" },
+    "white_bread_slice": { "name": "Weißbrot" },
+    "oats": { "name": "Haferflocken" },
+    "honey": { "name": "Honig" },
+    "almonds": { "name": "Mandeln" }
+  },
+  "exerciseDesc": {
+    "squat": "Schulterbreit stehen, Rumpf anspannen, Hüfte nach hinten-unten absenken bis die Oberschenkel parallel sind, dann über die Fersen wieder hochdrücken.",
+    "lunge": "Einen Schritt nach vorn machen, das hintere Knie Richtung Boden senken, Oberkörper aufrecht — dann zurückdrücken und Bein wechseln.",
+    "leg_press": "Füße schulterbreit auf die Plattform, Gewicht bis ca. 90° Kniewinkel absenken und ohne Durchstrecken wieder hochdrücken.",
+    "romanian_deadlift": "Mit leicht gebeugten Knien aus der Hüfte vorbeugen, die Stange nah an den Beinen absenken bis die Beinrückseite zieht, dann aufrichten.",
+    "bench_press": "Stange zur Brustmitte absenken, Ellbogen ca. 45° zum Körper, dann kraftvoll nach oben drücken.",
+    "pushup": "Hände unter den Schultern, Körper in einer Linie — Brust zum Boden senken und wieder hochdrücken.",
+    "incline_dumbbell_press": "Auf der Schrägbank die Kurzhanteln von Schulterhöhe nach oben drücken und kontrolliert absenken.",
+    "pullup": "Im Obergriff an die Stange hängen, Kinn über die Stange ziehen und langsam ablassen.",
+    "lat_pulldown": "Stange breit greifen, zur oberen Brust ziehen, Oberkörper aufrecht halten, kontrolliert zurücklassen.",
+    "barbell_row": "Mit geradem Rücken vorbeugen, Stange zu den unteren Rippen ziehen und Schulterblätter zusammendrücken.",
+    "overhead_press": "Stange von Schulterhöhe senkrecht über den Kopf drücken, Rumpf fest, Rippen unten.",
+    "lateral_raise": "Mit leicht gebeugten Ellbogen die Kurzhanteln seitlich bis Schulterhöhe heben und langsam senken.",
+    "biceps_curl": "Ellbogen am Körper fixieren, Gewicht nach oben curlen und vollständig kontrolliert absenken.",
+    "triceps_dip": "Am Barren oder an der Bank abstützen, Ellbogen bis 90° beugen und wieder hochdrücken.",
+    "plank": "Unterarme am Boden, Körper in einer geraden Linie — Position halten und ruhig atmen.",
+    "crunch": "Rückenlage mit angewinkelten Beinen, Schulterblätter vom Boden abrollen und langsam absenken.",
+    "hip_thrust": "Oberer Rücken auf der Bank, Hüfte durch Anspannen des Gesäßes nach oben drücken bis der Körper eine Linie bildet.",
+    "deadlift": "Mit geradem Rücken die Stange greifen und durch Bein- und Hüftstreckung aufstehen, auf gleichem Weg absenken."
   }
 }

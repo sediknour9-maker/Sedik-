@@ -1,12 +1,20 @@
 import { MOROCCAN_FOODS } from '../data/foods.moroccan';
+import { GENERIC_FOODS } from '../data/foods.generic';
 import type { FoodCategory, FoodItem, Macros, PortionUnit } from '../models/food';
+
+const SEED_FOODS = [...MOROCCAN_FOODS, ...GENERIC_FOODS];
 
 export function mergeFoods(
   custom: FoodItem[],
   overrides: Record<string, Partial<FoodItem>>
 ): FoodItem[] {
-  const seedWithOverrides = MOROCCAN_FOODS.map((food) => ({ ...food, ...overrides[food.id] }));
+  const seedWithOverrides = SEED_FOODS.map((food) => ({ ...food, ...overrides[food.id] }));
   return [...seedWithOverrides, ...custom];
+}
+
+/** Resolves a food's display name: user-given name first, then translation. */
+export function getFoodName(food: FoodItem, translate: (key: string) => string): string {
+  return food.customName ?? translate(food.nameKey);
 }
 
 export function searchFoods(
@@ -19,7 +27,8 @@ export function searchFoods(
   return foods.filter((food) => {
     if (category && food.category !== category) return false;
     if (!normalizedQuery) return true;
-    return resolveName(food.nameKey).toLowerCase().includes(normalizedQuery);
+    const name = food.customName ?? resolveName(food.nameKey);
+    return name.toLowerCase().includes(normalizedQuery);
   });
 }
 

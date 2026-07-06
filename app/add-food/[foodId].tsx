@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFoodDb } from '../../src/store/FoodDbContext';
 import { useLogs } from '../../src/store/LogContext';
 import { useSettings } from '../../src/store/SettingsContext';
-import { computeMacrosForPortion } from '../../src/services/foodRepository';
+import { computeMacrosForPortion, getFoodName } from '../../src/services/foodRepository';
 import { getMealSlotsFor } from '../../src/services/ramadanService';
 import { todayString } from '../../src/services/date';
 import { PortionPicker } from '../../src/components/PortionPicker';
@@ -70,7 +70,7 @@ export default function PortionScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t(food.nameKey)}</Text>
+        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{getFoodName(food, t)}</Text>
 
         <Text style={styles.sectionLabel}>{t('addFood.selectMealSlot')}</Text>
         <View style={[styles.slotRow, { flexDirection: rowDirection(isRTL) }]}>

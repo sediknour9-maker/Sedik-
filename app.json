@@ -6,8 +6,17 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "plugins": ["expo-router"],
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0E0F12",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Sedik Fit to access the camera to scan food barcodes."
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true
     },

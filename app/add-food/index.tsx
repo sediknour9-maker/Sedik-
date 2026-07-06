@@ -5,10 +5,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useFoodDb } from '../../src/store/FoodDbContext';
-import { searchFoods } from '../../src/services/foodRepository';
+import { searchFoods, getFoodName } from '../../src/services/foodRepository';
 import { FoodListItem } from '../../src/components/FoodListItem';
 import { colors } from '../../src/theme/colors';
-import { textAlign, useRTL } from '../../src/theme/rtl';
+import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
 
 export default function AddFoodSearchScreen() {
   const { t } = useTranslation();
@@ -36,6 +36,20 @@ export default function AddFoodSearchScreen() {
           onChangeText={setQuery}
           autoFocus
         />
+        <View style={[styles.toolRow, { flexDirection: rowDirection(isRTL) }]}>
+          <TouchableOpacity
+            style={styles.toolButton}
+            onPress={() => router.push({ pathname: '/scan-barcode', params: { mealSlot, date } })}
+          >
+            <Text style={styles.toolButtonText}>📷 {t('addFood.scanBarcode')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.toolButton}
+            onPress={() => router.push({ pathname: '/add-food/custom', params: { mealSlot, date } })}
+          >
+            <Text style={styles.toolButtonText}>＋ {t('addFood.createCustom')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <FlatList
@@ -43,7 +57,11 @@ export default function AddFoodSearchScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <FoodListItem title={t(item.nameKey)} kcal={item.perPortion.kcal} onPress={() => goToPortion(item.id)} />
+          <FoodListItem
+            title={getFoodName(item, t)}
+            kcal={item.perPortion.kcal}
+            onPress={() => goToPortion(item.id)}
+          />
         )}
       />
 
@@ -69,6 +87,17 @@ const styles = StyleSheet.create({
     color: colors.text,
     marginBottom: 12,
   },
+  toolRow: { gap: 8, marginBottom: 12 },
+  toolButton: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 10,
+    paddingVertical: 9,
+    alignItems: 'center',
+  },
+  toolButtonText: { fontSize: 13, color: colors.primaryDark, fontWeight: '600' },
   list: { paddingHorizontal: 20, paddingBottom: 12 },
   cancelButton: { alignItems: 'center', paddingVertical: 14 },
   cancelButtonText: { color: colors.textMuted, fontSize: 14 },

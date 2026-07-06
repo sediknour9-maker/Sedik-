@@ -25,6 +25,8 @@ export interface PortionUnit {
 export interface FoodItem {
   id: string;
   nameKey: string;
+  /** Display name for user-created foods; takes precedence over nameKey. */
+  customName?: string;
   category: FoodCategory;
   portionUnits: PortionUnit[];
   perPortion: Macros;

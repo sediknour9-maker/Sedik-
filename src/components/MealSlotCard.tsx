@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { colors } from '../theme/colors';
 import { useRTL, rowDirection, textAlign } from '../theme/rtl';
+import { getFoodName } from '../services/foodRepository';
 import { FoodListItem } from './FoodListItem';
 import type { LogEntry, MealSlot } from '../models/log';
 import type { FoodItem } from '../models/food';
@@ -45,7 +46,7 @@ export function MealSlotCard({ mealSlot, entries, foods, onAddPress, onRemoveEnt
           return (
             <FoodListItem
               key={entry.id}
-              title={food ? t(food.nameKey) : entry.foodId}
+              title={food ? getFoodName(food, t) : entry.foodId}
               subtitle={`x${entry.multiplier}`}
               kcal={entry.computed.kcal}
               onRemove={() => onRemoveEntry(entry.id)}

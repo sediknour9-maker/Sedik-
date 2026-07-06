@@ -16,6 +16,27 @@ export interface WorkoutDay {
   exerciseIds: string[];
 }
 
+export type EquipmentPreference = 'gym' | 'home';
+
+export interface PlannedExercise {
+  exerciseId: string;
+  sets: number;
+  reps: string;
+}
+
+export interface GeneratedDay {
+  id: string;
+  dayNumber: number;
+  focusKey: string; // 'training.focusFull' | 'training.focusUpper' | 'training.focusLower'
+  items: PlannedExercise[];
+}
+
+export interface GeneratedPlan {
+  days: GeneratedDay[];
+  equipment: EquipmentPreference;
+  generatedAt: string;
+}
+
 export interface MobilityExercise {
   id: string;
   nameKey: string;

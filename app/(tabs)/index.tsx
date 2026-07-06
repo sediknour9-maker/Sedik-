@@ -7,10 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useProfile } from '../../src/store/ProfileContext';
 import { useLogs } from '../../src/store/LogContext';
 import { useActivity } from '../../src/store/ActivityContext';
+import { usePlan } from '../../src/store/PlanContext';
 import { aggregateMacros } from '../../src/services/logRepository';
 import { computeStreak } from '../../src/services/streakService';
 import { todayString } from '../../src/services/date';
-import { WORKOUT_PLAN, EXERCISES } from '../../src/data/exercises';
+import { EXERCISES } from '../../src/data/exercises';
 import { colors } from '../../src/theme/colors';
 import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
 
@@ -31,6 +32,7 @@ export default function HomeScreen() {
   const { profile } = useProfile();
   const { entries, logDates } = useLogs();
   const { todayActivities, activityDates } = useActivity();
+  const { plan } = usePlan();
 
   const today = todayString();
   const consumed = useMemo(() => aggregateMacros(entries), [entries]);
@@ -45,9 +47,8 @@ export default function HomeScreen() {
   const mobilityDone = todayActivities.some((a) => a.type === 'mobility');
   const kcalBurned = todayActivities.reduce((sum, a) => sum + (a.kcalBurned ?? 0), 0);
 
-  // Rotate through the 3-day plan based on completed strength workouts
-  const strengthCount = activityDates.length; // rough rotation seed
-  const suggestedDay = WORKOUT_PLAN[strengthCount % WORKOUT_PLAN.length];
+  // Rotate through the generated plan based on days with logged activity
+  const suggestedDay = plan?.days.length ? plan.days[activityDates.length % plan.days.length] : null;
 
   if (!profile) return null;
 
@@ -86,21 +87,25 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <View style={styles.card}>
-          <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('home.todaysTraining')}</Text>
-          <Text style={[styles.trainingDay, { textAlign: textAlign(isRTL) }]}>{t(suggestedDay.nameKey)}</Text>
-          {suggestedDay.exerciseIds.slice(0, 3).map((id) => {
-            const exercise = EXERCISES.find((e) => e.id === id);
-            return exercise ? (
-              <Text key={id} style={[styles.trainingExercise, { textAlign: textAlign(isRTL) }]}>
-                • {t(exercise.nameKey)}
-              </Text>
-            ) : null;
-          })}
-          <TouchableOpacity style={styles.trainingButton} onPress={() => router.push('/(tabs)/training')}>
-            <Text style={styles.trainingButtonText}>{t('home.goToTraining')}</Text>
-          </TouchableOpacity>
-        </View>
+        {suggestedDay ? (
+          <View style={styles.card}>
+            <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('home.todaysTraining')}</Text>
+            <Text style={[styles.trainingDay, { textAlign: textAlign(isRTL) }]}>
+              {t('training.day', { n: suggestedDay.dayNumber })} · {t(suggestedDay.focusKey)}
+            </Text>
+            {suggestedDay.items.slice(0, 3).map((item) => {
+              const exercise = EXERCISES.find((e) => e.id === item.exerciseId);
+              return exercise ? (
+                <Text key={item.exerciseId} style={[styles.trainingExercise, { textAlign: textAlign(isRTL) }]}>
+                  • {t(exercise.nameKey)}
+                </Text>
+              ) : null;
+            })}
+            <TouchableOpacity style={styles.trainingButton} onPress={() => router.push('/(tabs)/training')}>
+              <Text style={styles.trainingButtonText}>{t('home.goToTraining')}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
