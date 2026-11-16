@@ -30,8 +30,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const isRTL = useRTL();
   const { profile } = useProfile();
-  const { entries, logDates } = useLogs();
-  const { todayActivities, activityDates, strengthSessionCount } = useActivity();
+  const { todayEntries: entries, logDates } = useLogs();
+  const { todayActivities, activityDates, activityCounts } = useActivity();
   const { plan } = usePlan();
 
   const today = todayString();
@@ -48,7 +48,7 @@ export default function HomeScreen() {
   const kcalBurned = todayActivities.reduce((sum, a) => sum + (a.kcalBurned ?? 0), 0);
 
   // Rotate through the generated plan based on completed strength workouts
-  const suggestedDay = plan?.days.length ? plan.days[strengthSessionCount % plan.days.length] : null;
+  const suggestedDay = plan?.days.length ? plan.days[activityCounts.strength % plan.days.length] : null;
 
   if (!profile) return null;
 
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   statValue: { fontSize: 20, fontWeight: '700', color: colors.primary },
   statLabel: { fontSize: 11, color: colors.textMuted, marginTop: 4, textAlign: 'center' },
-  trainingDay: { fontSize: 15, fontWeight: '600', color: colors.primaryDark, marginBottom: 6 },
+  trainingDay: { fontSize: 15, fontWeight: '600', color: colors.primaryLight, marginBottom: 6 },
   trainingExercise: { fontSize: 13, color: colors.textMuted, marginBottom: 2 },
   trainingButton: {
     marginTop: 12,

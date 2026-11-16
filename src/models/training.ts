@@ -1,3 +1,5 @@
+import type { ActivityLevel, Goal } from './user';
+
 export type MuscleGroup = 'chest' | 'back' | 'legs' | 'shoulders' | 'arms' | 'core' | 'fullBody';
 export type Equipment = 'bodyweight' | 'dumbbell' | 'barbell' | 'machine';
 
@@ -8,12 +10,6 @@ export interface Exercise {
   equipment: Equipment;
   sets: number;
   reps: string; // e.g. "8-12"
-}
-
-export interface WorkoutDay {
-  id: string;
-  nameKey: string;
-  exerciseIds: string[];
 }
 
 export type EquipmentPreference = 'gym' | 'home';
@@ -34,6 +30,9 @@ export interface GeneratedDay {
 export interface GeneratedPlan {
   days: GeneratedDay[];
   equipment: EquipmentPreference;
+  /** Profile inputs the plan was built from; a mismatch with the profile triggers regeneration. */
+  goal: Goal;
+  activityLevel: ActivityLevel;
   generatedAt: string;
 }
 
@@ -56,9 +55,11 @@ export interface ActivityLogEntry {
   id: string;
   date: string; // 'YYYY-MM-DD'
   type: ActivityType;
-  refId: string; // WorkoutDay id, CardioActivity id, or 'routine'
+  refId: string; // GeneratedDay id, CardioActivity id, or 'routine'
   durationMin?: number;
   kcalBurned?: number;
+  setsCompleted?: number;
+  setsTotal?: number;
   loggedAt: string;
 }
 

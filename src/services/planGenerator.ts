@@ -92,5 +92,21 @@ export function generatePlan(input: PlanInput): GeneratedPlan {
     days.push(buildDay(4, 'training.focusLower', LOWER_SLOTS, pool, input, 1));
   }
 
-  return { days, equipment: input.equipment, generatedAt: new Date().toISOString() };
+  return {
+    days,
+    equipment: input.equipment,
+    goal: input.goal,
+    activityLevel: input.activityLevel,
+    generatedAt: new Date().toISOString(),
+  };
+}
+
+const SECONDS_PER_SET = 45;
+const REST_SECONDS_PER_SET = 60;
+
+/** Rough session length: working time plus rest for every set, rounded to 5 minutes. */
+export function estimateDayMinutes(day: GeneratedDay): number {
+  const totalSets = day.items.reduce((sum, item) => sum + item.sets, 0);
+  const minutes = (totalSets * (SECONDS_PER_SET + REST_SECONDS_PER_SET)) / 60;
+  return Math.max(5, Math.round(minutes / 5) * 5);
 }

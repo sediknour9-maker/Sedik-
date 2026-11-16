@@ -1,4 +1,4 @@
-import { toDateString } from './date';
+import { addDays } from './date';
 
 /**
  * Counts consecutive active days ending today (or yesterday, so an
@@ -8,21 +8,28 @@ import { toDateString } from './date';
 export function computeStreak(activeDates: string[], today: string): number {
   const dateSet = new Set(activeDates);
   let streak = 0;
-  const cursor = parseDate(today);
 
   // An empty today keeps the streak alive as long as yesterday was active.
-  if (!dateSet.has(today)) {
-    cursor.setDate(cursor.getDate() - 1);
-  }
+  let cursor = dateSet.has(today) ? today : addDays(today, -1);
 
-  while (dateSet.has(toDateString(cursor))) {
+  while (dateSet.has(cursor)) {
     streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
+    cursor = addDays(cursor, -1);
   }
   return streak;
 }
 
-function parseDate(date: string): Date {
-  const [year, month, day] = date.split('-').map(Number);
-  return new Date(year, month - 1, day);
+/** Longest run of consecutive active days ever recorded. */
+export function computeLongestStreak(activeDates: string[]): number {
+  const sorted = Array.from(new Set(activeDates)).sort();
+  let longest = 0;
+  let current = 0;
+  let previous: string | null = null;
+
+  for (const date of sorted) {
+    current = previous !== null && addDays(previous, 1) === date ? current + 1 : 1;
+    longest = Math.max(longest, current);
+    previous = date;
+  }
+  return longest;
 }

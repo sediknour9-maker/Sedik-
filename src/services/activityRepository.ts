@@ -1,5 +1,5 @@
 import type { ActivityLogEntry, WeightEntry } from '../models/training';
-import { readStorage, writeStorage, removeStorage, STORAGE_KEYS } from './storage';
+import { readStorage, writeStorage, STORAGE_KEYS } from './storage';
 
 export async function getActivitiesForDate(date: string): Promise<ActivityLogEntry[]> {
   return (await readStorage<ActivityLogEntry[]>(STORAGE_KEYS.activityForDate(date))) ?? [];
@@ -7,6 +7,12 @@ export async function getActivitiesForDate(date: string): Promise<ActivityLogEnt
 
 export async function getActivityDates(): Promise<string[]> {
   return (await readStorage<string[]>(STORAGE_KEYS.activityIndex)) ?? [];
+}
+
+export async function getAllActivities(): Promise<ActivityLogEntry[]> {
+  const dates = await getActivityDates();
+  const perDate = await Promise.all(dates.map((date) => getActivitiesForDate(date)));
+  return perDate.flat();
 }
 
 export async function addActivity(entry: ActivityLogEntry): Promise<void> {
@@ -33,12 +39,6 @@ export async function removeActivity(date: string, entryId: string): Promise<voi
   }
 }
 
-export async function resetAllActivities(): Promise<void> {
-  const dates = await getActivityDates();
-  await Promise.all(dates.map((date) => removeStorage(STORAGE_KEYS.activityForDate(date))));
-  await removeStorage(STORAGE_KEYS.activityIndex);
-}
-
 export async function getWeightEntries(): Promise<WeightEntry[]> {
   return (await readStorage<WeightEntry[]>(STORAGE_KEYS.weights)) ?? [];
 }
@@ -50,6 +50,12 @@ export async function addWeightEntry(entry: WeightEntry): Promise<void> {
   await writeStorage(STORAGE_KEYS.weights, next);
 }
 
-export async function resetWeights(): Promise<void> {
-  await removeStorage(STORAGE_KEYS.weights);
+/** Last working weight (kg) the user entered per exercise, keyed by exercise id. */
+export async function getExerciseWeights(): Promise<Record<string, number>> {
+  return (await readStorage<Record<string, number>>(STORAGE_KEYS.exerciseWeights)) ?? {};
+}
+
+export async function saveExerciseWeights(weights: Record<string, number>): Promise<void> {
+  const existing = await getExerciseWeights();
+  await writeStorage(STORAGE_KEYS.exerciseWeights, { ...existing, ...weights });
 }

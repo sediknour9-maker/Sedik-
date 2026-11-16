@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   textBlock: { flex: 1 },
   title: { fontSize: 15, fontWeight: '600', color: colors.text },
   subtitle: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
-  kcal: { fontSize: 13, color: colors.primaryDark, fontWeight: '600' },
+  kcal: { fontSize: 13, color: colors.primaryLight, fontWeight: '600' },
   removeButton: { paddingHorizontal: 6, paddingVertical: 2 },
   removeText: { fontSize: 18, color: colors.danger, fontWeight: '700' },
 });

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     alignItems: 'center',
   },
-  toolButtonText: { fontSize: 13, color: colors.primaryDark, fontWeight: '600' },
+  toolButtonText: { fontSize: 13, color: colors.primaryLight, fontWeight: '600' },
   list: { paddingHorizontal: 20, paddingBottom: 12 },
   cancelButton: { alignItems: 'center', paddingVertical: 14 },
   cancelButtonText: { color: colors.textMuted, fontSize: 14 },

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { generatePlan } from '../services/planGenerator';
-import { readStorage, writeStorage, removeStorage, STORAGE_KEYS } from '../services/storage';
+import { readStorage, writeStorage, STORAGE_KEYS } from '../services/storage';
+import { useDataEpoch } from './DataEpochContext';
 import { useProfile } from './ProfileContext';
 import type { EquipmentPreference, GeneratedPlan } from '../models/training';
 
@@ -9,29 +10,22 @@ interface PlanContextValue {
   plan: GeneratedPlan | null;
   isLoading: boolean;
   regenerate: (equipment: EquipmentPreference) => Promise<void>;
-  resetPlan: () => Promise<void>;
 }
 
 const PlanContext = createContext<PlanContextValue | undefined>(undefined);
 
 export function PlanProvider({ children }: { children: ReactNode }) {
-  const { profile } = useProfile();
+  const { epoch } = useDataEpoch();
+  const { profile, isLoading: isProfileLoading } = useProfile();
   const [plan, setPlan] = useState<GeneratedPlan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     readStorage<GeneratedPlan>(STORAGE_KEYS.plan)
       .then(setPlan)
       .finally(() => setIsLoading(false));
-  }, []);
-
-  // Generate an initial plan once a profile exists and none is stored yet.
-  useEffect(() => {
-    if (!isLoading && !plan && profile) {
-      regenerate('gym');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, plan, profile]);
+  }, [epoch]);
 
   const regenerate = async (equipment: EquipmentPreference) => {
     if (!profile) return;
@@ -40,12 +34,18 @@ export function PlanProvider({ children }: { children: ReactNode }) {
     await writeStorage(STORAGE_KEYS.plan, next);
   };
 
-  const resetPlan = async () => {
-    setPlan(null);
-    await removeStorage(STORAGE_KEYS.plan);
-  };
+  // Keep the plan in sync with the profile: build one when none exists and
+  // rebuild when the goal or activity level it was generated from changed.
+  useEffect(() => {
+    if (isLoading || isProfileLoading || !profile) return;
+    const isOutdated = !plan || plan.goal !== profile.goal || plan.activityLevel !== profile.activityLevel;
+    if (isOutdated) {
+      regenerate(plan?.equipment ?? 'gym');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isProfileLoading, plan, profile]);
 
-  const value = useMemo(() => ({ plan, isLoading, regenerate, resetPlan }), [plan, isLoading, profile]);
+  const value = useMemo(() => ({ plan, isLoading, regenerate }), [plan, isLoading, profile]);
 
   return <PlanContext.Provider value={value}>{children}</PlanContext.Provider>;
 }

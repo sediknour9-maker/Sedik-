@@ -1,95 +1,79 @@
-import React, { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { AppState } from 'react-native';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import {
   addActivity,
   addWeightEntry,
-  getActivitiesForDate,
-  getActivityDates,
+  getAllActivities,
   getWeightEntries,
   removeActivity,
 } from '../services/activityRepository';
-import { todayString } from '../services/date';
-import type { ActivityLogEntry, WeightEntry } from '../models/training';
+import { useDataEpoch } from './DataEpochContext';
+import { useToday } from './useToday';
+import type { ActivityLogEntry, ActivityType, WeightEntry } from '../models/training';
 
 interface ActivityContextValue {
   todayActivities: ActivityLogEntry[];
+  /** Dates with at least one logged activity, oldest first. */
   activityDates: string[];
+  /** Lifetime number of logged sessions per activity type. */
+  activityCounts: Record<ActivityType, number>;
   weights: WeightEntry[];
-  /** Total number of completed strength workouts, used to rotate the plan. */
-  strengthSessionCount: number;
   isLoading: boolean;
   logActivity: (entry: ActivityLogEntry) => Promise<void>;
-  removeActivityEntry: (date: string, entryId: string) => Promise<void>;
+  removeActivityEntry: (entry: ActivityLogEntry) => Promise<void>;
   logWeight: (weightKg: number) => Promise<void>;
-  refresh: () => Promise<void>;
 }
 
 const ActivityContext = createContext<ActivityContextValue | undefined>(undefined);
 
 export function ActivityProvider({ children }: { children: ReactNode }) {
-  const [todayActivities, setTodayActivities] = useState<ActivityLogEntry[]>([]);
-  const [activityDates, setActivityDates] = useState<string[]>([]);
+  const { epoch } = useDataEpoch();
+  const today = useToday();
+  const [activities, setActivities] = useState<ActivityLogEntry[]>([]);
   const [weights, setWeights] = useState<WeightEntry[]>([]);
-  const [strengthSessionCount, setStrengthSessionCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const reload = async () => {
-    const today = todayString();
-    const [entries, dates, weightEntries] = await Promise.all([
-      getActivitiesForDate(today),
-      getActivityDates(),
-      getWeightEntries(),
-    ]);
-    const allEntries = await Promise.all(dates.map((date) => getActivitiesForDate(date)));
-    setStrengthSessionCount(allEntries.flat().filter((entry) => entry.type === 'strength').length);
-    setTodayActivities(entries);
-    setActivityDates(dates);
+  const reload = useCallback(async () => {
+    const [allActivities, weightEntries] = await Promise.all([getAllActivities(), getWeightEntries()]);
+    setActivities(allActivities);
     setWeights(weightEntries);
     setIsLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     reload();
-  }, []);
-
-  // Reload "today's" activities when the app returns to the foreground,
-  // so a date change past midnight is picked up.
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') reload();
-    });
-    return () => subscription.remove();
-  }, []);
+  }, [reload, epoch]);
 
   const logActivity = async (entry: ActivityLogEntry) => {
     await addActivity(entry);
     await reload();
   };
 
-  const removeActivityEntry = async (date: string, entryId: string) => {
-    await removeActivity(date, entryId);
+  const removeActivityEntry = async (entry: ActivityLogEntry) => {
+    await removeActivity(entry.date, entry.id);
     await reload();
   };
 
   const logWeight = async (weightKg: number) => {
-    await addWeightEntry({ date: todayString(), weightKg });
+    await addWeightEntry({ date: today, weightKg });
     await reload();
   };
 
+  const derived = useMemo(() => {
+    const activityCounts: Record<ActivityType, number> = { strength: 0, cardio: 0, mobility: 0 };
+    activities.forEach((entry) => {
+      activityCounts[entry.type] += 1;
+    });
+    return {
+      todayActivities: activities.filter((entry) => entry.date === today),
+      activityDates: Array.from(new Set(activities.map((entry) => entry.date))).sort(),
+      activityCounts,
+    };
+  }, [activities, today]);
+
   const value = useMemo(
-    () => ({
-      todayActivities,
-      activityDates,
-      weights,
-      strengthSessionCount,
-      isLoading,
-      logActivity,
-      removeActivityEntry,
-      logWeight,
-      refresh: reload,
-    }),
-    [todayActivities, activityDates, weights, strengthSessionCount, isLoading]
+    () => ({ ...derived, weights, isLoading, logActivity, removeActivityEntry, logWeight }),
+    [derived, weights, isLoading, today]
   );
 
   return <ActivityContext.Provider value={value}>{children}</ActivityContext.Provider>;

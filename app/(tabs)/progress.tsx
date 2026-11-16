@@ -191,6 +191,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   listDate: { fontSize: 13, color: colors.text, fontVariant: ['tabular-nums'] },
-  listValue: { fontSize: 13, color: colors.primaryDark, fontWeight: '600', fontVariant: ['tabular-nums'] },
+  listValue: { fontSize: 13, color: colors.primaryLight, fontWeight: '600', fontVariant: ['tabular-nums'] },
   empty: { color: colors.textMuted, fontStyle: 'italic' },
 });

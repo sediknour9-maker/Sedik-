@@ -1,6 +1,6 @@
-import type { Exercise, WorkoutDay, MobilityExercise, CardioActivity } from '../models/training';
+import type { Exercise, MobilityExercise, CardioActivity } from '../models/training';
 
-/** Strength exercise pool used by the 3-day full-body plan. */
+/** Strength exercise pool the plan generator draws from. */
 export const EXERCISES: Exercise[] = [
   { id: 'squat', nameKey: 'exercise.squat', muscleGroup: 'legs', equipment: 'barbell', sets: 3, reps: '8-12' },
   { id: 'lunge', nameKey: 'exercise.lunge', muscleGroup: 'legs', equipment: 'bodyweight', sets: 3, reps: '10-12' },
@@ -24,25 +24,6 @@ export const EXERCISES: Exercise[] = [
   { id: 'split_squat', nameKey: 'exercise.split_squat', muscleGroup: 'legs', equipment: 'bodyweight', sets: 3, reps: '10-12' },
   { id: 'glute_bridge', nameKey: 'exercise.glute_bridge', muscleGroup: 'legs', equipment: 'bodyweight', sets: 3, reps: '12-15' },
   { id: 'dumbbell_row', nameKey: 'exercise.dumbbell_row', muscleGroup: 'back', equipment: 'dumbbell', sets: 3, reps: '8-12' },
-];
-
-/** Simple 3-day full-body split. */
-export const WORKOUT_PLAN: WorkoutDay[] = [
-  {
-    id: 'day_a',
-    nameKey: 'training.dayA',
-    exerciseIds: ['squat', 'bench_press', 'barbell_row', 'lateral_raise', 'plank'],
-  },
-  {
-    id: 'day_b',
-    nameKey: 'training.dayB',
-    exerciseIds: ['deadlift', 'overhead_press', 'lat_pulldown', 'biceps_curl', 'crunch'],
-  },
-  {
-    id: 'day_c',
-    nameKey: 'training.dayC',
-    exerciseIds: ['leg_press', 'incline_dumbbell_press', 'pullup', 'triceps_dip', 'hip_thrust'],
-  },
 ];
 
 export const MOBILITY_ROUTINE: MobilityExercise[] = [

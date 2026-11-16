@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
   actionButtonText: { color: '#fff', fontWeight: '700' },
   regenerateButton: { alignItems: 'center', paddingVertical: 10 },
-  regenerateButtonText: { color: colors.primaryDark, fontWeight: '600', fontSize: 13 },
+  regenerateButtonText: { color: colors.primaryLight, fontWeight: '600', fontSize: 13 },
   chipWrap: { flexWrap: 'wrap', gap: 8, marginBottom: 8 },
   chip: {
     paddingVertical: 7,
@@ -316,5 +316,5 @@ const styles = StyleSheet.create({
   },
   stepperButtonText: { fontSize: 18, color: colors.primary, fontWeight: '700' },
   stepperValue: { fontSize: 16, fontWeight: '700', color: colors.text, minWidth: 80, textAlign: 'center' },
-  estBurn: { textAlign: 'center', marginTop: 10, color: colors.primaryDark, fontWeight: '600' },
+  estBurn: { textAlign: 'center', marginTop: 10, color: colors.primaryLight, fontWeight: '600' },
 });

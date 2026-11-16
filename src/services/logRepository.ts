@@ -1,6 +1,6 @@
 import type { LogEntry } from '../models/log';
 import type { Macros } from '../models/food';
-import { readStorage, writeStorage, removeStorage, STORAGE_KEYS } from './storage';
+import { readStorage, writeStorage, STORAGE_KEYS } from './storage';
 
 export async function getLogsForDate(date: string): Promise<LogEntry[]> {
   return (await readStorage<LogEntry[]>(STORAGE_KEYS.logsForDate(date))) ?? [];
@@ -20,6 +20,15 @@ export async function addLogEntry(entry: LogEntry): Promise<void> {
   }
 }
 
+/** Replaces the stored entry with the same id, keeping its position in the day. */
+export async function updateLogEntry(entry: LogEntry): Promise<void> {
+  const existing = await getLogsForDate(entry.date);
+  await writeStorage(
+    STORAGE_KEYS.logsForDate(entry.date),
+    existing.map((current) => (current.id === entry.id ? entry : current))
+  );
+}
+
 export async function removeLogEntry(date: string, entryId: string): Promise<void> {
   const existing = await getLogsForDate(date);
   const remaining = existing.filter((entry) => entry.id !== entryId);
@@ -34,10 +43,16 @@ export async function removeLogEntry(date: string, entryId: string): Promise<voi
   }
 }
 
-export async function resetAllLogs(): Promise<void> {
-  const dates = await getLogDates();
-  await Promise.all(dates.map((date) => removeStorage(STORAGE_KEYS.logsForDate(date))));
-  await removeStorage(STORAGE_KEYS.logsIndex);
+export interface DayTotal {
+  date: string;
+  kcal: number;
+}
+
+/** Calorie totals for the given dates, in the same order (0 for days without entries). */
+export async function getDailyTotals(dates: string[]): Promise<DayTotal[]> {
+  return Promise.all(
+    dates.map(async (date) => ({ date, kcal: aggregateMacros(await getLogsForDate(date)).kcal }))
+  );
 }
 
 export function aggregateMacros(entries: LogEntry[]): Macros {

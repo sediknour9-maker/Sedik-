@@ -60,7 +60,10 @@ export default function NutritionScreen() {
             entries={entries.filter((entry) => entry.mealSlot === slot)}
             foods={foods}
             onAddPress={() => router.push({ pathname: '/add-food', params: { mealSlot: slot, date: selectedDate } })}
-            onRemoveEntry={removeEntry}
+            onRemoveEntry={(entryId) => {
+              const entry = entries.find((candidate) => candidate.id === entryId);
+              if (entry) removeEntry(entry);
+            }}
           />
         ))}
       </ScrollView>

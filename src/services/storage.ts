@@ -47,15 +47,38 @@ export async function removeStorage(key: string): Promise<void> {
   }
 }
 
+const KEY_PREFIX = 'app:';
+
 export const STORAGE_KEYS = {
   profile: 'app:profile',
   settings: 'app:settings',
   customFoods: 'app:foods:custom',
   foodOverrides: 'app:foods:overrides',
+  recentFoods: 'app:foods:recent',
   logsIndex: 'app:logs:index',
   logsForDate: (date: string) => `app:logs:${date}`,
   activityIndex: 'app:activity:index',
   activityForDate: (date: string) => `app:activity:${date}`,
+  waterForDate: (date: string) => `app:water:${date}`,
   weights: 'app:weights',
+  exerciseWeights: 'app:exercise:weights',
   plan: 'app:plan',
 } as const;
+
+/**
+ * Removes everything the user logged or configured except app settings
+ * (language, Ramadan mode). Works by key prefix so newly added stores are
+ * covered without touching this function.
+ */
+export async function clearUserData(): Promise<void> {
+  const keep = (key: string) => key === STORAGE_KEYS.settings;
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.removeMany(keys.filter((key) => key.startsWith(KEY_PREFIX) && !keep(key)));
+  } catch {
+    // Persistent storage unavailable: only the in-memory fallback holds data.
+  }
+  for (const key of Array.from(memoryStore.keys())) {
+    if (!keep(key)) memoryStore.delete(key);
+  }
+}
