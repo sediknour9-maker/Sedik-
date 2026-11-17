@@ -43,7 +43,17 @@
     "goalGain": "Prendre du poids",
     "reviewTitle": "Vos objectifs quotidiens",
     "dailyTargetSummary": "D'après votre profil, voici votre objectif quotidien recommandé",
-    "finish": "Commencer"
+    "finish": "Commencer",
+    "tagline": "Votre coach fitness, pensé pour le Maroc",
+    "step": "Étape {{current}} sur {{total}}",
+    "setupSubtitle": "Nous l'utilisons pour calculer vos besoins caloriques quotidiens.",
+    "goalsSubtitle": "Vous pouvez le modifier à tout moment dans votre profil.",
+    "rangeHint": "entrez une valeur entre {{min}} et {{max}}",
+    "height": "Taille",
+    "weight": "Poids",
+    "goalLoseDesc": "Environ 0,5 kg par semaine",
+    "goalMaintainDesc": "Garder votre poids actuel",
+    "goalGainDesc": "Prendre du muscle avec un léger surplus"
   },
   "dashboard": {
     "title": "Aujourd'hui",
@@ -119,7 +129,22 @@
     "kcalOver": "kcal en trop",
     "eaten": "Mangé",
     "burned": "Brûlé",
-    "goal": "Objectif"
+    "goal": "Objectif",
+    "greetingMorning": "Bonjour",
+    "greetingAfternoon": "Bon après-midi",
+    "greetingEvening": "Bonsoir",
+    "calories": "Calories",
+    "quickLog": "Repas",
+    "quickScan": "Scanner",
+    "quickWeight": "Poids",
+    "startWorkout": "Commencer la séance",
+    "exerciseCount_one": "{{count}} exercice",
+    "exerciseCount_other": "{{count}} exercices",
+    "durationApprox": "~{{minutes}} min",
+    "thisWeek": "Cette semaine",
+    "activeDays": "{{count}}/7 jours actifs",
+    "streakLabel": "{{count}} jours d'affilée",
+    "goalWater": "Boire 8 verres d'eau"
   },
   "training": {
     "title": "Entraînement",
@@ -412,5 +437,22 @@
     "progress": "{{count}} / {{goal}} verres",
     "glassNumber": "Verre {{number}}",
     "addGlass": "Ajouter un verre"
+  },
+  "units": {
+    "years": "ans",
+    "cm": "cm",
+    "kg": "kg"
+  },
+  "activityLevel": {
+    "sedentary": "Plutôt sédentaire",
+    "sedentaryDesc": "Travail de bureau, peu ou pas de sport",
+    "light": "Légèrement actif",
+    "lightDesc": "Sport 1 à 3 jours par semaine",
+    "moderate": "Modérément actif",
+    "moderateDesc": "Sport 3 à 5 jours par semaine",
+    "active": "Très actif",
+    "activeDesc": "Sport intense 6 à 7 jours par semaine",
+    "veryActive": "Athlète",
+    "veryActiveDesc": "Travail physique ou deux entraînements par jour"
   }
 }

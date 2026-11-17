@@ -1,124 +1,82 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GoalPicker } from '../../src/components/profile/GoalPicker';
+import { TargetsCard } from '../../src/components/profile/TargetsCard';
+import { Button } from '../../src/components/ui/Button';
+import { IconButton } from '../../src/components/ui/IconButton';
+import { Row } from '../../src/components/ui/Row';
+import { Screen } from '../../src/components/ui/Screen';
+import { StepIndicator } from '../../src/components/ui/StepIndicator';
+import { Txt } from '../../src/components/ui/Txt';
+import { computeTargets } from '../../src/services/calorieCalculator';
+import { parseDecimal } from '../../src/services/profileValidation';
 import { useOnboardingDraft } from '../../src/store/OnboardingDraftContext';
 import { useProfile } from '../../src/store/ProfileContext';
-import { computeTargets } from '../../src/services/calorieCalculator';
 import { colors } from '../../src/theme/colors';
-import { useRTL, rowDirection, textAlign } from '../../src/theme/rtl';
-import type { Goal } from '../../src/models/user';
-
-const GOALS: { value: Goal; labelKey: string }[] = [
-  { value: 'lose', labelKey: 'onboarding.goalLose' },
-  { value: 'maintain', labelKey: 'onboarding.goalMaintain' },
-  { value: 'gain', labelKey: 'onboarding.goalGain' },
-];
+import { useRTL } from '../../src/theme/rtl';
 
 export default function GoalsScreen() {
   const { t } = useTranslation();
-  const { draft, updateDraft } = useOnboardingDraft();
-  const { createProfile } = useProfile();
   const router = useRouter();
   const isRTL = useRTL();
+  const { draft, updateDraft } = useOnboardingDraft();
+  const { createProfile } = useProfile();
+  const [isSaving, setIsSaving] = useState(false);
 
-  const parsedDraft = useMemo(() => {
-    const parseNumber = (value: string) => Number(value.replace(',', '.')) || 0;
-    return {
+  const profileDraft = useMemo(
+    () => ({
       sex: draft.sex,
-      age: parseNumber(draft.age),
-      heightCm: parseNumber(draft.heightCm),
-      weightKg: parseNumber(draft.weightKg),
+      age: parseDecimal(draft.age),
+      heightCm: parseDecimal(draft.heightCm),
+      weightKg: parseDecimal(draft.weightKg),
       activityLevel: draft.activityLevel,
       goal: draft.goal,
-    };
-  }, [draft]);
+    }),
+    [draft]
+  );
 
-  const targets = useMemo(() => computeTargets(parsedDraft), [parsedDraft]);
+  const targets = useMemo(() => computeTargets(profileDraft), [profileDraft]);
 
   const handleFinish = async () => {
-    await createProfile(parsedDraft);
+    setIsSaving(true);
+    await createProfile(profileDraft);
     router.replace('/(tabs)');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('onboarding.goalsTitle')}</Text>
-
-        <View style={styles.goalList}>
-          {GOALS.map(({ value, labelKey }) => (
-            <TouchableOpacity
-              key={value}
-              style={[styles.goalRow, draft.goal === value && styles.goalRowActive]}
-              onPress={() => updateDraft({ goal: value })}
-            >
-              <Text style={[styles.goalText, draft.goal === value && styles.goalTextActive]}>{t(labelKey)}</Text>
-            </TouchableOpacity>
-          ))}
+    <Screen
+      edges={['top', 'bottom']}
+      footer={
+        <Button
+          label={t('onboarding.finish')}
+          icon="sparkles"
+          size="lg"
+          loading={isSaving}
+          onPress={handleFinish}
+          testID="onboarding-finish"
+        />
+      }
+    >
+      <Row gap={14}>
+        <IconButton icon={isRTL ? 'arrowRight' : 'arrowLeft'} label={t('common.back')} onPress={() => router.back()} />
+        <View style={{ flex: 1 }}>
+          <StepIndicator current={3} total={3} />
         </View>
+      </Row>
 
-        <Text style={[styles.reviewTitle, { textAlign: textAlign(isRTL) }]}>{t('onboarding.reviewTitle')}</Text>
-        <Text style={[styles.reviewSubtitle, { textAlign: textAlign(isRTL) }]}>
-          {t('onboarding.dailyTargetSummary')}
-        </Text>
-
-        <View style={styles.targetCard}>
-          <Text style={styles.targetKcal}>
-            {targets.kcal} {t('common.kcal')} / {t('common.perDay')}
-          </Text>
-          <View style={[styles.macroRow, { flexDirection: rowDirection(isRTL) }]}>
-            <Text style={styles.macroText}>
-              {t('common.protein')}: {targets.proteinG}g
-            </Text>
-            <Text style={styles.macroText}>
-              {t('common.carbs')}: {targets.carbsG}g
-            </Text>
-            <Text style={styles.macroText}>
-              {t('common.fat')}: {targets.fatG}g
-            </Text>
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
-          <Text style={styles.finishButtonText}>{t('onboarding.finish')}</Text>
-        </TouchableOpacity>
+      <View style={{ gap: 4 }}>
+        <Txt variant="title">{t('onboarding.goalsTitle')}</Txt>
+        <Txt variant="body" color={colors.textMuted}>
+          {t('onboarding.goalsSubtitle')}
+        </Txt>
       </View>
-    </SafeAreaView>
+
+      <GoalPicker value={draft.goal} onChange={(goal) => updateDraft({ goal })} />
+
+      <TargetsCard targets={targets} title={t('onboarding.reviewTitle')} />
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { flex: 1, padding: 24 },
-  title: { fontSize: 22, fontWeight: '700', color: colors.text, marginBottom: 20 },
-  goalList: { gap: 8, marginBottom: 28 },
-  goalRow: {
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  goalRowActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  goalText: { color: colors.text, fontSize: 15, fontWeight: '600' },
-  goalTextActive: { color: '#fff' },
-  reviewTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 4 },
-  reviewSubtitle: { fontSize: 13, color: colors.textMuted, marginBottom: 12 },
-  targetCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 24,
-  },
-  targetKcal: { fontSize: 22, fontWeight: '700', color: colors.primary, marginBottom: 10, textAlign: 'center' },
-  macroRow: { justifyContent: 'space-around' },
-  macroText: { fontSize: 13, color: colors.textMuted },
-  finishButton: { backgroundColor: colors.primary, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
-  finishButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-});

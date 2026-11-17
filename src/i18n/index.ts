@@ -10,6 +10,14 @@ import de from './locales/de.json';
 export const SUPPORTED_LANGUAGES = ['en', 'fr', 'ar', 'de'] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
+/** Each language's name in its own script, as shown in the language picker. */
+export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
+  en: 'English',
+  fr: 'Français',
+  ar: 'العربية',
+  de: 'Deutsch',
+};
+
 function detectDeviceLanguage(): SupportedLanguage {
   const deviceTag = Localization.getLocales()[0]?.languageCode;
   return (SUPPORTED_LANGUAGES as readonly string[]).includes(deviceTag ?? '')

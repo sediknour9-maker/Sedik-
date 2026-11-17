@@ -3,6 +3,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { Redirect } from 'expo-router';
 import { Tabs } from 'expo-router/js-tabs';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, type IconName } from '../../src/components/ui/Icon';
 import { useProfile } from '../../src/store/ProfileContext';
@@ -19,6 +20,7 @@ const TABS: { name: string; titleKey: string; icon: IconName }[] = [
 export default function TabsLayout() {
   const { t } = useTranslation();
   const { profile, isLoading } = useProfile();
+  const insets = useSafeAreaInsets();
 
   if (isLoading) {
     return (
@@ -39,8 +41,15 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+        // Explicit height so labels aren't clipped; the inset keeps clear of the home indicator.
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+          height: 62 + insets.bottom,
+          paddingTop: 6,
+          paddingBottom: 8 + insets.bottom,
+        },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 2 },
         sceneStyle: { backgroundColor: colors.background },
       }}
     >

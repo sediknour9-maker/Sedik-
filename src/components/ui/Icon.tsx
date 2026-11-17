@@ -1,6 +1,17 @@
 import React, { type ComponentType } from 'react';
 
 import Activity from 'lucide-react-native/icons/activity';
+import Armchair from 'lucide-react-native/icons/armchair';
+import CircleAlert from 'lucide-react-native/icons/circle-alert';
+import History from 'lucide-react-native/icons/history';
+import Languages from 'lucide-react-native/icons/languages';
+import Mars from 'lucide-react-native/icons/mars';
+import PartyPopper from 'lucide-react-native/icons/party-popper';
+import RotateCcw from 'lucide-react-native/icons/rotate-ccw';
+import Scale from 'lucide-react-native/icons/scale';
+import Sparkles from 'lucide-react-native/icons/sparkles';
+import UserRoundPen from 'lucide-react-native/icons/user-round-pen';
+import Venus from 'lucide-react-native/icons/venus';
 import Apple from 'lucide-react-native/icons/apple';
 import ArrowLeft from 'lucide-react-native/icons/arrow-left';
 import ArrowRight from 'lucide-react-native/icons/arrow-right';
@@ -83,6 +94,17 @@ type Glyph = ComponentType<{
 // Icons are imported one by one so the bundle only contains the ones in use.
 const ICONS = {
   activity: Activity,
+  armchair: Armchair,
+  alert: CircleAlert,
+  history: History,
+  languages: Languages,
+  mars: Mars,
+  party: PartyPopper,
+  undo: RotateCcw,
+  scale: Scale,
+  sparkles: Sparkles,
+  userEdit: UserRoundPen,
+  venus: Venus,
   apple: Apple,
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,

@@ -43,7 +43,17 @@
     "goalGain": "Gain weight",
     "reviewTitle": "Your daily targets",
     "dailyTargetSummary": "Based on your profile, here is your recommended daily target",
-    "finish": "Get started"
+    "finish": "Get started",
+    "tagline": "Your fitness coach, made for Morocco",
+    "step": "Step {{current}} of {{total}}",
+    "setupSubtitle": "We use this to calculate your daily calorie needs.",
+    "goalsSubtitle": "You can change it anytime in your profile.",
+    "rangeHint": "enter a value between {{min}} and {{max}}",
+    "height": "Height",
+    "weight": "Weight",
+    "goalLoseDesc": "About 0.5 kg per week",
+    "goalMaintainDesc": "Keep your current weight",
+    "goalGainDesc": "Build muscle with a small surplus"
   },
   "dashboard": {
     "title": "Today",
@@ -119,7 +129,22 @@
     "kcalOver": "kcal over",
     "eaten": "Eaten",
     "burned": "Burned",
-    "goal": "Goal"
+    "goal": "Goal",
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "calories": "Calories",
+    "quickLog": "Log food",
+    "quickScan": "Scan",
+    "quickWeight": "Weight",
+    "startWorkout": "Start workout",
+    "exerciseCount_one": "{{count}} exercise",
+    "exerciseCount_other": "{{count}} exercises",
+    "durationApprox": "~{{minutes}} min",
+    "thisWeek": "This week",
+    "activeDays": "{{count}}/7 days active",
+    "streakLabel": "{{count}}-day streak",
+    "goalWater": "Drink 8 glasses of water"
   },
   "training": {
     "title": "Training",
@@ -412,5 +437,22 @@
     "progress": "{{count}} / {{goal}} glasses",
     "glassNumber": "Glass {{number}}",
     "addGlass": "Add a glass"
+  },
+  "units": {
+    "years": "yrs",
+    "cm": "cm",
+    "kg": "kg"
+  },
+  "activityLevel": {
+    "sedentary": "Mostly sitting",
+    "sedentaryDesc": "Desk job, little or no exercise",
+    "light": "Lightly active",
+    "lightDesc": "Exercise 1–3 days a week",
+    "moderate": "Moderately active",
+    "moderateDesc": "Exercise 3–5 days a week",
+    "active": "Very active",
+    "activeDesc": "Hard exercise 6–7 days a week",
+    "veryActive": "Athlete",
+    "veryActiveDesc": "Physical job or training twice a day"
   }
 }

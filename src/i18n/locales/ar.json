@@ -43,7 +43,17 @@
     "goalGain": "زيادة الوزن",
     "reviewTitle": "أهدافك اليومية",
     "dailyTargetSummary": "بناءً على ملفك الشخصي، إليك هدفك اليومي الموصى به",
-    "finish": "ابدأ الآن"
+    "finish": "ابدأ الآن",
+    "tagline": "مدربك الرياضي، مصمم للمغرب",
+    "step": "الخطوة {{current}} من {{total}}",
+    "setupSubtitle": "نستخدم هذه المعلومات لحساب احتياجك اليومي من السعرات.",
+    "goalsSubtitle": "يمكنك تغييره في أي وقت من ملفك الشخصي.",
+    "rangeHint": "أدخل قيمة بين {{min}} و{{max}}",
+    "height": "الطول",
+    "weight": "الوزن",
+    "goalLoseDesc": "حوالي 0.5 كغ في الأسبوع",
+    "goalMaintainDesc": "الحفاظ على وزنك الحالي",
+    "goalGainDesc": "بناء العضلات بفائض بسيط"
   },
   "dashboard": {
     "title": "اليوم",
@@ -119,7 +129,26 @@
     "kcalOver": "سعرة زائدة",
     "eaten": "مستهلكة",
     "burned": "محروقة",
-    "goal": "الهدف"
+    "goal": "الهدف",
+    "greetingMorning": "صباح الخير",
+    "greetingAfternoon": "نهارك سعيد",
+    "greetingEvening": "مساء الخير",
+    "calories": "السعرات",
+    "quickLog": "وجبة",
+    "quickScan": "مسح",
+    "quickWeight": "الوزن",
+    "startWorkout": "ابدأ التمرين",
+    "exerciseCount_zero": "لا توجد تمارين",
+    "exerciseCount_one": "تمرين واحد",
+    "exerciseCount_two": "تمرينان",
+    "exerciseCount_few": "{{count}} تمارين",
+    "exerciseCount_many": "{{count}} تمرينًا",
+    "exerciseCount_other": "{{count}} تمرين",
+    "durationApprox": "~{{minutes}} دقيقة",
+    "thisWeek": "هذا الأسبوع",
+    "activeDays": "{{count}}/7 أيام نشطة",
+    "streakLabel": "{{count}} أيام متتالية",
+    "goalWater": "اشرب 8 أكواب من الماء"
   },
   "training": {
     "title": "التمرين",
@@ -412,5 +441,22 @@
     "progress": "{{count}} / {{goal}} أكواب",
     "glassNumber": "الكوب {{number}}",
     "addGlass": "إضافة كوب"
+  },
+  "units": {
+    "years": "سنة",
+    "cm": "سم",
+    "kg": "كغ"
+  },
+  "activityLevel": {
+    "sedentary": "قليل الحركة",
+    "sedentaryDesc": "عمل مكتبي، رياضة قليلة أو معدومة",
+    "light": "نشاط خفيف",
+    "lightDesc": "رياضة 1–3 أيام في الأسبوع",
+    "moderate": "نشاط متوسط",
+    "moderateDesc": "رياضة 3–5 أيام في الأسبوع",
+    "active": "نشيط جدًا",
+    "activeDesc": "رياضة مكثفة 6–7 أيام في الأسبوع",
+    "veryActive": "رياضي",
+    "veryActiveDesc": "عمل بدني أو تمرين مرتين في اليوم"
   }
 }

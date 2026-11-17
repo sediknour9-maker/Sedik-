@@ -1,49 +1,104 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Logo } from '../../src/components/brand/Logo';
+import { ZelligePattern } from '../../src/components/brand/ZelligePattern';
+import { Button } from '../../src/components/ui/Button';
+import { OptionCard } from '../../src/components/ui/OptionCard';
+import { Screen } from '../../src/components/ui/Screen';
+import { StepIndicator } from '../../src/components/ui/StepIndicator';
+import { Txt } from '../../src/components/ui/Txt';
+import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES } from '../../src/i18n';
 import { useSettings } from '../../src/store/SettingsContext';
-import { LanguageSwitcher } from '../../src/components/LanguageSwitcher';
 import { colors } from '../../src/theme/colors';
-import { useRTL, textAlign } from '../../src/theme/rtl';
+import { MAX_CONTENT_WIDTH, radius, spacing } from '../../src/theme/tokens';
+
+const HERO_HEIGHT = 250;
 
 export default function LanguageScreen() {
   const { t } = useTranslation();
-  const { language, setLanguage } = useSettings();
   const router = useRouter();
-  const isRTL = useRTL();
+  const { width } = useWindowDimensions();
+  const { language, setLanguage } = useSettings();
+  const heroWidth = Math.min(width, MAX_CONTENT_WIDTH);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('onboarding.languageTitle')}</Text>
-        <Text style={[styles.subtitle, { textAlign: textAlign(isRTL) }]}>{t('onboarding.languageSubtitle')}</Text>
-
-        <View style={styles.switcher}>
-          <LanguageSwitcher value={language} onChange={setLanguage} />
+    <Screen
+      edges={['top', 'bottom']}
+      contentStyle={{ paddingTop: 0 }}
+      footer={
+        <Button
+          label={t('common.next')}
+          size="lg"
+          onPress={() => router.push('/(onboarding)/setup')}
+          testID="onboarding-next"
+        />
+      }
+    >
+      <View style={[styles.hero, { width: heroWidth }]}>
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          <ZelligePattern width={heroWidth} height={HERO_HEIGHT} opacity={0.35} fadeTo={colors.background} />
         </View>
-
-        <TouchableOpacity style={styles.nextButton} onPress={() => router.push('/(onboarding)/setup')}>
-          <Text style={styles.nextButtonText}>{t('common.next')}</Text>
-        </TouchableOpacity>
+        <View style={styles.heroContent}>
+          <Logo size={80} />
+          <Txt variant="display" center>
+            {t('common.appName')}
+          </Txt>
+          <Txt variant="body" center color={colors.textMuted}>
+            {t('onboarding.tagline')}
+          </Txt>
+        </View>
       </View>
-    </SafeAreaView>
+
+      <StepIndicator current={1} total={3} />
+
+      <View style={{ gap: 4 }}>
+        <Txt variant="title">{t('onboarding.languageTitle')}</Txt>
+        <Txt variant="body" color={colors.textMuted}>
+          {t('onboarding.languageSubtitle')}
+        </Txt>
+      </View>
+
+      <View style={{ gap: 10 }}>
+        {SUPPORTED_LANGUAGES.map((code) => (
+          <OptionCard
+            key={code}
+            title={LANGUAGE_NAMES[code]}
+            leading={
+              <View style={styles.codeBadge}>
+                <Txt variant="label" center color={colors.primaryLight}>
+                  {code.toUpperCase()}
+                </Txt>
+              </View>
+            }
+            selected={language === code}
+            onPress={() => setLanguage(code)}
+            testID={`language-${code}`}
+          />
+        ))}
+      </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { flex: 1, padding: 24, justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 8 },
-  subtitle: { fontSize: 14, color: colors.textMuted, marginBottom: 24 },
-  switcher: { marginBottom: 40 },
-  nextButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 12,
-    paddingVertical: 14,
+  hero: {
+    height: HERO_HEIGHT,
+    alignSelf: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: -spacing.sm,
   },
-  nextButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  // Above the absolutely positioned pattern, so its fade doesn't tint the logo.
+  heroContent: { alignItems: 'center', gap: spacing.sm, zIndex: 1 },
+  codeBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.md,
+    backgroundColor: colors.primarySoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
