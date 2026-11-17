@@ -27,6 +27,9 @@ export default function RootLayout() {
               <Stack.Screen name="add-food/[foodId]" options={{ presentation: 'modal' }} />
               <Stack.Screen name="add-food/custom" options={{ presentation: 'modal' }} />
               <Stack.Screen name="scan-barcode" options={{ presentation: 'modal' }} />
+              {/* A stray swipe must not throw away a running session. */}
+              <Stack.Screen name="workout/[dayId]" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="mobility" options={{ gestureEnabled: false }} />
             </Stack>
           </View>
         </AppProviders>

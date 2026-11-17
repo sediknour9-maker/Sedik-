@@ -41,15 +41,16 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
-        // Explicit height so labels aren't clipped; the inset keeps clear of the home indicator.
+        // Each tab needs ~53px (5px padding, 28px icon box, label, 5px padding); the default
+        // 49px bar clips the labels. The inset keeps clear of the home indicator.
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
-          height: 62 + insets.bottom,
-          paddingTop: 6,
-          paddingBottom: 8 + insets.bottom,
+          height: 66 + insets.bottom,
+          paddingTop: 4,
+          paddingBottom: 6 + insets.bottom,
         },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 2 },
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
         sceneStyle: { backgroundColor: colors.background },
       }}
     >

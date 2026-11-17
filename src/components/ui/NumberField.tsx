@@ -4,6 +4,7 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { radius, spacing } from '../../theme/tokens';
 import { rowDirection, textAlign, useRTL } from '../../theme/rtl';
+import { hideWebFocusRing } from '../../theme/web';
 import { Txt } from './Txt';
 
 interface NumberFieldProps {
@@ -47,7 +48,7 @@ export function NumberField({
         ]}
       >
         <TextInput
-          style={[styles.input, { textAlign: textAlign(isRTL) }]}
+          style={[styles.input, hideWebFocusRing, { textAlign: textAlign(isRTL) }]}
           value={value}
           onChangeText={onChangeText}
           onFocus={() => setIsFocused(true)}
@@ -93,7 +94,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: colors.text,
-    // The box border shows focus; the browser's own focus ring would draw a second frame.
-    outlineWidth: 0,
   },
 });

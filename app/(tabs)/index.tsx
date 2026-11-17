@@ -242,7 +242,7 @@ export default function HomeScreen() {
             <Button
               label={t('home.startWorkout')}
               icon="play"
-              onPress={() => router.push('/(tabs)/training')}
+              onPress={() => router.push({ pathname: '/workout/[dayId]', params: { dayId: workoutDay.id } })}
               testID="home-start-workout"
             />
           )}

@@ -169,7 +169,18 @@
     "day": "Day {{n}}",
     "focusFull": "Full body",
     "focusUpper": "Upper body",
-    "focusLower": "Lower body"
+    "focusLower": "Lower body",
+    "perWeek_one": "{{count}}× per week",
+    "perWeek_other": "{{count}}× per week",
+    "smartPlanHint": "Built from your goal and activity level",
+    "nextUp": "Up next",
+    "doneToday": "Done today",
+    "planRegenerated": "New plan created",
+    "chooseActivity": "Choose an activity",
+    "cardioSaved": "Activity saved",
+    "mobilityTitle": "Mobility routine",
+    "startRoutine": "Start routine",
+    "routineAgain": "Do it again"
   },
   "scanner": {
     "title": "Scan barcode",
@@ -441,7 +452,8 @@
   "units": {
     "years": "yrs",
     "cm": "cm",
-    "kg": "kg"
+    "kg": "kg",
+    "min": "min"
   },
   "activityLevel": {
     "sedentary": "Mostly sitting",
@@ -454,5 +466,45 @@
     "activeDesc": "Hard exercise 6–7 days a week",
     "veryActive": "Athlete",
     "veryActiveDesc": "Physical job or training twice a day"
+  },
+  "muscle": {
+    "chest": "Chest",
+    "back": "Back",
+    "legs": "Legs",
+    "shoulders": "Shoulders",
+    "arms": "Arms",
+    "core": "Core",
+    "fullBody": "Full body"
+  },
+  "workout": {
+    "setsProgress": "{{done}} of {{total}} sets",
+    "set": "Set",
+    "weightLabel": "Working weight",
+    "bodyweight": "Bodyweight exercise",
+    "howTo": "How to do it",
+    "rest": "Rest",
+    "skipRest": "Skip",
+    "finish": "Finish workout",
+    "discardTitle": "Quit this workout?",
+    "discardMessage": "The sets you checked off won't be saved.",
+    "quit": "Quit without saving",
+    "keepGoing": "Keep going",
+    "completeTitle": "Workout complete!",
+    "completeSubtitle": "Great job. Keep the streak going tomorrow.",
+    "duration": "Duration",
+    "setsDone": "Sets",
+    "done": "Done",
+    "saved": "Workout saved"
+  },
+  "mobilityPlayer": {
+    "step": "Exercise {{current}} of {{total}}",
+    "nextUp": "Next: {{name}}",
+    "pause": "Pause",
+    "resume": "Resume",
+    "paused": "Paused",
+    "skip": "Next exercise",
+    "completeTitle": "Routine complete!",
+    "exercisesDone": "exercises",
+    "saved": "Routine saved"
   }
 }

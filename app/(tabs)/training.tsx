@@ -1,320 +1,424 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
-import { useProfile } from '../../src/store/ProfileContext';
+import { CARDIO_META, DEFAULT_CARDIO_META, MUSCLE_LABEL_KEYS } from '../../src/components/activityMeta';
+import { Button } from '../../src/components/ui/Button';
+import { Card } from '../../src/components/ui/Card';
+import { Icon } from '../../src/components/ui/Icon';
+import { IconBadge } from '../../src/components/ui/IconBadge';
+import { IconButton } from '../../src/components/ui/IconButton';
+import { Row } from '../../src/components/ui/Row';
+import { Screen } from '../../src/components/ui/Screen';
+import { ScreenHeader } from '../../src/components/ui/ScreenHeader';
+import { Segmented } from '../../src/components/ui/Segmented';
+import { Stepper } from '../../src/components/ui/Stepper';
+import { useToast } from '../../src/components/ui/Toast';
+import { Txt } from '../../src/components/ui/Txt';
+import { CARDIO_ACTIVITIES, EXERCISES, MOBILITY_ROUTINE } from '../../src/data/exercises';
+import { computeCardioKcal } from '../../src/services/cardioCalculator';
+import { estimateDayMinutes } from '../../src/services/planGenerator';
+import { formatClock } from '../../src/services/workoutTiming';
 import { useActivity } from '../../src/store/ActivityContext';
 import { usePlan } from '../../src/store/PlanContext';
-import { computeCardioKcal } from '../../src/services/cardioCalculator';
-import { todayString } from '../../src/services/date';
-import { CARDIO_ACTIVITIES, EXERCISES, MOBILITY_ROUTINE } from '../../src/data/exercises';
-import { colors } from '../../src/theme/colors';
-import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
-import type { EquipmentPreference } from '../../src/models/training';
+import { useProfile } from '../../src/store/ProfileContext';
+import { useToday } from '../../src/store/useToday';
+import { colors, tones } from '../../src/theme/colors';
+import { radius, spacing } from '../../src/theme/tokens';
+import type { EquipmentPreference, GeneratedDay } from '../../src/models/training';
 
 type Segment = 'strength' | 'cardio' | 'mobility';
 
+const SEGMENTS: Segment[] = ['strength', 'cardio', 'mobility'];
+const GOAL_LABEL_KEYS = { lose: 'onboarding.goalLose', maintain: 'onboarding.goalMaintain', gain: 'onboarding.goalGain' };
+const MOBILITY_MINUTES = Math.round(MOBILITY_ROUTINE.reduce((sum, item) => sum + item.durationSec, 0) / 60);
+const CARDIO_STEP_MIN = 5;
+
+function chunk<T>(items: T[], size: number): T[][] {
+  return Array.from({ length: Math.ceil(items.length / size) }, (_, index) => items.slice(index * size, index * size + size));
+}
+
+interface PlanDayCardProps {
+  day: GeneratedDay;
+  status: 'done' | 'next' | null;
+  expandedExercise: string | null;
+  onToggleExercise: (key: string) => void;
+  onStart: () => void;
+}
+
+function PlanDayCard({ day, status, expandedExercise, onToggleExercise, onStart }: PlanDayCardProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Card style={[{ gap: 12 }, status === 'next' && styles.cardHighlighted]} testID={`plan-${day.id}`}>
+      <Row gap={12}>
+        <View style={[styles.dayBadge, status === 'done' && { backgroundColor: colors.secondarySoft }]}>
+          {status === 'done' ? (
+            <Icon name="check" size={20} color={colors.secondaryLight} strokeWidth={3} />
+          ) : (
+            <Txt variant="heading" center color={colors.primaryLight}>
+              {day.dayNumber}
+            </Txt>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Txt variant="heading">
+            {t('training.day', { n: day.dayNumber })} · {t(day.focusKey)}
+          </Txt>
+          <Txt variant="caption" color={colors.textMuted}>
+            {t('home.exerciseCount', { count: day.items.length })} ·{' '}
+            {t('home.durationApprox', { minutes: estimateDayMinutes(day) })}
+          </Txt>
+        </View>
+        {status ? (
+          <View style={[styles.statusPill, { backgroundColor: status === 'done' ? tones.secondary.bg : tones.primary.bg }]}>
+            <Txt variant="micro" color={status === 'done' ? tones.secondary.fg : tones.primary.fg}>
+              {t(status === 'done' ? 'training.doneToday' : 'training.nextUp')}
+            </Txt>
+          </View>
+        ) : null}
+      </Row>
+
+      <View>
+        {day.items.map((item) => {
+          const exercise = EXERCISES.find((candidate) => candidate.id === item.exerciseId);
+          if (!exercise) return null;
+          const key = `${day.id}_${exercise.id}`;
+          const isExpanded = expandedExercise === key;
+          return (
+            <Pressable
+              key={exercise.id}
+              onPress={() => onToggleExercise(key)}
+              accessibilityRole="button"
+              accessibilityState={{ expanded: isExpanded }}
+              style={({ pressed }) => [styles.exerciseRow, pressed && { opacity: 0.7 }]}
+            >
+              <Row gap={10}>
+                <View style={{ flex: 1 }}>
+                  <Txt variant="body">{t(exercise.nameKey)}</Txt>
+                  <Txt variant="micro" color={colors.textDim}>
+                    {t(MUSCLE_LABEL_KEYS[exercise.muscleGroup])}
+                  </Txt>
+                </View>
+                <Txt variant="label" tabular color={colors.textMuted}>
+                  {item.sets} × {item.reps}
+                </Txt>
+                <Icon name={isExpanded ? 'chevronUp' : 'chevronDown'} size={16} color={colors.textDim} />
+              </Row>
+              {isExpanded ? (
+                <Txt variant="caption" color={colors.textMuted} style={styles.exerciseDesc}>
+                  {t(`exerciseDesc.${exercise.id}`)}
+                </Txt>
+              ) : null}
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <Button
+        label={t('home.startWorkout')}
+        icon="play"
+        variant={status === 'next' ? 'primary' : 'secondary'}
+        onPress={onStart}
+        testID={`start-${day.id}`}
+      />
+    </Card>
+  );
+}
+
 export default function TrainingScreen() {
   const { t } = useTranslation();
-  const isRTL = useRTL();
+  const router = useRouter();
+  const today = useToday();
+  const showToast = useToast();
+  const params = useLocalSearchParams<{ segment?: string }>();
   const { profile } = useProfile();
-  const { todayActivities, logActivity } = useActivity();
+  const { todayActivities, activityCounts, logActivity, removeActivityEntry } = useActivity();
   const { plan, regenerate } = usePlan();
+
   const [segment, setSegment] = useState<Segment>('strength');
+  const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
   const [selectedCardio, setSelectedCardio] = useState(CARDIO_ACTIVITIES[0].id);
   const [durationMin, setDurationMin] = useState(30);
-  const [expandedExercise, setExpandedExercise] = useState<string | null>(null);
+
+  // Other screens can open a specific section, e.g. the mobility goal on Home.
+  useEffect(() => {
+    if (params.segment && (SEGMENTS as string[]).includes(params.segment)) {
+      setSegment(params.segment as Segment);
+    }
+  }, [params.segment]);
 
   if (!profile) return null;
 
-  const cardioActivity = CARDIO_ACTIVITIES.find((a) => a.id === selectedCardio) ?? CARDIO_ACTIVITIES[0];
-  const estKcal = computeCardioKcal(cardioActivity.met, profile.weightKg, durationMin);
-  const mobilityDoneToday = todayActivities.some((a) => a.type === 'mobility');
-  const equipment = plan?.equipment ?? 'gym';
+  const cardioActivity = CARDIO_ACTIVITIES.find((activity) => activity.id === selectedCardio) ?? CARDIO_ACTIVITIES[0];
+  const estimatedKcal = computeCardioKcal(cardioActivity.met, profile.weightKg, durationMin);
+  const todayCardio = todayActivities.filter((activity) => activity.type === 'cardio');
+  const mobilityDone = todayActivities.some((activity) => activity.type === 'mobility');
+  const doneDayIds = new Set(todayActivities.filter((a) => a.type === 'strength').map((a) => a.refId));
+  const nextDayId = plan?.days.length ? plan.days[activityCounts.strength % plan.days.length].id : null;
 
-  const logStrength = (dayId: string) =>
-    logActivity({
-      id: `${Date.now()}`,
-      date: todayString(),
-      type: 'strength',
-      refId: dayId,
-      loggedAt: new Date().toISOString(),
-    });
+  const changeEquipment = async (equipment: EquipmentPreference) => {
+    if (equipment === plan?.equipment) return;
+    await regenerate(equipment);
+    showToast(t('training.planRegenerated'));
+  };
 
-  const logCardio = () =>
-    logActivity({
+  const saveCardio = async () => {
+    await logActivity({
       id: `${Date.now()}`,
-      date: todayString(),
+      date: today,
       type: 'cardio',
       refId: cardioActivity.id,
       durationMin,
-      kcalBurned: estKcal,
+      kcalBurned: estimatedKcal,
       loggedAt: new Date().toISOString(),
     });
-
-  const logMobility = () =>
-    logActivity({
-      id: `${Date.now()}`,
-      date: todayString(),
-      type: 'mobility',
-      refId: 'routine',
-      loggedAt: new Date().toISOString(),
-    });
+    showToast(t('training.cardioSaved'));
+  };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('training.title')}</Text>
+    <Screen>
+      <ScreenHeader
+        title={t('training.title')}
+        subtitle={
+          plan ? `${t('training.perWeek', { count: plan.days.length })} · ${t(GOAL_LABEL_KEYS[profile.goal])}` : undefined
+        }
+      />
 
-        <View style={[styles.segmentRow, { flexDirection: rowDirection(isRTL) }]}>
-          {(
-            [
-              { value: 'strength', labelKey: 'training.segStrength' },
-              { value: 'cardio', labelKey: 'training.segCardio' },
-              { value: 'mobility', labelKey: 'training.segMobility' },
-            ] as { value: Segment; labelKey: string }[]
-          ).map(({ value, labelKey }) => (
-            <TouchableOpacity
-              key={value}
-              style={[styles.segment, segment === value && styles.segmentActive]}
-              onPress={() => setSegment(value)}
-            >
-              <Text style={[styles.segmentText, segment === value && styles.segmentTextActive]}>{t(labelKey)}</Text>
-            </TouchableOpacity>
+      <Segmented
+        value={segment}
+        onChange={setSegment}
+        options={[
+          { value: 'strength', label: t('training.segStrength'), icon: 'dumbbell' },
+          { value: 'cardio', label: t('training.segCardio'), icon: 'heartPulse' },
+          { value: 'mobility', label: t('training.segMobility'), icon: 'person' },
+        ]}
+      />
+
+      {segment === 'strength' && plan ? (
+        <>
+          <Card style={{ gap: 12 }}>
+            <Row gap={12}>
+              <IconBadge icon="sparkles" tone="accent" size={40} />
+              <View style={{ flex: 1 }}>
+                <Txt variant="heading">{t('training.smartPlan')}</Txt>
+                <Txt variant="caption" color={colors.textMuted}>
+                  {t('training.smartPlanHint')}
+                </Txt>
+              </View>
+            </Row>
+            <Segmented
+              value={plan.equipment}
+              onChange={changeEquipment}
+              options={[
+                { value: 'gym', label: t('training.equipGym'), icon: 'dumbbell' },
+                { value: 'home', label: t('training.equipHome'), icon: 'home' },
+              ]}
+            />
+          </Card>
+
+          {plan.days.map((day) => (
+            <PlanDayCard
+              key={day.id}
+              day={day}
+              status={doneDayIds.has(day.id) ? 'done' : day.id === nextDayId ? 'next' : null}
+              expandedExercise={expandedExercise}
+              onToggleExercise={(key) => setExpandedExercise(expandedExercise === key ? null : key)}
+              onStart={() => router.push({ pathname: '/workout/[dayId]', params: { dayId: day.id } })}
+            />
           ))}
-        </View>
+        </>
+      ) : null}
 
-        {segment === 'strength' ? (
-          <>
-            <View style={[styles.planHeader, { flexDirection: rowDirection(isRTL) }]}>
-              <Text style={[styles.planTitle, { textAlign: textAlign(isRTL) }]}>{t('training.smartPlan')}</Text>
-              <View style={[styles.equipRow, { flexDirection: rowDirection(isRTL) }]}>
-                {(
-                  [
-                    { value: 'gym', labelKey: 'training.equipGym' },
-                    { value: 'home', labelKey: 'training.equipHome' },
-                  ] as { value: EquipmentPreference; labelKey: string }[]
-                ).map(({ value, labelKey }) => (
-                  <TouchableOpacity
-                    key={value}
-                    style={[styles.equipChip, equipment === value && styles.equipChipActive]}
-                    onPress={() => regenerate(value)}
-                  >
-                    <Text style={[styles.equipChipText, equipment === value && styles.equipChipTextActive]}>
-                      {t(labelKey)}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            {plan?.days.map((day) => {
-              const doneToday = todayActivities.some((a) => a.type === 'strength' && a.refId === day.id);
-              return (
-                <View key={day.id} style={styles.card}>
-                  <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>
-                    {t('training.day', { n: day.dayNumber })} · {t(day.focusKey)}
-                  </Text>
-                  {day.items.map((item) => {
-                    const exercise = EXERCISES.find((e) => e.id === item.exerciseId);
-                    if (!exercise) return null;
-                    const isExpanded = expandedExercise === `${day.id}_${item.exerciseId}`;
-                    return (
-                      <View key={item.exerciseId}>
-                        <TouchableOpacity
-                          style={[styles.exerciseRow, { flexDirection: rowDirection(isRTL) }]}
-                          onPress={() =>
-                            setExpandedExercise(isExpanded ? null : `${day.id}_${item.exerciseId}`)
-                          }
-                        >
-                          <Text style={[styles.exerciseName, { textAlign: textAlign(isRTL) }]}>
-                            {t(exercise.nameKey)}
-                          </Text>
-                          <Text style={styles.exerciseDetail}>
-                            {item.sets} × {item.reps}
-                          </Text>
-                        </TouchableOpacity>
-                        {isExpanded ? (
-                          <Text style={[styles.exerciseDesc, { textAlign: textAlign(isRTL) }]}>
-                            {t(`exerciseDesc.${exercise.id}`)}
-                          </Text>
-                        ) : null}
-                      </View>
-                    );
-                  })}
-                  {doneToday ? (
-                    <Text style={styles.doneText}>{t('training.workoutDone')}</Text>
-                  ) : (
-                    <TouchableOpacity style={styles.actionButton} onPress={() => logStrength(day.id)}>
-                      <Text style={styles.actionButtonText}>{t('training.completeWorkout')}</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            })}
-
-            <TouchableOpacity style={styles.regenerateButton} onPress={() => regenerate(equipment)}>
-              <Text style={styles.regenerateButtonText}>↻ {t('training.regenerate')}</Text>
-            </TouchableOpacity>
-          </>
-        ) : null}
-
-        {segment === 'cardio' ? (
-          <View style={styles.card}>
-            <View style={[styles.chipWrap, { flexDirection: rowDirection(isRTL) }]}>
-              {CARDIO_ACTIVITIES.map((activity) => (
-                <TouchableOpacity
-                  key={activity.id}
-                  style={[styles.chip, selectedCardio === activity.id && styles.chipActive]}
-                  onPress={() => setSelectedCardio(activity.id)}
-                >
-                  <Text style={[styles.chipText, selectedCardio === activity.id && styles.chipTextActive]}>
-                    {t(activity.nameKey)}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={[styles.sectionLabel, { textAlign: textAlign(isRTL) }]}>{t('training.duration')}</Text>
-            <View style={[styles.stepperRow, { flexDirection: rowDirection(isRTL) }]}>
-              <TouchableOpacity
-                style={styles.stepperButton}
-                onPress={() => setDurationMin(Math.max(5, durationMin - 5))}
-              >
-                <Text style={styles.stepperButtonText}>−</Text>
-              </TouchableOpacity>
-              <Text style={styles.stepperValue}>
-                {durationMin} {t('common.minutes')}
-              </Text>
-              <TouchableOpacity style={styles.stepperButton} onPress={() => setDurationMin(durationMin + 5)}>
-                <Text style={styles.stepperButtonText}>+</Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.estBurn}>{t('training.estBurn', { kcal: estKcal })}</Text>
-
-            <TouchableOpacity style={styles.actionButton} onPress={logCardio}>
-              <Text style={styles.actionButtonText}>{t('training.logCardio')}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
-
-        {segment === 'mobility' ? (
-          <View style={styles.card}>
-            {MOBILITY_ROUTINE.map((exercise) => (
-              <View key={exercise.id} style={[styles.exerciseRow, { flexDirection: rowDirection(isRTL) }]}>
-                <View style={styles.mobilityTextBlock}>
-                  <Text style={[styles.exerciseName, { textAlign: textAlign(isRTL) }]}>{t(exercise.nameKey)}</Text>
-                  <Text style={[styles.mobilityTarget, { textAlign: textAlign(isRTL) }]}>{t(exercise.targetKey)}</Text>
-                </View>
-                <Text style={styles.exerciseDetail}>{exercise.durationSec}s</Text>
-              </View>
+      {segment === 'cardio' ? (
+        <>
+          <Card style={{ gap: 10 }}>
+            <Txt variant="heading">{t('training.chooseActivity')}</Txt>
+            {chunk(CARDIO_ACTIVITIES, 3).map((row) => (
+              <Row key={row[0].id} gap={10} align="stretch">
+                {row.map((activity) => {
+                  const meta = CARDIO_META[activity.id] ?? DEFAULT_CARDIO_META;
+                  const isSelected = activity.id === selectedCardio;
+                  return (
+                    <Pressable
+                      key={activity.id}
+                      onPress={() => setSelectedCardio(activity.id)}
+                      accessibilityRole="radio"
+                      accessibilityState={{ selected: isSelected }}
+                      testID={`cardio-${activity.id}`}
+                      style={({ pressed }) => [
+                        styles.cardioTile,
+                        isSelected && styles.cardioTileSelected,
+                        pressed && { opacity: 0.8 },
+                      ]}
+                    >
+                      <IconBadge icon={meta.icon} tone={meta.tone} size={38} />
+                      <Txt variant="caption" center numberOfLines={2}>
+                        {t(activity.nameKey)}
+                      </Txt>
+                    </Pressable>
+                  );
+                })}
+              </Row>
             ))}
-            {mobilityDoneToday ? (
-              <Text style={styles.doneText}>{t('training.routineDone')}</Text>
-            ) : (
-              <TouchableOpacity style={styles.actionButton} onPress={logMobility}>
-                <Text style={styles.actionButtonText}>{t('training.completeRoutine')}</Text>
-              </TouchableOpacity>
-            )}
+          </Card>
+
+          <Card style={{ gap: 16 }}>
+            <Txt variant="heading">{t('workout.duration')}</Txt>
+            <Stepper
+              value={`${durationMin} ${t('units.min')}`}
+              canDecrement={durationMin > CARDIO_STEP_MIN}
+              onDecrement={() => setDurationMin(Math.max(CARDIO_STEP_MIN, durationMin - CARDIO_STEP_MIN))}
+              onIncrement={() => setDurationMin(durationMin + CARDIO_STEP_MIN)}
+            />
+            <Row gap={8} justify="center" style={styles.burnRow}>
+              <Icon name="flame" size={18} color={colors.orange} fill={colors.orange} />
+              <Txt variant="subheading" tabular>
+                {t('training.estBurn', { kcal: estimatedKcal })}
+              </Txt>
+            </Row>
+            <Button label={t('training.logCardio')} icon="plus" onPress={saveCardio} testID="cardio-save" />
+          </Card>
+
+          {todayCardio.length ? (
+            <Card style={{ gap: 4 }}>
+              <Txt variant="heading" style={{ marginBottom: 4 }}>
+                {t('common.today')}
+              </Txt>
+              {todayCardio.map((entry) => {
+                const activity = CARDIO_ACTIVITIES.find((candidate) => candidate.id === entry.refId);
+                const meta = CARDIO_META[entry.refId] ?? DEFAULT_CARDIO_META;
+                return (
+                  <Row key={entry.id} gap={12} style={styles.logRow}>
+                    <IconBadge icon={meta.icon} tone={meta.tone} size={34} />
+                    <View style={{ flex: 1 }}>
+                      <Txt variant="subheading">{activity ? t(activity.nameKey) : entry.refId}</Txt>
+                      <Txt variant="caption" color={colors.textMuted}>
+                        {entry.durationMin} {t('units.min')} · {entry.kcalBurned} {t('common.kcal')}
+                      </Txt>
+                    </View>
+                    <IconButton
+                      icon="trash"
+                      label={t('common.delete')}
+                      size={34}
+                      color={colors.danger}
+                      filled={false}
+                      onPress={() => removeActivityEntry(entry)}
+                      testID={`cardio-delete-${entry.id}`}
+                    />
+                  </Row>
+                );
+              })}
+            </Card>
+          ) : null}
+        </>
+      ) : null}
+
+      {segment === 'mobility' ? (
+        <Card style={{ gap: 14 }}>
+          <Row gap={12}>
+            <IconBadge icon="person" tone="violet" size={44} />
+            <View style={{ flex: 1 }}>
+              <Txt variant="heading">{t('training.mobilityTitle')}</Txt>
+              <Txt variant="caption" color={colors.textMuted}>
+                {t('home.exerciseCount', { count: MOBILITY_ROUTINE.length })} ·{' '}
+                {t('home.durationApprox', { minutes: MOBILITY_MINUTES })}
+              </Txt>
+            </View>
+          </Row>
+
+          <View>
+            {MOBILITY_ROUTINE.map((item, index) => (
+              <Row key={item.id} gap={12} style={styles.mobilityRow}>
+                <View style={styles.indexBubble}>
+                  <Txt variant="micro" center color={colors.textMuted}>
+                    {index + 1}
+                  </Txt>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Txt variant="body">{t(item.nameKey)}</Txt>
+                  <Txt variant="micro" color={colors.textDim}>
+                    {t(item.targetKey)}
+                  </Txt>
+                </View>
+                <Txt variant="label" tabular color={colors.textMuted}>
+                  {formatClock(item.durationSec)}
+                </Txt>
+              </Row>
+            ))}
           </View>
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+
+          {mobilityDone ? (
+            <Row gap={8} style={styles.doneBanner}>
+              <Icon name="checkCircle" size={20} color={colors.secondaryLight} />
+              <Txt variant="label" color={colors.secondaryLight}>
+                {t('training.routineDone')}
+              </Txt>
+            </Row>
+          ) : null}
+          <Button
+            label={mobilityDone ? t('training.routineAgain') : t('training.startRoutine')}
+            icon="play"
+            variant={mobilityDone ? 'secondary' : 'primary'}
+            onPress={() => router.push('/mobility')}
+            testID="mobility-start"
+          />
+        </Card>
+      ) : null}
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 20, paddingBottom: 48 },
-  title: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 14 },
-  segmentRow: { gap: 8, marginBottom: 16 },
-  segment: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-  },
-  segmentActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  segmentText: { color: colors.text, fontSize: 13, fontWeight: '600' },
-  segmentTextActive: { color: '#fff' },
-  planHeader: { justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  planTitle: { fontSize: 15, fontWeight: '700', color: colors.text },
-  equipRow: { gap: 6 },
-  equipChip: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  equipChipActive: { backgroundColor: colors.secondary, borderColor: colors.secondary },
-  equipChipText: { color: colors.text, fontSize: 12 },
-  equipChipTextActive: { color: '#fff', fontWeight: '600' },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 14,
-  },
-  cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 10 },
-  exerciseRow: { justifyContent: 'space-between', alignItems: 'center', paddingVertical: 7 },
-  exerciseName: { fontSize: 14, color: colors.text, flex: 1 },
-  exerciseDetail: { fontSize: 13, color: colors.textMuted, fontVariant: ['tabular-nums'] },
-  exerciseDesc: {
-    fontSize: 12,
-    color: colors.textMuted,
-    backgroundColor: colors.background,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 6,
-    lineHeight: 17,
-  },
-  mobilityTextBlock: { flex: 1 },
-  mobilityTarget: { fontSize: 11, color: colors.textMuted, marginTop: 1 },
-  doneText: { marginTop: 12, textAlign: 'center', color: colors.secondary, fontWeight: '700' },
-  actionButton: {
-    marginTop: 12,
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    paddingVertical: 11,
-    alignItems: 'center',
-  },
-  actionButtonText: { color: '#fff', fontWeight: '700' },
-  regenerateButton: { alignItems: 'center', paddingVertical: 10 },
-  regenerateButtonText: { color: colors.primaryLight, fontWeight: '600', fontSize: 13 },
-  chipWrap: { flexWrap: 'wrap', gap: 8, marginBottom: 8 },
-  chip: {
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
-  },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipText: { color: colors.text, fontSize: 12 },
-  chipTextActive: { color: '#fff', fontWeight: '600' },
-  sectionLabel: { fontSize: 13, fontWeight: '600', color: colors.textMuted, marginTop: 10, marginBottom: 8 },
-  stepperRow: { alignItems: 'center', gap: 16, justifyContent: 'center' },
-  stepperButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
+  cardHighlighted: { borderColor: colors.primary },
+  dayBadge: {
+    width: 42,
+    height: 42,
+    borderRadius: radius.md,
+    backgroundColor: colors.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  stepperButtonText: { fontSize: 18, color: colors.primary, fontWeight: '700' },
-  stepperValue: { fontSize: 16, fontWeight: '700', color: colors.text, minWidth: 80, textAlign: 'center' },
-  estBurn: { textAlign: 'center', marginTop: 10, color: colors.primaryLight, fontWeight: '600' },
+  statusPill: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: radius.pill },
+  exerciseRow: {
+    paddingVertical: 9,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
+  },
+  exerciseDesc: {
+    marginTop: 8,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    backgroundColor: colors.surfaceRaised,
+  },
+  cardioTile: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xs,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceRaised,
+  },
+  cardioTileSelected: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
+  burnRow: { paddingVertical: 10, borderRadius: radius.md, backgroundColor: colors.orangeSoft },
+  logRow: { paddingVertical: 8 },
+  mobilityRow: { paddingVertical: 8, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
+  indexBubble: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.surfaceRaised,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  doneBanner: {
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: radius.md,
+    backgroundColor: colors.secondarySoft,
+  },
 });

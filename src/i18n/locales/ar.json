@@ -173,7 +173,22 @@
     "day": "اليوم {{n}}",
     "focusFull": "جسم كامل",
     "focusUpper": "الجزء العلوي",
-    "focusLower": "الجزء السفلي"
+    "focusLower": "الجزء السفلي",
+    "perWeek_zero": "لا تمارين أسبوعيًا",
+    "perWeek_one": "مرة في الأسبوع",
+    "perWeek_two": "مرتان في الأسبوع",
+    "perWeek_few": "{{count}} مرات في الأسبوع",
+    "perWeek_many": "{{count}} مرة في الأسبوع",
+    "perWeek_other": "{{count}} مرة في الأسبوع",
+    "smartPlanHint": "مبنية على هدفك ومستوى نشاطك",
+    "nextUp": "التالي",
+    "doneToday": "أُنجز اليوم",
+    "planRegenerated": "تم إنشاء خطة جديدة",
+    "chooseActivity": "اختر نشاطًا",
+    "cardioSaved": "تم حفظ النشاط",
+    "mobilityTitle": "روتين المرونة",
+    "startRoutine": "ابدأ الروتين",
+    "routineAgain": "مرة أخرى"
   },
   "scanner": {
     "title": "مسح الباركود",
@@ -445,7 +460,8 @@
   "units": {
     "years": "سنة",
     "cm": "سم",
-    "kg": "كغ"
+    "kg": "كغ",
+    "min": "دقيقة"
   },
   "activityLevel": {
     "sedentary": "قليل الحركة",
@@ -458,5 +474,45 @@
     "activeDesc": "رياضة مكثفة 6–7 أيام في الأسبوع",
     "veryActive": "رياضي",
     "veryActiveDesc": "عمل بدني أو تمرين مرتين في اليوم"
+  },
+  "muscle": {
+    "chest": "الصدر",
+    "back": "الظهر",
+    "legs": "الساقان",
+    "shoulders": "الكتفان",
+    "arms": "الذراعان",
+    "core": "الجذع",
+    "fullBody": "الجسم كامل"
+  },
+  "workout": {
+    "setsProgress": "{{done}} من {{total}} مجموعات",
+    "set": "مجموعة",
+    "weightLabel": "وزن التمرين",
+    "bodyweight": "تمرين بوزن الجسم",
+    "howTo": "طريقة الأداء",
+    "rest": "راحة",
+    "skipRest": "تخطي",
+    "finish": "إنهاء التمرين",
+    "discardTitle": "إلغاء هذا التمرين؟",
+    "discardMessage": "لن يتم حفظ المجموعات التي أنجزتها.",
+    "quit": "الخروج دون حفظ",
+    "keepGoing": "متابعة التمرين",
+    "completeTitle": "أحسنت! انتهى التمرين",
+    "completeSubtitle": "عمل رائع، واصل غدًا.",
+    "duration": "المدة",
+    "setsDone": "المجموعات",
+    "done": "تم",
+    "saved": "تم حفظ التمرين"
+  },
+  "mobilityPlayer": {
+    "step": "التمرين {{current}} من {{total}}",
+    "nextUp": "التالي: {{name}}",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "paused": "متوقف مؤقتًا",
+    "skip": "التمرين التالي",
+    "completeTitle": "أحسنت! انتهى الروتين",
+    "exercisesDone": "تمارين",
+    "saved": "تم حفظ الروتين"
   }
 }

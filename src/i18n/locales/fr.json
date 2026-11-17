@@ -169,7 +169,18 @@
     "day": "Jour {{n}}",
     "focusFull": "Corps entier",
     "focusUpper": "Haut du corps",
-    "focusLower": "Bas du corps"
+    "focusLower": "Bas du corps",
+    "perWeek_one": "{{count}}× par semaine",
+    "perWeek_other": "{{count}}× par semaine",
+    "smartPlanHint": "Conçu selon votre objectif et votre niveau d'activité",
+    "nextUp": "À suivre",
+    "doneToday": "Fait aujourd'hui",
+    "planRegenerated": "Nouveau plan créé",
+    "chooseActivity": "Choisissez une activité",
+    "cardioSaved": "Activité enregistrée",
+    "mobilityTitle": "Routine de mobilité",
+    "startRoutine": "Commencer la routine",
+    "routineAgain": "Recommencer"
   },
   "scanner": {
     "title": "Scanner le code-barres",
@@ -441,7 +452,8 @@
   "units": {
     "years": "ans",
     "cm": "cm",
-    "kg": "kg"
+    "kg": "kg",
+    "min": "min"
   },
   "activityLevel": {
     "sedentary": "Plutôt sédentaire",
@@ -454,5 +466,45 @@
     "activeDesc": "Sport intense 6 à 7 jours par semaine",
     "veryActive": "Athlète",
     "veryActiveDesc": "Travail physique ou deux entraînements par jour"
+  },
+  "muscle": {
+    "chest": "Pectoraux",
+    "back": "Dos",
+    "legs": "Jambes",
+    "shoulders": "Épaules",
+    "arms": "Bras",
+    "core": "Gainage",
+    "fullBody": "Corps entier"
+  },
+  "workout": {
+    "setsProgress": "{{done}} séries sur {{total}}",
+    "set": "Série",
+    "weightLabel": "Charge de travail",
+    "bodyweight": "Exercice au poids du corps",
+    "howTo": "Comment faire",
+    "rest": "Repos",
+    "skipRest": "Passer",
+    "finish": "Terminer la séance",
+    "discardTitle": "Quitter la séance ?",
+    "discardMessage": "Les séries cochées ne seront pas enregistrées.",
+    "quit": "Quitter sans enregistrer",
+    "keepGoing": "Continuer",
+    "completeTitle": "Séance terminée !",
+    "completeSubtitle": "Bravo ! Continuez demain.",
+    "duration": "Durée",
+    "setsDone": "Séries",
+    "done": "Terminé",
+    "saved": "Séance enregistrée"
+  },
+  "mobilityPlayer": {
+    "step": "Exercice {{current}} sur {{total}}",
+    "nextUp": "Ensuite : {{name}}",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "paused": "En pause",
+    "skip": "Exercice suivant",
+    "completeTitle": "Routine terminée !",
+    "exercisesDone": "exercices",
+    "saved": "Routine enregistrée"
   }
 }
