@@ -37,7 +37,7 @@ export function MacroBars({ consumed, targets }: MacroBarsProps) {
           </Txt>
           <ProgressBar progress={macro.target > 0 ? macro.value / macro.target : 0} color={macro.color} height={6} />
           <Txt variant="caption" tabular numberOfLines={1}>
-            {Math.round(macro.value)} / {Math.round(macro.target)} g
+            {Math.round(macro.value)} / {Math.round(macro.target)} {t('units.g')}
           </Txt>
         </View>
       ))}

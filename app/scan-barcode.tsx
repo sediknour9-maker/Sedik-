@@ -1,19 +1,25 @@
 import React, { useRef, useState } from 'react';
-import { ActivityIndicator, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
+import { Button } from '../src/components/ui/Button';
+import { Card } from '../src/components/ui/Card';
+import { IconBadge } from '../src/components/ui/IconBadge';
+import { Row } from '../src/components/ui/Row';
+import { Screen } from '../src/components/ui/Screen';
+import { ScreenHeader } from '../src/components/ui/ScreenHeader';
+import { TextField } from '../src/components/ui/TextField';
+import { Txt } from '../src/components/ui/Txt';
 import { lookupBarcode } from '../src/services/openFoodFacts';
 import { useFoodDb } from '../src/store/FoodDbContext';
 import { colors } from '../src/theme/colors';
-import { textAlign, useRTL } from '../src/theme/rtl';
+import { radius } from '../src/theme/tokens';
 
 export default function ScanBarcodeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const isRTL = useRTL();
   const { mealSlot, date } = useLocalSearchParams<{ mealSlot?: string; date?: string }>();
   const { foods, addCustomFood } = useFoodDb();
   const [permission, requestPermission] = useCameraPermissions();
@@ -24,15 +30,18 @@ export default function ScanBarcodeScreen() {
 
   const isNative = Platform.OS !== 'web';
 
+  const openPortion = (foodId: string) =>
+    router.replace({ pathname: '/add-food/[foodId]', params: { foodId, mealSlot, date } });
+
   const handleBarcode = async (barcode: string) => {
     if (isLooking) return;
     setIsLooking(true);
     setNotFound(false);
 
-    const existing = foods.find((f) => f.id === `barcode_${barcode}`);
+    const existing = foods.find((food) => food.id === `barcode_${barcode}`);
     if (existing) {
       setIsLooking(false);
-      router.replace({ pathname: `/add-food/${existing.id}`, params: { mealSlot, date } });
+      openPortion(existing.id);
       return;
     }
 
@@ -46,17 +55,17 @@ export default function ScanBarcodeScreen() {
     }
 
     await addCustomFood({ ...result.food, customName: result.name });
-    router.replace({ pathname: `/add-food/${result.food.id}`, params: { mealSlot, date } });
+    openPortion(result.food.id);
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('scanner.title')}</Text>
+    <Screen edges={['top', 'bottom']}>
+      <ScreenHeader title={t('scanner.title')} onBack={() => router.back()} />
 
-        {isNative && permission?.granted ? (
+      {isNative && permission?.granted ? (
+        <View style={styles.cameraFrame}>
           <CameraView
-            style={styles.camera}
+            style={StyleSheet.absoluteFill}
             barcodeScannerSettings={{ barcodeTypes: ['ean13', 'ean8', 'upc_a', 'upc_e'] }}
             onBarcodeScanned={({ data }) => {
               if (scannedRef.current) return;
@@ -64,104 +73,74 @@ export default function ScanBarcodeScreen() {
               handleBarcode(data);
             }}
           />
-        ) : isNative ? (
-          <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
-            <Text style={styles.permissionButtonText}>{t('scanner.permission')}</Text>
-          </TouchableOpacity>
-        ) : (
-          <Text style={[styles.webNote, { textAlign: textAlign(isRTL) }]}>{t('scanner.noCamera')}</Text>
-        )}
+          <View style={styles.viewfinder} pointerEvents="none" />
+        </View>
+      ) : (
+        <Card style={{ alignItems: 'center', gap: 12 }}>
+          <IconBadge icon="barcode" tone="violet" size={56} />
+          <Txt variant="body" center color={colors.textMuted}>
+            {isNative ? t('scanner.permissionHint') : t('scanner.noCamera')}
+          </Txt>
+          {isNative ? (
+            <Button label={t('scanner.permission')} icon="camera" variant="soft" onPress={requestPermission} />
+          ) : null}
+        </Card>
+      )}
 
-        <Text style={[styles.manualLabel, { textAlign: textAlign(isRTL) }]}>{t('scanner.manualLabel')}</Text>
-        <TextInput
-          style={[styles.input, { textAlign: textAlign(isRTL) }]}
-          keyboardType="numeric"
-          placeholder="6111024000123"
-          placeholderTextColor={colors.textMuted}
+      <Card style={{ gap: 12 }}>
+        <TextField
+          label={t('scanner.manualLabel')}
           value={manualCode}
           onChangeText={setManualCode}
+          keyboardType="number-pad"
+          placeholder="6111024000123"
+          testID="barcode-input"
         />
-        <TouchableOpacity
-          style={[styles.lookupButton, (!manualCode.trim() || isLooking) && styles.buttonDisabled]}
-          disabled={!manualCode.trim() || isLooking}
+        <Button
+          label={t('scanner.search')}
+          icon="search"
+          disabled={!manualCode.trim()}
+          loading={isLooking}
           onPress={() => handleBarcode(manualCode.trim())}
-        >
-          {isLooking ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.lookupButtonText}>{t('scanner.search')}</Text>
-          )}
-        </TouchableOpacity>
+          testID="barcode-lookup"
+        />
+      </Card>
 
-        {notFound ? (
-          <View style={styles.notFoundBox}>
-            <Text style={[styles.notFoundText, { textAlign: textAlign(isRTL) }]}>{t('scanner.notFound')}</Text>
-            <TouchableOpacity
-              style={styles.customButton}
-              onPress={() => router.replace({ pathname: '/add-food/custom', params: { mealSlot, date } })}
-            >
-              <Text style={styles.customButtonText}>{t('addFood.createCustom')}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
-
-        <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
-          <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      {notFound ? (
+        <Card style={{ gap: 12 }} testID="barcode-not-found">
+          <Row gap={12}>
+            <IconBadge icon="alert" tone="accent" size={40} />
+            <Txt variant="body" style={{ flex: 1 }}>
+              {t('scanner.notFound')}
+            </Txt>
+          </Row>
+          <Button
+            label={t('addFood.createCustom')}
+            icon="plus"
+            variant="soft"
+            onPress={() => router.replace({ pathname: '/add-food/custom', params: { mealSlot, date } })}
+          />
+        </Card>
+      ) : null}
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { flex: 1, padding: 20 },
-  title: { fontSize: 20, fontWeight: '700', color: colors.text, marginBottom: 14 },
-  camera: { height: 260, borderRadius: 14, overflow: 'hidden', marginBottom: 6 },
-  permissionButton: {
-    backgroundColor: colors.secondary,
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  permissionButtonText: { color: '#fff', fontWeight: '700' },
-  webNote: { color: colors.textMuted, fontSize: 13, fontStyle: 'italic' },
-  manualLabel: { fontSize: 13, fontWeight: '600', color: colors.textMuted, marginTop: 20, marginBottom: 8 },
-  input: {
+  cameraFrame: {
+    height: 280,
+    borderRadius: radius.xl,
+    overflow: 'hidden',
     backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    fontSize: 15,
-    color: colors.text,
-    marginBottom: 10,
-  },
-  lookupButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 12,
-    paddingVertical: 12,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  buttonDisabled: { opacity: 0.5 },
-  lookupButtonText: { color: '#fff', fontWeight: '700' },
-  notFoundBox: {
-    marginTop: 16,
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
+  viewfinder: {
+    width: '72%',
+    height: 120,
+    borderRadius: radius.md,
+    borderWidth: 2,
+    borderColor: colors.onPrimary,
+    opacity: 0.85,
   },
-  notFoundText: { color: colors.text, fontSize: 13, marginBottom: 10 },
-  customButton: {
-    backgroundColor: colors.secondary,
-    borderRadius: 10,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  customButtonText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  cancelButton: { alignItems: 'center', paddingVertical: 16, marginTop: 'auto' },
-  cancelButtonText: { color: colors.textMuted, fontSize: 14 },
 });

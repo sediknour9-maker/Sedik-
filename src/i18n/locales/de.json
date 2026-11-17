@@ -19,7 +19,8 @@
     "perDay": "pro Tag",
     "minutes": "Min.",
     "decrease": "Verringern",
-    "increase": "Erhöhen"
+    "increase": "Erhöhen",
+    "clear": "Leeren"
   },
   "onboarding": {
     "languageTitle": "Wähle deine Sprache",
@@ -89,7 +90,17 @@
     "confirmAdd": "Zum Tagebuch hinzufügen",
     "selectMealSlot": "Mahlzeit wählen",
     "scanBarcode": "Barcode scannen",
-    "createCustom": "Eigenes Lebensmittel"
+    "createCustom": "Eigenes Lebensmittel",
+    "recent": "Zuletzt eingetragen",
+    "allFoods": "Alle Lebensmittel",
+    "resultCount_one": "{{count}} Lebensmittel",
+    "resultCount_other": "{{count}} Lebensmittel",
+    "noResults": "Nichts gefunden",
+    "added": "Zum Tagebuch hinzugefügt",
+    "updated": "Eintrag aktualisiert",
+    "deleted": "Eintrag gelöscht",
+    "deleteTitle": "Diesen Eintrag löschen?",
+    "editTitle": "Eintrag bearbeiten"
   },
   "history": {
     "title": "Verlauf",
@@ -113,7 +124,11 @@
     "bannerHint": "Mahlzeiten werden nach Suhoor und Iftar gruppiert."
   },
   "nutrition": {
-    "title": "Ernährung"
+    "title": "Ernährung",
+    "yesterday": "Gestern",
+    "previousDay": "Vorheriger Tag",
+    "nextDay": "Nächster Tag",
+    "tapToEdit": "Tippen, um Portion zu ändern oder zu löschen"
   },
   "home": {
     "streak": "Tage-Serie",
@@ -188,12 +203,17 @@
     "search": "Suchen",
     "notFound": "Produkt nicht gefunden oder keine Verbindung. Du kannst es manuell anlegen.",
     "noCamera": "Kamera-Scan funktioniert in der Handy-App — hier den Barcode manuell eingeben.",
-    "permission": "Kamerazugriff erlauben"
+    "permission": "Kamerazugriff erlauben",
+    "permissionHint": "Erlaube den Kamerazugriff, um den Barcode eines Produkts zu scannen."
   },
   "custom": {
     "title": "Neues Lebensmittel",
     "nameLabel": "Name",
-    "portionGrams": "Portionsgröße (g)"
+    "portionGrams": "Portionsgröße",
+    "subtitle": "Werte von der Verpackung oder aus deinem Rezept",
+    "category": "Kategorie",
+    "macrosPerPortion": "Makros pro Portion (optional)",
+    "save": "Speichern und weiter"
   },
   "progress": {
     "title": "Fortschritt",
@@ -453,7 +473,8 @@
     "years": "J.",
     "cm": "cm",
     "kg": "kg",
-    "min": "Min."
+    "min": "Min.",
+    "g": "g"
   },
   "activityLevel": {
     "sedentary": "Überwiegend sitzend",
@@ -506,5 +527,12 @@
     "completeTitle": "Routine geschafft!",
     "exercisesDone": "Übungen",
     "saved": "Routine gespeichert"
+  },
+  "tabs": {
+    "today": "Heute",
+    "training": "Training",
+    "nutrition": "Ernährung",
+    "progress": "Fortschritt",
+    "profile": "Profil"
   }
 }

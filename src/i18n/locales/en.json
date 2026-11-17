@@ -19,7 +19,8 @@
     "perDay": "per day",
     "minutes": "min",
     "decrease": "Decrease",
-    "increase": "Increase"
+    "increase": "Increase",
+    "clear": "Clear"
   },
   "onboarding": {
     "languageTitle": "Choose your language",
@@ -89,7 +90,17 @@
     "confirmAdd": "Add to log",
     "selectMealSlot": "Select meal",
     "scanBarcode": "Scan barcode",
-    "createCustom": "Create custom food"
+    "createCustom": "Create custom food",
+    "recent": "Recently logged",
+    "allFoods": "All foods",
+    "resultCount_one": "{{count}} food",
+    "resultCount_other": "{{count}} foods",
+    "noResults": "No food found",
+    "added": "Added to your log",
+    "updated": "Entry updated",
+    "deleted": "Entry deleted",
+    "deleteTitle": "Delete this entry?",
+    "editTitle": "Edit entry"
   },
   "history": {
     "title": "History",
@@ -113,7 +124,11 @@
     "bannerHint": "Meals are grouped into Suhoor and Iftar."
   },
   "nutrition": {
-    "title": "Nutrition"
+    "title": "Nutrition",
+    "yesterday": "Yesterday",
+    "previousDay": "Previous day",
+    "nextDay": "Next day",
+    "tapToEdit": "Tap to change portion or delete"
   },
   "home": {
     "streak": "day streak",
@@ -188,12 +203,17 @@
     "search": "Look up",
     "notFound": "Product not found or no connection. You can create it manually.",
     "noCamera": "Camera scanning works in the mobile app — enter the barcode manually here.",
-    "permission": "Grant camera access"
+    "permission": "Grant camera access",
+    "permissionHint": "Allow camera access to scan a product's barcode."
   },
   "custom": {
     "title": "New food",
     "nameLabel": "Name",
-    "portionGrams": "Portion size (g)"
+    "portionGrams": "Portion size",
+    "subtitle": "Values from the package label or your own recipe",
+    "category": "Category",
+    "macrosPerPortion": "Macros per portion (optional)",
+    "save": "Save and continue"
   },
   "progress": {
     "title": "Progress",
@@ -453,7 +473,8 @@
     "years": "yrs",
     "cm": "cm",
     "kg": "kg",
-    "min": "min"
+    "min": "min",
+    "g": "g"
   },
   "activityLevel": {
     "sedentary": "Mostly sitting",
@@ -506,5 +527,12 @@
     "completeTitle": "Routine complete!",
     "exercisesDone": "exercises",
     "saved": "Routine saved"
+  },
+  "tabs": {
+    "today": "Today",
+    "training": "Training",
+    "nutrition": "Nutrition",
+    "progress": "Progress",
+    "profile": "Profile"
   }
 }

@@ -32,7 +32,7 @@ export function searchFoods(
   });
 }
 
-function getDefaultPortion(food: FoodItem): PortionUnit {
+export function getDefaultPortion(food: FoodItem): PortionUnit {
   return food.portionUnits.find((unit) => unit.isDefault) ?? food.portionUnits[0];
 }
 

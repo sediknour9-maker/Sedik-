@@ -1,153 +1,205 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 
+import { FOOD_CATEGORY_META } from '../../src/components/foodMeta';
+import { MacroTiles } from '../../src/components/MacroTiles';
+import { MEAL_SLOT_META } from '../../src/components/mealSlotMeta';
+import { Button } from '../../src/components/ui/Button';
+import { Card } from '../../src/components/ui/Card';
+import { Chip } from '../../src/components/ui/Chip';
+import { confirmAction } from '../../src/components/ui/confirm';
+import { IconBadge } from '../../src/components/ui/IconBadge';
+import { Row } from '../../src/components/ui/Row';
+import { Screen } from '../../src/components/ui/Screen';
+import { ScreenHeader } from '../../src/components/ui/ScreenHeader';
+import { Stepper } from '../../src/components/ui/Stepper';
+import { useToast } from '../../src/components/ui/Toast';
+import { Txt } from '../../src/components/ui/Txt';
+import { formatNumber } from '../../src/i18n/locale';
+import { computeMacrosForPortion, getDefaultPortion, getFoodName } from '../../src/services/foodRepository';
+import { getMealSlotsFor } from '../../src/services/ramadanService';
 import { useFoodDb } from '../../src/store/FoodDbContext';
 import { useLogs } from '../../src/store/LogContext';
 import { useSettings } from '../../src/store/SettingsContext';
-import { computeMacrosForPortion, getFoodName } from '../../src/services/foodRepository';
-import { getMealSlotsFor } from '../../src/services/ramadanService';
-import { todayString } from '../../src/services/date';
-import { PortionPicker } from '../../src/components/PortionPicker';
 import { colors } from '../../src/theme/colors';
-import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
 import type { MealSlot } from '../../src/models/log';
 
-const MEAL_SLOT_LABEL_KEY: Record<MealSlot, string> = {
-  breakfast: 'dashboard.mealSlotBreakfast',
-  lunch: 'dashboard.mealSlotLunch',
-  dinner: 'dashboard.mealSlotDinner',
-  snack: 'dashboard.mealSlotSnack',
-  suhoor: 'dashboard.mealSlotSuhoor',
-  iftar: 'dashboard.mealSlotIftar',
-};
+const QUANTITY_STEP = 0.5;
+
+function isMealSlot(value: string | undefined): value is MealSlot {
+  return !!value && value in MEAL_SLOT_META;
+}
 
 export default function PortionScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
-  const isRTL = useRTL();
-  const { foodId, mealSlot: mealSlotParam, date: dateParam } = useLocalSearchParams<{
-    foodId: string;
-    mealSlot?: string;
-    date?: string;
-  }>();
-  const { foods } = useFoodDb();
-  const { addEntry } = useLogs();
+  const showToast = useToast();
+  const params = useLocalSearchParams<{ foodId: string; mealSlot?: string; date?: string; entryId?: string }>();
+  const { foods, markFoodUsed } = useFoodDb();
+  const { today, entries, addEntry, updateEntry, removeEntry } = useLogs();
   const { ramadanOverride } = useSettings();
 
-  const food = foods.find((f) => f.id === foodId);
-  const date = dateParam ?? todayString();
-  const availableSlots = useMemo(() => getMealSlotsFor(date, ramadanOverride), [date, ramadanOverride]);
+  const editing = params.entryId ? entries.find((entry) => entry.id === params.entryId) : undefined;
+  const food = foods.find((candidate) => candidate.id === params.foodId);
+  const date = editing?.date ?? params.date ?? today;
+
+  const slots = useMemo(() => {
+    const active = getMealSlotsFor(date, ramadanOverride);
+    return editing && !active.includes(editing.mealSlot) ? [...active, editing.mealSlot] : active;
+  }, [date, ramadanOverride, editing]);
+
   const [mealSlot, setMealSlot] = useState<MealSlot>(
-    (mealSlotParam as MealSlot) ?? availableSlots[0]
+    () => editing?.mealSlot ?? (isMealSlot(params.mealSlot) ? params.mealSlot : slots[0])
   );
-
   const [portionUnitKey, setPortionUnitKey] = useState(
-    food?.portionUnits.find((u) => u.isDefault)?.key ?? food?.portionUnits[0]?.key ?? ''
+    () => editing?.portionUnitKey ?? (food ? getDefaultPortion(food).key : '')
   );
-  const [multiplier, setMultiplier] = useState(1);
+  const [multiplier, setMultiplier] = useState(() => editing?.multiplier ?? 1);
+  const [isSaving, setIsSaving] = useState(false);
 
-  if (!food) return null;
+  if (!food) return <Redirect href="/(tabs)/nutrition" />;
 
+  const meta = FOOD_CATEGORY_META[food.category];
+  const defaultPortion = getDefaultPortion(food);
   const computed = computeMacrosForPortion(food, portionUnitKey, multiplier);
 
-  const handleConfirm = async () => {
-    await addEntry({
-      id: `${Date.now()}`,
-      date,
-      mealSlot,
-      foodId: food.id,
-      portionUnitKey,
-      multiplier,
-      computed,
-      loggedAt: new Date().toISOString(),
+  // Back to wherever the flow started (Home or the diary), closing search and portion screens together.
+  const close = () => (router.canDismiss() ? router.dismissAll() : router.replace('/(tabs)/nutrition'));
+
+  const save = async () => {
+    setIsSaving(true);
+    if (editing) {
+      await updateEntry({ ...editing, mealSlot, portionUnitKey, multiplier, computed });
+      showToast(t('addFood.updated'));
+    } else {
+      await addEntry({
+        id: `${Date.now()}`,
+        date,
+        mealSlot,
+        foodId: food.id,
+        portionUnitKey,
+        multiplier,
+        computed,
+        loggedAt: new Date().toISOString(),
+      });
+      await markFoodUsed(food.id);
+      showToast(t('addFood.added'));
+    }
+    close();
+  };
+
+  const remove = () => {
+    if (!editing) return;
+    confirmAction({
+      title: t('addFood.deleteTitle'),
+      message: getFoodName(food, t),
+      confirmLabel: t('common.delete'),
+      cancelLabel: t('common.cancel'),
+      destructive: true,
+      onConfirm: async () => {
+        await removeEntry(editing);
+        showToast(t('addFood.deleted'));
+        close();
+      },
     });
-    router.replace('/(tabs)/nutrition');
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{getFoodName(food, t)}</Text>
+    <Screen
+      edges={['top', 'bottom']}
+      footer={
+        <Row gap={10}>
+          {editing ? (
+            <Button
+              label={t('common.delete')}
+              icon="trash"
+              variant="danger"
+              size="lg"
+              onPress={remove}
+              testID="entry-delete"
+            />
+          ) : null}
+          <Button
+            label={editing ? t('common.save') : t('addFood.confirmAdd')}
+            icon={editing ? 'check' : 'plus'}
+            size="lg"
+            loading={isSaving}
+            onPress={save}
+            style={{ flex: 1 }}
+            testID="portion-save"
+          />
+        </Row>
+      }
+    >
+      <ScreenHeader title={editing ? t('addFood.editTitle') : t('addFood.title')} onBack={() => router.back()} />
 
-        <Text style={styles.sectionLabel}>{t('addFood.selectMealSlot')}</Text>
-        <View style={[styles.slotRow, { flexDirection: rowDirection(isRTL) }]}>
-          {availableSlots.map((slot) => (
-            <TouchableOpacity
+      <Row gap={14}>
+        <IconBadge icon={meta.icon} tone={meta.tone} size={60} />
+        <View style={{ flex: 1, gap: 2 }}>
+          <Txt variant="title" style={{ fontSize: 22, lineHeight: 28 }}>
+            {getFoodName(food, t)}
+          </Txt>
+          <Txt variant="caption" color={colors.textMuted}>
+            {t(meta.labelKey)} · {food.perPortion.kcal} {t('common.kcal')} / {t(defaultPortion.labelKey)}
+          </Txt>
+        </View>
+      </Row>
+
+      <View style={{ gap: 10 }}>
+        <Txt variant="heading">{t('addFood.selectMealSlot')}</Txt>
+        <Row gap={8} wrap>
+          {slots.map((slot) => (
+            <Chip
               key={slot}
-              style={[styles.slotChip, mealSlot === slot && styles.slotChipActive]}
+              icon={MEAL_SLOT_META[slot].icon}
+              label={t(MEAL_SLOT_META[slot].labelKey)}
+              selected={mealSlot === slot}
+              tone="secondary"
               onPress={() => setMealSlot(slot)}
-            >
-              <Text style={[styles.slotChipText, mealSlot === slot && styles.slotChipTextActive]}>
-                {t(MEAL_SLOT_LABEL_KEY[slot])}
-              </Text>
-            </TouchableOpacity>
+              testID={`slot-${slot}`}
+            />
           ))}
-        </View>
+        </Row>
+      </View>
 
-        <PortionPicker
-          food={food}
-          portionUnitKey={portionUnitKey}
-          multiplier={multiplier}
-          onChangePortionUnit={setPortionUnitKey}
-          onChangeMultiplier={setMultiplier}
+      <View style={{ gap: 10 }}>
+        <Txt variant="heading">{t('addFood.selectPortion')}</Txt>
+        <Row gap={8} wrap>
+          {food.portionUnits.map((unit) => (
+            <Chip
+              key={unit.key}
+              label={`${t(unit.labelKey)} · ${unit.gramsEquivalent} ${t('units.g')}`}
+              selected={portionUnitKey === unit.key}
+              onPress={() => setPortionUnitKey(unit.key)}
+              testID={`unit-${unit.key}`}
+            />
+          ))}
+        </Row>
+      </View>
+
+      <View style={{ gap: 10 }}>
+        <Txt variant="heading">{t('addFood.quantity')}</Txt>
+        <Stepper
+          value={`${formatNumber(multiplier, i18n.language)} ×`}
+          canDecrement={multiplier > QUANTITY_STEP}
+          onDecrement={() => setMultiplier(Math.max(QUANTITY_STEP, multiplier - QUANTITY_STEP))}
+          onIncrement={() => setMultiplier(multiplier + QUANTITY_STEP)}
         />
+      </View>
 
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryKcal}>
-            {computed.kcal} {t('common.kcal')}
-          </Text>
-          <View style={[styles.summaryRow, { flexDirection: rowDirection(isRTL) }]}>
-            <Text style={styles.summaryText}>
-              {t('common.protein')}: {computed.proteinG}g
-            </Text>
-            <Text style={styles.summaryText}>
-              {t('common.carbs')}: {computed.carbsG}g
-            </Text>
-            <Text style={styles.summaryText}>
-              {t('common.fat')}: {computed.fatG}g
-            </Text>
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-          <Text style={styles.confirmButtonText}>{t('addFood.confirmAdd')}</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+      <Card style={{ gap: 14 }}>
+        <Row gap={6} align="flex-end">
+          <Txt variant="display" tabular color={colors.primaryLight} testID="portion-kcal">
+            {computed.kcal}
+          </Txt>
+          <Txt variant="subheading" color={colors.textMuted} style={{ marginBottom: 5 }}>
+            {t('common.kcal')}
+          </Txt>
+        </Row>
+        <MacroTiles proteinG={computed.proteinG} carbsG={computed.carbsG} fatG={computed.fatG} />
+      </Card>
+    </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 20, paddingBottom: 48 },
-  title: { fontSize: 22, fontWeight: '700', color: colors.text, marginBottom: 12 },
-  sectionLabel: { fontSize: 13, fontWeight: '600', color: colors.textMuted, marginBottom: 8 },
-  slotRow: { gap: 8, flexWrap: 'wrap' },
-  slotChip: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  slotChipActive: { backgroundColor: colors.secondary, borderColor: colors.secondary },
-  slotChipText: { color: colors.text, fontSize: 13 },
-  slotChipTextActive: { color: '#fff', fontWeight: '600' },
-  summaryCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginVertical: 24,
-  },
-  summaryKcal: { fontSize: 22, fontWeight: '700', color: colors.primary, textAlign: 'center', marginBottom: 10 },
-  summaryRow: { justifyContent: 'space-around' },
-  summaryText: { fontSize: 13, color: colors.textMuted },
-  confirmButton: { backgroundColor: colors.primary, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
-  confirmButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-});

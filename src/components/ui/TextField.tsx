@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  type KeyboardTypeOptions,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 import { colors } from '../../theme/colors';
 import { radius, spacing } from '../../theme/tokens';
@@ -7,35 +14,40 @@ import { rowDirection, textAlign, useRTL } from '../../theme/rtl';
 import { hideWebFocusRing } from '../../theme/web';
 import { Txt } from './Txt';
 
-interface NumberFieldProps {
+interface TextFieldProps {
   label: string;
   value: string;
   onChangeText: (value: string) => void;
-  /** Unit shown inside the field after the number, e.g. "kg". */
+  keyboardType?: KeyboardTypeOptions;
+  /** Unit shown inside the field after the value, e.g. "kg". */
   unit?: string;
   placeholder?: string;
   /** Marks the field with a red border. */
   invalid?: boolean;
   /** Message under the field, e.g. what range is allowed. */
   hint?: string;
+  /** Layout of the whole field, e.g. { flex: 1 } to share a row. */
+  style?: StyleProp<ViewStyle>;
   testID?: string;
 }
 
-export function NumberField({
+export function TextField({
   label,
   value,
   onChangeText,
+  keyboardType = 'default',
   unit,
   placeholder,
   invalid,
   hint,
+  style,
   testID,
-}: NumberFieldProps) {
+}: TextFieldProps) {
   const isRTL = useRTL();
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={styles.field}>
+    <View style={[styles.field, style]}>
       <Txt variant="label" color={colors.textMuted} numberOfLines={1}>
         {label}
       </Txt>
@@ -53,7 +65,7 @@ export function NumberField({
           onChangeText={onChangeText}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          keyboardType="decimal-pad"
+          keyboardType={keyboardType}
           placeholder={placeholder}
           placeholderTextColor={colors.textDim}
           accessibilityLabel={label}
@@ -75,7 +87,7 @@ export function NumberField({
 }
 
 const styles = StyleSheet.create({
-  field: { flex: 1, gap: spacing.xs + 2 },
+  field: { gap: spacing.xs + 2 },
   box: {
     alignItems: 'center',
     gap: spacing.sm,

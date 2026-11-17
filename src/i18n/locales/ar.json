@@ -19,7 +19,8 @@
     "perDay": "في اليوم",
     "minutes": "دقيقة",
     "decrease": "إنقاص",
-    "increase": "زيادة"
+    "increase": "زيادة",
+    "clear": "مسح"
   },
   "onboarding": {
     "languageTitle": "اختر لغتك",
@@ -89,7 +90,21 @@
     "confirmAdd": "أضف إلى السجل",
     "selectMealSlot": "اختر الوجبة",
     "scanBarcode": "مسح الباركود",
-    "createCustom": "إنشاء طعام مخصص"
+    "createCustom": "إنشاء طعام مخصص",
+    "recent": "أُضيفت مؤخرًا",
+    "allFoods": "كل الأطعمة",
+    "resultCount_zero": "لا توجد أطعمة",
+    "resultCount_one": "طعام واحد",
+    "resultCount_two": "طعامان",
+    "resultCount_few": "{{count}} أطعمة",
+    "resultCount_many": "{{count}} طعامًا",
+    "resultCount_other": "{{count}} طعام",
+    "noResults": "لم يتم العثور على أي طعام",
+    "added": "تمت الإضافة إلى السجل",
+    "updated": "تم تحديث الإدخال",
+    "deleted": "تم حذف الإدخال",
+    "deleteTitle": "حذف هذا الإدخال؟",
+    "editTitle": "تعديل الإدخال"
   },
   "history": {
     "title": "السجل",
@@ -113,7 +128,11 @@
     "bannerHint": "تُجمع الوجبات في السحور والإفطار."
   },
   "nutrition": {
-    "title": "التغذية"
+    "title": "التغذية",
+    "yesterday": "أمس",
+    "previousDay": "اليوم السابق",
+    "nextDay": "اليوم التالي",
+    "tapToEdit": "اضغط لتغيير الحصة أو الحذف"
   },
   "home": {
     "streak": "أيام متتالية",
@@ -196,12 +215,17 @@
     "search": "بحث",
     "notFound": "المنتج غير موجود أو لا يوجد اتصال. يمكنك إنشاؤه يدويًا.",
     "noCamera": "المسح بالكاميرا يعمل في تطبيق الهاتف — أدخل الباركود يدويًا هنا.",
-    "permission": "السماح بالوصول إلى الكاميرا"
+    "permission": "السماح بالوصول إلى الكاميرا",
+    "permissionHint": "اسمح بالوصول إلى الكاميرا لمسح باركود المنتج."
   },
   "custom": {
     "title": "طعام جديد",
     "nameLabel": "الاسم",
-    "portionGrams": "حجم الحصة (غ)"
+    "portionGrams": "حجم الحصة",
+    "subtitle": "القيم من الملصق الغذائي أو من وصفتك",
+    "category": "الفئة",
+    "macrosPerPortion": "العناصر الغذائية لكل حصة (اختياري)",
+    "save": "حفظ ومتابعة"
   },
   "progress": {
     "title": "التقدم",
@@ -461,7 +485,8 @@
     "years": "سنة",
     "cm": "سم",
     "kg": "كغ",
-    "min": "دقيقة"
+    "min": "دقيقة",
+    "g": "غ"
   },
   "activityLevel": {
     "sedentary": "قليل الحركة",
@@ -514,5 +539,12 @@
     "completeTitle": "أحسنت! انتهى الروتين",
     "exercisesDone": "تمارين",
     "saved": "تم حفظ الروتين"
+  },
+  "tabs": {
+    "today": "اليوم",
+    "training": "التمرين",
+    "nutrition": "التغذية",
+    "progress": "التقدم",
+    "profile": "ملفي"
   }
 }

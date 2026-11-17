@@ -6,7 +6,7 @@ import { BODY_LIMITS, isValidBodyValue, type BodyField } from '../../services/pr
 import { colors, type Tone } from '../../theme/colors';
 import type { ActivityLevel, Sex } from '../../models/user';
 import type { IconName } from '../ui/Icon';
-import { NumberField } from '../ui/NumberField';
+import { TextField } from '../ui/TextField';
 import { OptionCard } from '../ui/OptionCard';
 import { Row } from '../ui/Row';
 import { Txt } from '../ui/Txt';
@@ -77,8 +77,10 @@ export function BodyStatsForm({ values, onChange }: BodyStatsFormProps) {
       <View style={{ gap: 10 }}>
         <Row gap={10} align="flex-start">
           {FIELDS.map(({ field, labelKey, unitKey, placeholder }) => (
-            <NumberField
+            <TextField
               key={field}
+              keyboardType="decimal-pad"
+              style={{ flex: 1 }}
               label={t(labelKey)}
               unit={t(unitKey)}
               placeholder={placeholder}

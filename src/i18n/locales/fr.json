@@ -19,7 +19,8 @@
     "perDay": "par jour",
     "minutes": "min",
     "decrease": "Diminuer",
-    "increase": "Augmenter"
+    "increase": "Augmenter",
+    "clear": "Effacer"
   },
   "onboarding": {
     "languageTitle": "Choisissez votre langue",
@@ -89,7 +90,17 @@
     "confirmAdd": "Ajouter au journal",
     "selectMealSlot": "Choisir le repas",
     "scanBarcode": "Scanner un code-barres",
-    "createCustom": "Créer un aliment"
+    "createCustom": "Créer un aliment",
+    "recent": "Ajoutés récemment",
+    "allFoods": "Tous les aliments",
+    "resultCount_one": "{{count}} aliment",
+    "resultCount_other": "{{count}} aliments",
+    "noResults": "Aucun aliment trouvé",
+    "added": "Ajouté au journal",
+    "updated": "Entrée modifiée",
+    "deleted": "Entrée supprimée",
+    "deleteTitle": "Supprimer cette entrée ?",
+    "editTitle": "Modifier l'entrée"
   },
   "history": {
     "title": "Historique",
@@ -113,7 +124,11 @@
     "bannerHint": "Les repas sont regroupés en Suhoor et Iftar."
   },
   "nutrition": {
-    "title": "Nutrition"
+    "title": "Nutrition",
+    "yesterday": "Hier",
+    "previousDay": "Jour précédent",
+    "nextDay": "Jour suivant",
+    "tapToEdit": "Touchez pour modifier la portion ou supprimer"
   },
   "home": {
     "streak": "jours de suite",
@@ -188,12 +203,17 @@
     "search": "Rechercher",
     "notFound": "Produit introuvable ou pas de connexion. Vous pouvez le créer manuellement.",
     "noCamera": "Le scan caméra fonctionne dans l'appli mobile — saisissez le code manuellement ici.",
-    "permission": "Autoriser l'accès à la caméra"
+    "permission": "Autoriser l'accès à la caméra",
+    "permissionHint": "Autorisez l'accès à la caméra pour scanner le code-barres d'un produit."
   },
   "custom": {
     "title": "Nouvel aliment",
     "nameLabel": "Nom",
-    "portionGrams": "Taille de la portion (g)"
+    "portionGrams": "Taille de la portion",
+    "subtitle": "Valeurs de l'emballage ou de votre recette",
+    "category": "Catégorie",
+    "macrosPerPortion": "Macros par portion (facultatif)",
+    "save": "Enregistrer et continuer"
   },
   "progress": {
     "title": "Progrès",
@@ -453,7 +473,8 @@
     "years": "ans",
     "cm": "cm",
     "kg": "kg",
-    "min": "min"
+    "min": "min",
+    "g": "g"
   },
   "activityLevel": {
     "sedentary": "Plutôt sédentaire",
@@ -506,5 +527,12 @@
     "completeTitle": "Routine terminée !",
     "exercisesDone": "exercices",
     "saved": "Routine enregistrée"
+  },
+  "tabs": {
+    "today": "Aujourd'hui",
+    "training": "Sport",
+    "nutrition": "Nutrition",
+    "progress": "Progrès",
+    "profile": "Profil"
   }
 }

@@ -1,3 +1,5 @@
+import { intlLocale } from '../i18n/locale';
+
 export function toDateString(date: Date): string {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, '0');
@@ -26,14 +28,6 @@ export function lastNDates(endDate: string, n: number): string[] {
   return Array.from({ length: n }, (_, index) => addDays(endDate, index - (n - 1)));
 }
 
-// ar-MA keeps Western digits and Moroccan month names, matching local usage.
-const INTL_LOCALES: Record<string, string> = {
-  en: 'en-GB',
-  fr: 'fr-FR',
-  de: 'de-DE',
-  ar: 'ar-MA',
-};
-
 const DATE_STYLES = {
   full: { weekday: 'long', day: 'numeric', month: 'long' },
   dayMonth: { day: 'numeric', month: 'short' },
@@ -44,7 +38,7 @@ export type DateStyle = keyof typeof DATE_STYLES;
 
 export function formatDate(date: string, language: string, style: DateStyle): string {
   try {
-    return new Intl.DateTimeFormat(INTL_LOCALES[language] ?? 'en-GB', DATE_STYLES[style]).format(parseDate(date));
+    return new Intl.DateTimeFormat(intlLocale(language), DATE_STYLES[style]).format(parseDate(date));
   } catch {
     return date;
   }

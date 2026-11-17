@@ -10,11 +10,11 @@ import { useProfile } from '../../src/store/ProfileContext';
 import { colors } from '../../src/theme/colors';
 
 const TABS: { name: string; titleKey: string; icon: IconName }[] = [
-  { name: 'index', titleKey: 'common.today', icon: 'home' },
-  { name: 'training', titleKey: 'training.title', icon: 'dumbbell' },
-  { name: 'nutrition', titleKey: 'nutrition.title', icon: 'utensils' },
-  { name: 'progress', titleKey: 'progress.title', icon: 'chart' },
-  { name: 'profile', titleKey: 'profile.title', icon: 'user' },
+  { name: 'index', titleKey: 'tabs.today', icon: 'home' },
+  { name: 'training', titleKey: 'tabs.training', icon: 'dumbbell' },
+  { name: 'nutrition', titleKey: 'tabs.nutrition', icon: 'utensils' },
+  { name: 'progress', titleKey: 'tabs.progress', icon: 'chart' },
+  { name: 'profile', titleKey: 'tabs.profile', icon: 'user' },
 ];
 
 export default function TabsLayout() {

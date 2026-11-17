@@ -1,104 +1,163 @@
 import React, { useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { FOOD_CATEGORIES, FOOD_CATEGORY_META } from '../../src/components/foodMeta';
+import { FoodRow } from '../../src/components/FoodRow';
+import { MEAL_SLOT_META } from '../../src/components/mealSlotMeta';
+import { Button } from '../../src/components/ui/Button';
+import { Card } from '../../src/components/ui/Card';
+import { Chip } from '../../src/components/ui/Chip';
+import { ChipScroller } from '../../src/components/ui/ChipScroller';
+import type { IconName } from '../../src/components/ui/Icon';
+import { IconBadge } from '../../src/components/ui/IconBadge';
+import { Row } from '../../src/components/ui/Row';
+import { Screen } from '../../src/components/ui/Screen';
+import { ScreenHeader } from '../../src/components/ui/ScreenHeader';
+import { SearchField } from '../../src/components/ui/SearchField';
+import { Txt } from '../../src/components/ui/Txt';
+import { formatDate } from '../../src/services/date';
+import { searchFoods } from '../../src/services/foodRepository';
 import { useFoodDb } from '../../src/store/FoodDbContext';
-import { searchFoods, getFoodName } from '../../src/services/foodRepository';
-import { FoodListItem } from '../../src/components/FoodListItem';
-import { colors } from '../../src/theme/colors';
-import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
+import { useLogs } from '../../src/store/LogContext';
+import { colors, type Tone } from '../../src/theme/colors';
+import { spacing } from '../../src/theme/tokens';
+import type { FoodCategory } from '../../src/models/food';
+import type { MealSlot } from '../../src/models/log';
 
-export default function AddFoodSearchScreen() {
-  const { t } = useTranslation();
+const RECENT_SHOWN = 5;
+
+interface ToolTileProps {
+  icon: IconName;
+  tone: Tone;
+  label: string;
+  onPress: () => void;
+  testID: string;
+}
+
+function ToolTile({ icon, tone, label, onPress, testID }: ToolTileProps) {
+  return (
+    <Card onPress={onPress} style={styles.tool} testID={testID}>
+      <Row gap={10}>
+        <IconBadge icon={icon} tone={tone} size={36} />
+        <Txt variant="label" numberOfLines={2} style={{ flex: 1 }}>
+          {label}
+        </Txt>
+      </Row>
+    </Card>
+  );
+}
+
+export default function AddFoodScreen() {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
-  const isRTL = useRTL();
   const { mealSlot, date } = useLocalSearchParams<{ mealSlot?: string; date?: string }>();
-  const { foods } = useFoodDb();
+  const { foods, recentFoods } = useFoodDb();
+  const { today } = useLogs();
   const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<FoodCategory | 'all'>('all');
 
-  const results = useMemo(() => searchFoods(foods, query, (key) => t(key)), [foods, query, t]);
+  const results = useMemo(
+    () => searchFoods(foods, query, (key) => t(key), category === 'all' ? undefined : category),
+    [foods, query, category, t]
+  );
+  const showRecent = !query.trim() && category === 'all' && recentFoods.length > 0;
 
-  const goToPortion = (foodId: string) => {
-    router.push({ pathname: `/add-food/${foodId}`, params: { mealSlot, date } });
-  };
+  const slotMeta = mealSlot && mealSlot in MEAL_SLOT_META ? MEAL_SLOT_META[mealSlot as MealSlot] : undefined;
+  const dayLabel = !date || date === today ? t('common.today') : formatDate(date, i18n.language, 'dayMonth');
+  const subtitle = slotMeta ? `${t(slotMeta.labelKey)} · ${dayLabel}` : dayLabel;
+
+  const openFood = (foodId: string) =>
+    router.push({ pathname: '/add-food/[foodId]', params: { foodId, mealSlot, date } });
+
+  const openCustom = () => router.push({ pathname: '/add-food/custom', params: { mealSlot, date } });
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('addFood.title')}</Text>
-        <TextInput
-          style={[styles.search, { textAlign: textAlign(isRTL) }]}
-          placeholder={t('browse.searchPlaceholder')}
-          placeholderTextColor={colors.textMuted}
-          value={query}
-          onChangeText={setQuery}
-          autoFocus
-        />
-        <View style={[styles.toolRow, { flexDirection: rowDirection(isRTL) }]}>
-          <TouchableOpacity
-            style={styles.toolButton}
-            onPress={() => router.push({ pathname: '/scan-barcode', params: { mealSlot, date } })}
-          >
-            <Text style={styles.toolButtonText}>📷 {t('addFood.scanBarcode')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.toolButton}
-            onPress={() => router.push({ pathname: '/add-food/custom', params: { mealSlot, date } })}
-          >
-            <Text style={styles.toolButtonText}>＋ {t('addFood.createCustom')}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+    <Screen edges={['top', 'bottom']} scroll={false} contentStyle={{ paddingBottom: 0 }}>
+      <ScreenHeader title={t('addFood.title')} subtitle={subtitle} onBack={() => router.back()} />
+      <SearchField
+        value={query}
+        onChangeText={setQuery}
+        placeholder={t('browse.searchPlaceholder')}
+        testID="food-search"
+      />
 
       <FlatList
         data={results}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        renderItem={({ item }) => (
-          <FoodListItem
-            title={getFoodName(item, t)}
-            kcal={item.perPortion.kcal}
-            onPress={() => goToPortion(item.id)}
-          />
-        )}
-      />
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 32 }}
+        ListHeaderComponent={
+          <View style={{ gap: 14, paddingBottom: 4 }}>
+            <Row gap={10} align="stretch">
+              <ToolTile
+                icon="barcode"
+                tone="violet"
+                label={t('addFood.scanBarcode')}
+                onPress={() => router.push({ pathname: '/scan-barcode', params: { mealSlot, date } })}
+                testID="tool-scan"
+              />
+              <ToolTile
+                icon="plus"
+                tone="secondary"
+                label={t('addFood.createCustom')}
+                onPress={openCustom}
+                testID="tool-custom"
+              />
+            </Row>
 
-      <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
-        <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+            <ChipScroller>
+              <Chip
+                label={t('browse.categoryAll')}
+                selected={category === 'all'}
+                onPress={() => setCategory('all')}
+                testID="category-all"
+              />
+              {FOOD_CATEGORIES.map((value) => (
+                <Chip
+                  key={value}
+                  icon={FOOD_CATEGORY_META[value].icon}
+                  label={t(FOOD_CATEGORY_META[value].labelKey)}
+                  selected={category === value}
+                  onPress={() => setCategory(value)}
+                  testID={`category-${value}`}
+                />
+              ))}
+            </ChipScroller>
+
+            {showRecent ? (
+              <View>
+                <Txt variant="label" color={colors.textMuted}>
+                  {t('addFood.recent')}
+                </Txt>
+                {recentFoods.slice(0, RECENT_SHOWN).map((food) => (
+                  <FoodRow key={food.id} food={food} onPress={() => openFood(food.id)} testID={`recent-${food.id}`} />
+                ))}
+              </View>
+            ) : null}
+
+            <Txt variant="label" color={colors.textMuted}>
+              {showRecent ? t('addFood.allFoods') : t('addFood.resultCount', { count: results.length })}
+            </Txt>
+          </View>
+        }
+        renderItem={({ item }) => <FoodRow food={item} onPress={() => openFood(item.id)} testID={`food-${item.id}`} />}
+        ListEmptyComponent={
+          <Card style={{ alignItems: 'center', gap: 12, marginTop: 8 }}>
+            <IconBadge icon="search" tone="neutral" size={48} />
+            <Txt variant="subheading" center>
+              {t('addFood.noResults')}
+            </Txt>
+            <Button label={t('addFood.createCustom')} icon="plus" variant="soft" onPress={openCustom} />
+          </Card>
+        }
+      />
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  header: { paddingHorizontal: 20, paddingTop: 10 },
-  title: { fontSize: 20, fontWeight: '700', color: colors.text, marginBottom: 12 },
-  search: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    fontSize: 15,
-    color: colors.text,
-    marginBottom: 12,
-  },
-  toolRow: { gap: 8, marginBottom: 12 },
-  toolButton: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    paddingVertical: 9,
-    alignItems: 'center',
-  },
-  toolButtonText: { fontSize: 13, color: colors.primaryLight, fontWeight: '600' },
-  list: { paddingHorizontal: 20, paddingBottom: 12 },
-  cancelButton: { alignItems: 'center', paddingVertical: 14 },
-  cancelButtonText: { color: colors.textMuted, fontSize: 14 },
+  tool: { flex: 1, paddingVertical: spacing.md, paddingHorizontal: spacing.md, justifyContent: 'center' },
 });
