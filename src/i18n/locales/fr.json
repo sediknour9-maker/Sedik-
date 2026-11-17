@@ -115,7 +115,12 @@
     "ramadanOn": "Toujours activé",
     "ramadanOff": "Toujours désactivé",
     "resetData": "Réinitialiser les données",
-    "resetConfirm": "Cela supprimera votre profil et toutes les entrées enregistrées. Êtes-vous sûr ?"
+    "resetConfirm": "Cela supprimera votre profil et toutes les entrées enregistrées. Êtes-vous sûr ?",
+    "ramadanHint": "Pendant le Ramadan, les repas passent au Suhoor et à l'Iftar.",
+    "resetAction": "Tout supprimer",
+    "resetDone": "Toutes les données ont été supprimées",
+    "dataTitle": "Vos données",
+    "dataHint": "Tout est enregistré uniquement sur cet appareil."
   },
   "ramadan": {
     "bannerActive": "Le mode Ramadan est actif",
@@ -224,13 +229,41 @@
     "totalWorkouts": "Séances",
     "totalCardio": "Séances cardio",
     "totalMobility": "Routines mobilité",
-    "nutritionHistory": "Historique nutrition"
+    "nutritionHistory": "Historique nutrition",
+    "streakDays_one": "jour d'affilée",
+    "streakDays_other": "jours d'affilée",
+    "bestStreak_one": "Record : {{count}} jour",
+    "bestStreak_other": "Record : {{count}} jours",
+    "weightSaved": "Poids enregistré · objectifs mis à jour",
+    "sinceStart": "{{change}} depuis le {{date}}",
+    "weightEmpty": "Enregistrez votre poids pour voir votre évolution.",
+    "weightOnePoint": "Enregistrez-le un autre jour pour voir la tendance.",
+    "todayWeight": "Poids du jour",
+    "caloriesTitle": "Calories · 7 derniers jours",
+    "caloriesSummary_one": "Moyenne {{average}} kcal · {{count}} jour saisi",
+    "caloriesSummary_other": "Moyenne {{average}} kcal · {{count}} jours saisis",
+    "noMealsWeek": "Aucun repas saisi ces 7 derniers jours",
+    "nothingLogged": "Rien de saisi",
+    "overGoal": "{{value}} au-dessus de l'objectif",
+    "underGoal": "{{value}} sous l'objectif",
+    "goalLine": "Objectif quotidien · {{value}} kcal"
   },
   "profile": {
     "title": "Profil",
     "yourTargets": "Vos objectifs quotidiens",
     "community": "Communauté",
-    "joinDiscord": "Rejoindre la communauté Discord"
+    "joinDiscord": "Rejoindre la communauté Discord",
+    "yourProfile": "Votre profil",
+    "edit": "Modifier le profil",
+    "goal": "Objectif",
+    "activity": "Activité",
+    "communityHint": "Posez vos questions, partagez vos progrès, trouvez des partenaires",
+    "version": "Version {{version}}",
+    "editTitle": "Modifier le profil",
+    "editSubtitle": "Vos objectifs quotidiens sont recalculés à l'enregistrement.",
+    "saveChanges": "Enregistrer",
+    "newTargets": "Vos nouveaux objectifs quotidiens",
+    "updated": "Profil mis à jour"
   },
   "exercise": {
     "squat": "Squat",

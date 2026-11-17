@@ -1,149 +1,202 @@
 import React from 'react';
-import { Alert, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 
-import { useSettings } from '../../src/store/SettingsContext';
-import { useProfile } from '../../src/store/ProfileContext';
+import { Logo } from '../../src/components/brand/Logo';
+import { TargetsCard } from '../../src/components/profile/TargetsCard';
+import { Button } from '../../src/components/ui/Button';
+import { Card } from '../../src/components/ui/Card';
+import { Chevron } from '../../src/components/ui/Chevron';
+import { Chip } from '../../src/components/ui/Chip';
+import { confirmAction } from '../../src/components/ui/confirm';
+import type { IconName } from '../../src/components/ui/Icon';
+import { IconBadge } from '../../src/components/ui/IconBadge';
+import { IconButton } from '../../src/components/ui/IconButton';
+import { Row } from '../../src/components/ui/Row';
+import { Screen } from '../../src/components/ui/Screen';
+import { ScreenHeader } from '../../src/components/ui/ScreenHeader';
+import { Segmented } from '../../src/components/ui/Segmented';
+import { useToast } from '../../src/components/ui/Toast';
+import { Txt } from '../../src/components/ui/Txt';
+import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES } from '../../src/i18n';
+import { formatNumber } from '../../src/i18n/locale';
 import { useDataEpoch } from '../../src/store/DataEpochContext';
-import { LanguageSwitcher } from '../../src/components/LanguageSwitcher';
-import { colors } from '../../src/theme/colors';
-import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
-import type { RamadanOverride } from '../../src/models/user';
+import { useProfile } from '../../src/store/ProfileContext';
+import { useSettings } from '../../src/store/SettingsContext';
+import { colors, type Tone } from '../../src/theme/colors';
+import type { Goal, RamadanOverride } from '../../src/models/user';
 
 // Replace with the real invite link once the community server exists.
 const COMMUNITY_DISCORD_URL = 'https://discord.com';
 
-const RAMADAN_OPTIONS: { value: RamadanOverride; labelKey: string }[] = [
-  { value: 'auto', labelKey: 'settings.ramadanAuto' },
-  { value: 'on', labelKey: 'settings.ramadanOn' },
-  { value: 'off', labelKey: 'settings.ramadanOff' },
-];
+const GOAL_META: Record<Goal, { icon: IconName; tone: Tone; labelKey: string }> = {
+  lose: { icon: 'trendingDown', tone: 'info', labelKey: 'onboarding.goalLose' },
+  maintain: { icon: 'target', tone: 'secondary', labelKey: 'onboarding.goalMaintain' },
+  gain: { icon: 'trendingUp', tone: 'orange', labelKey: 'onboarding.goalGain' },
+};
+
+interface SettingHeaderProps {
+  icon: IconName;
+  tone: Tone;
+  title: string;
+  hint?: string;
+}
+
+function SettingHeader({ icon, tone, title, hint }: SettingHeaderProps) {
+  return (
+    <Row gap={12}>
+      <IconBadge icon={icon} tone={tone} size={36} />
+      <View style={{ flex: 1, gap: 1 }}>
+        <Txt variant="subheading">{title}</Txt>
+        {hint ? (
+          <Txt variant="caption" color={colors.textMuted}>
+            {hint}
+          </Txt>
+        ) : null}
+      </View>
+    </Row>
+  );
+}
 
 export default function ProfileScreen() {
-  const { t } = useTranslation();
-  const isRTL = useRTL();
+  const { t, i18n } = useTranslation();
+  const router = useRouter();
+  const showToast = useToast();
   const { language, setLanguage, ramadanOverride, setRamadanOverride } = useSettings();
   const { profile } = useProfile();
   const { resetAllData } = useDataEpoch();
 
-  const handleReset = () => {
-    // Alert.alert buttons are a no-op on react-native-web, so confirm natively there.
-    if (Platform.OS === 'web') {
-      // eslint-disable-next-line no-alert
-      if (window.confirm(t('settings.resetConfirm'))) {
-        resetAllData();
-      }
-      return;
-    }
-    Alert.alert(t('settings.resetData'), t('settings.resetConfirm'), [
-      { text: t('common.cancel'), style: 'cancel' },
-      { text: t('common.confirm'), style: 'destructive', onPress: resetAllData },
-    ]);
-  };
+  if (!profile) return null;
+
+  const goal = GOAL_META[profile.goal];
+  const bodySummary = [
+    t(`onboarding.${profile.sex}`),
+    `${profile.age} ${t('units.years')}`,
+    `${profile.heightCm} ${t('units.cm')}`,
+    `${formatNumber(profile.weightKg, i18n.language, 1)} ${t('units.kg')}`,
+  ].join(' · ');
+
+  const reset = () =>
+    confirmAction({
+      title: t('settings.resetData'),
+      message: t('settings.resetConfirm'),
+      confirmLabel: t('settings.resetAction'),
+      cancelLabel: t('common.cancel'),
+      destructive: true,
+      onConfirm: async () => {
+        await resetAllData();
+        showToast(t('settings.resetDone'));
+      },
+    });
+
+  const ramadanOptions: { value: RamadanOverride; label: string }[] = [
+    { value: 'auto', label: t('settings.ramadanAuto') },
+    { value: 'on', label: t('settings.ramadanOn') },
+    { value: 'off', label: t('settings.ramadanOff') },
+  ];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('profile.title')}</Text>
+    <Screen>
+      <ScreenHeader title={t('profile.title')} />
 
-        {profile ? (
-          <View style={styles.card}>
-            <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('profile.yourTargets')}</Text>
-            <Text style={styles.targetKcal}>
-              {profile.targets.kcal} {t('common.kcal')} / {t('common.perDay')}
-            </Text>
-            <View style={[styles.macroRow, { flexDirection: rowDirection(isRTL) }]}>
-              <Text style={styles.macroText}>
-                {t('common.protein')}: {profile.targets.proteinG}g
-              </Text>
-              <Text style={styles.macroText}>
-                {t('common.carbs')}: {profile.targets.carbsG}g
-              </Text>
-              <Text style={styles.macroText}>
-                {t('common.fat')}: {profile.targets.fatG}g
-              </Text>
-            </View>
+      <Card style={{ gap: 16 }} testID="profile-summary">
+        <Row gap={14}>
+          <IconBadge icon={profile.sex === 'female' ? 'venus' : 'mars'} tone={profile.sex === 'female' ? 'pink' : 'info'} size={56} />
+          <View style={{ flex: 1, gap: 2 }}>
+            <Txt variant="heading">{t('profile.yourProfile')}</Txt>
+            <Txt variant="caption" color={colors.textMuted}>
+              {bodySummary}
+            </Txt>
           </View>
-        ) : null}
+          <IconButton icon="pencil" label={t('profile.edit')} onPress={() => router.push('/profile-edit')} testID="profile-edit" />
+        </Row>
+        <Row gap={10} align="stretch">
+          <Row gap={10} style={styles.fact}>
+            <IconBadge icon={goal.icon} tone={goal.tone} size={32} />
+            <View style={{ flex: 1 }}>
+              <Txt variant="micro" color={colors.textDim}>
+                {t('profile.goal')}
+              </Txt>
+              <Txt variant="label" numberOfLines={2}>
+                {t(goal.labelKey)}
+              </Txt>
+            </View>
+          </Row>
+          <Row gap={10} style={styles.fact}>
+            <IconBadge icon="activity" tone="secondary" size={32} />
+            <View style={{ flex: 1 }}>
+              <Txt variant="micro" color={colors.textDim}>
+                {t('profile.activity')}
+              </Txt>
+              <Txt variant="label" numberOfLines={2}>
+                {t(`activityLevel.${profile.activityLevel}`)}
+              </Txt>
+            </View>
+          </Row>
+        </Row>
+      </Card>
 
-        <Text style={styles.sectionLabel}>{t('settings.language')}</Text>
-        <LanguageSwitcher value={language} onChange={setLanguage} />
+      <TargetsCard targets={profile.targets} title={t('profile.yourTargets')} />
 
-        <Text style={styles.sectionLabel}>{t('settings.ramadanMode')}</Text>
-        <View style={[styles.optionRow, { flexDirection: rowDirection(isRTL) }]}>
-          {RAMADAN_OPTIONS.map(({ value, labelKey }) => (
-            <TouchableOpacity
-              key={value}
-              style={[styles.option, ramadanOverride === value && styles.optionActive]}
-              onPress={() => setRamadanOverride(value)}
-            >
-              <Text style={[styles.optionText, ramadanOverride === value && styles.optionTextActive]}>
-                {t(labelKey)}
-              </Text>
-            </TouchableOpacity>
+      <Txt variant="label" color={colors.textMuted} style={{ marginTop: 4 }}>
+        {t('settings.title')}
+      </Txt>
+
+      <Card style={{ gap: 14 }}>
+        <SettingHeader icon="languages" tone="info" title={t('settings.language')} />
+        <Row gap={8} wrap>
+          {SUPPORTED_LANGUAGES.map((code) => (
+            <Chip
+              key={code}
+              label={LANGUAGE_NAMES[code]}
+              selected={language === code}
+              onPress={() => setLanguage(code)}
+              testID={`settings-language-${code}`}
+            />
           ))}
-        </View>
+        </Row>
+        <View style={styles.divider} />
+        <SettingHeader icon="moonStar" tone="violet" title={t('settings.ramadanMode')} hint={t('settings.ramadanHint')} />
+        <Segmented options={ramadanOptions} value={ramadanOverride} onChange={setRamadanOverride} />
+      </Card>
 
-        <Text style={styles.sectionLabel}>{t('profile.community')}</Text>
-        <TouchableOpacity
-          style={styles.communityButton}
-          onPress={() => Linking.openURL(COMMUNITY_DISCORD_URL)}
-        >
-          <Text style={styles.communityButtonText}>💬 {t('profile.joinDiscord')}</Text>
-        </TouchableOpacity>
+      <Card onPress={() => Linking.openURL(COMMUNITY_DISCORD_URL)} testID="community-link">
+        <Row gap={12}>
+          <IconBadge icon="message" tone="violet" size={40} />
+          <View style={{ flex: 1, gap: 1 }}>
+            <Txt variant="subheading">{t('profile.joinDiscord')}</Txt>
+            <Txt variant="caption" color={colors.textMuted}>
+              {t('profile.communityHint')}
+            </Txt>
+          </View>
+          <Chevron />
+        </Row>
+      </Card>
 
-        <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-          <Text style={styles.resetButtonText}>{t('settings.resetData')}</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+      <Card style={{ gap: 14 }}>
+        <SettingHeader icon="info" tone="neutral" title={t('settings.dataTitle')} hint={t('settings.dataHint')} />
+        <Button label={t('settings.resetData')} icon="trash" variant="danger" onPress={reset} testID="reset-data" />
+      </Card>
+
+      <View style={styles.footer}>
+        <Logo size={28} />
+        <Txt variant="caption" center color={colors.textDim}>
+          {t('common.appName')} · {t('profile.version', { version: Constants.expoConfig?.version ?? '1.0.0' })}
+        </Txt>
+      </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 20, paddingBottom: 48 },
-  title: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 20 },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 8,
-  },
-  cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 10 },
-  targetKcal: { fontSize: 20, fontWeight: '700', color: colors.primary, textAlign: 'center', marginBottom: 8 },
-  macroRow: { justifyContent: 'space-around' },
-  macroText: { fontSize: 12, color: colors.textMuted },
-  sectionLabel: { fontSize: 13, fontWeight: '600', color: colors.textMuted, marginBottom: 10, marginTop: 20 },
-  optionRow: { gap: 8, flexWrap: 'wrap' },
-  option: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  optionActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  optionText: { color: colors.text, fontSize: 13 },
-  optionTextActive: { color: '#fff', fontWeight: '600' },
-  communityButton: {
-    backgroundColor: colors.secondary,
+  fact: {
+    flex: 1,
+    padding: 10,
     borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
+    backgroundColor: colors.surfaceRaised,
   },
-  communityButtonText: { color: '#fff', fontWeight: '700' },
-  resetButton: {
-    marginTop: 40,
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.danger,
-  },
-  resetButtonText: { color: colors.danger, fontWeight: '700' },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.border },
+  footer: { alignItems: 'center', gap: 6, paddingTop: 8 },
 });

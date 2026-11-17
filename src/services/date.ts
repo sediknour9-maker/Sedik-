@@ -23,6 +23,11 @@ export function addDays(date: string, days: number): string {
   return toDateString(result);
 }
 
+/** Whole calendar days from `from` to `to` (negative when `to` is earlier); DST shifts round away. */
+export function daysBetween(from: string, to: string): number {
+  return Math.round((parseDate(to).getTime() - parseDate(from).getTime()) / 86_400_000);
+}
+
 /** The n consecutive dates ending at endDate, oldest first. */
 export function lastNDates(endDate: string, n: number): string[] {
   return Array.from({ length: n }, (_, index) => addDays(endDate, index - (n - 1)));

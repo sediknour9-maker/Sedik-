@@ -1,196 +1,383 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useLogs } from '../../src/store/LogContext';
+import { ColumnChart } from '../../src/components/charts/ColumnChart';
+import { TrendLineChart } from '../../src/components/charts/TrendLineChart';
+import { Button } from '../../src/components/ui/Button';
+import { Card } from '../../src/components/ui/Card';
+import { Icon, type IconName } from '../../src/components/ui/Icon';
+import { IconBadge } from '../../src/components/ui/IconBadge';
+import { Row } from '../../src/components/ui/Row';
+import { Screen } from '../../src/components/ui/Screen';
+import { ScreenHeader } from '../../src/components/ui/ScreenHeader';
+import { TextField } from '../../src/components/ui/TextField';
+import { useToast } from '../../src/components/ui/Toast';
+import { Txt } from '../../src/components/ui/Txt';
+import { formatNumber } from '../../src/i18n/locale';
+import { formatDate, lastNDates } from '../../src/services/date';
+import { getDailyTotals, type DayTotal } from '../../src/services/logRepository';
+import { isValidBodyValue, parseDecimal } from '../../src/services/profileValidation';
+import { computeLongestStreak, computeStreak } from '../../src/services/streakService';
 import { useActivity } from '../../src/store/ActivityContext';
-import { getLogsForDate, aggregateMacros } from '../../src/services/logRepository';
-import { getActivitiesForDate } from '../../src/services/activityRepository';
-import type { ActivityType } from '../../src/models/training';
-import { colors } from '../../src/theme/colors';
-import { rowDirection, textAlign, useRTL } from '../../src/theme/rtl';
+import { useLogs } from '../../src/store/LogContext';
+import { useProfile } from '../../src/store/ProfileContext';
+import { chartColors, colors, type Tone } from '../../src/theme/colors';
+import type { Goal } from '../../src/models/user';
 
-interface DayTotal {
-  date: string;
-  kcal: number;
+const HISTORY_SHOWN = 5;
+
+interface StatTileProps {
+  icon: IconName;
+  tone: Tone;
+  value: number;
+  label: string;
+  detail?: string;
+  testID: string;
+}
+
+function StatTile({ icon, tone, value, label, detail, testID }: StatTileProps) {
+  return (
+    <Card style={styles.statTile} testID={testID}>
+      <IconBadge icon={icon} tone={tone} size={36} />
+      <View style={{ gap: 2 }}>
+        <Txt variant="title" style={styles.statValue}>
+          {value}
+        </Txt>
+        <Txt variant="caption" color={colors.textMuted} numberOfLines={2}>
+          {label}
+        </Txt>
+        {detail ? (
+          <Txt variant="micro" color={colors.textDim}>
+            {detail}
+          </Txt>
+        ) : null}
+      </View>
+    </Card>
+  );
+}
+
+/** Whether a weight change moves toward the user's goal; maintaining has no direction. */
+function isTowardGoal(change: number, goal: Goal): boolean {
+  if (goal === 'lose') return change < 0;
+  if (goal === 'gain') return change > 0;
+  return false;
 }
 
 export default function ProgressScreen() {
-  const { t } = useTranslation();
-  const isRTL = useRTL();
-  const { logDates } = useLogs();
-  const { weights, logWeight, activityDates } = useActivity();
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
+  const showToast = useToast();
+  const { profile, updateProfile } = useProfile();
+  const { today, logDates, revision } = useLogs();
+  const { weights, logWeight, activityDates, activityCounts } = useActivity();
   const [weightInput, setWeightInput] = useState('');
-  const [dayTotals, setDayTotals] = useState<DayTotal[]>([]);
-  const [activityCounts, setActivityCounts] = useState<Record<ActivityType, number>>({
-    strength: 0,
-    cardio: 0,
-    mobility: 0,
-  });
+  const [isSaving, setIsSaving] = useState(false);
+  const [week, setWeek] = useState<DayTotal[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      const totals = await Promise.all(
-        logDates
-          .slice()
-          .reverse()
-          .map(async (date) => {
-            const entries = await getLogsForDate(date);
-            return { date, kcal: aggregateMacros(entries).kcal };
-          })
-      );
-      if (!cancelled) setDayTotals(totals);
-    })();
+    getDailyTotals(lastNDates(today, 7)).then((totals) => {
+      if (!cancelled) setWeek(totals);
+    });
     return () => {
       cancelled = true;
     };
-  }, [logDates]);
+  }, [today, revision]);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const counts: Record<ActivityType, number> = { strength: 0, cardio: 0, mobility: 0 };
-      const perDate = await Promise.all(activityDates.map((date) => getActivitiesForDate(date)));
-      perDate.flat().forEach((entry) => {
-        counts[entry.type] += 1;
-      });
-      if (!cancelled) setActivityCounts(counts);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [activityDates]);
+  const activeDates = useMemo(() => Array.from(new Set([...logDates, ...activityDates])), [logDates, activityDates]);
+  const streak = computeStreak(activeDates, today);
+  const bestStreak = Math.max(streak, computeLongestStreak(activeDates));
 
-  const handleLogWeight = async () => {
-    const value = Number(weightInput.replace(',', '.'));
-    if (!value || value <= 0) return;
+  const kg = t('units.kg');
+  const kcal = t('common.kcal');
+  const weightPoints = useMemo(() => weights.map((entry) => ({ date: entry.date, value: entry.weightKg })), [weights]);
+  const weightChange = weights.length > 1 ? weights[weights.length - 1].weightKg - weights[0].weightKg : 0;
+  const changeTone = profile && isTowardGoal(weightChange, profile.goal) ? colors.secondaryLight : colors.textMuted;
+  const history = weights.slice().reverse().slice(0, HISTORY_SHOWN);
+
+  const loggedDays = week.filter((day) => day.kcal > 0);
+  const averageKcal = loggedDays.length
+    ? Math.round(loggedDays.reduce((sum, day) => sum + day.kcal, 0) / loggedDays.length)
+    : 0;
+  const goalKcal = profile?.targets.kcal ?? 0;
+
+  const weightValid = isValidBodyValue('weightKg', weightInput);
+  const weightInvalid = weightInput.trim() !== '' && !weightValid;
+
+  const saveWeight = async () => {
+    if (!weightValid) return;
+    setIsSaving(true);
+    const value = Math.round(parseDecimal(weightInput) * 10) / 10;
     await logWeight(value);
+    // The latest weight drives the calorie targets, so keep the profile in step with the log.
+    await updateProfile({ weightKg: value });
+    setIsSaving(false);
     setWeightInput('');
+    showToast(t('progress.weightSaved'));
   };
 
-  const recentWeights = weights.slice().reverse().slice(0, 10);
+  // The sign and digits are isolated as left-to-right so Arabic text keeps the minus in front of the number.
+  const formatSigned = (value: number) =>
+    `⁦${value > 0 ? '+' : value < 0 ? '−' : '±'}${formatNumber(Math.abs(value), language, 1)}⁩ ${kg}`;
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { textAlign: textAlign(isRTL) }]}>{t('progress.title')}</Text>
+    <Screen>
+      <ScreenHeader title={t('progress.title')} />
 
-        <View style={styles.card}>
-          <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('progress.statsTitle')}</Text>
-          <View style={[styles.statRow, { flexDirection: rowDirection(isRTL) }]}>
-            <View style={styles.statTile}>
-              <Text style={styles.statValue}>{activityCounts.strength}</Text>
-              <Text style={styles.statLabel}>{t('progress.totalWorkouts')}</Text>
-            </View>
-            <View style={styles.statTile}>
-              <Text style={styles.statValue}>{activityCounts.cardio}</Text>
-              <Text style={styles.statLabel}>{t('progress.totalCardio')}</Text>
-            </View>
-            <View style={styles.statTile}>
-              <Text style={styles.statValue}>{activityCounts.mobility}</Text>
-              <Text style={styles.statLabel}>{t('progress.totalMobility')}</Text>
-            </View>
+      <Row gap={12} wrap align="stretch">
+        <StatTile
+          icon="flame"
+          tone="orange"
+          value={streak}
+          label={t('progress.streakDays', { count: streak })}
+          detail={t('progress.bestStreak', { count: bestStreak })}
+          testID="stat-streak"
+        />
+        <StatTile
+          icon="dumbbell"
+          tone="primary"
+          value={activityCounts.strength}
+          label={t('progress.totalWorkouts')}
+          testID="stat-strength"
+        />
+        <StatTile
+          icon="heartPulse"
+          tone="info"
+          value={activityCounts.cardio}
+          label={t('progress.totalCardio')}
+          testID="stat-cardio"
+        />
+        <StatTile
+          icon="person"
+          tone="violet"
+          value={activityCounts.mobility}
+          label={t('progress.totalMobility')}
+          testID="stat-mobility"
+        />
+      </Row>
+
+      <Card style={{ gap: 18 }} testID="weight-card">
+        <Row gap={12}>
+          <IconBadge icon="scale" tone="info" size={40} />
+          <View style={{ flex: 1 }}>
+            <Txt variant="heading">{t('progress.weightTitle')}</Txt>
+            {profile ? (
+              <Txt variant="caption" color={colors.textMuted}>
+                {t(`onboarding.goal${profile.goal.charAt(0).toUpperCase()}${profile.goal.slice(1)}`)}
+              </Txt>
+            ) : null}
           </View>
-        </View>
+          {weights.length > 1 ? (
+            <Row gap={4} style={styles.changePill} testID="weight-change">
+              <Icon
+                name={weightChange < 0 ? 'trendingDown' : weightChange > 0 ? 'trendingUp' : 'target'}
+                size={16}
+                color={changeTone}
+              />
+              <Txt variant="label" tabular color={changeTone}>
+                {formatSigned(weightChange)}
+              </Txt>
+            </Row>
+          ) : null}
+        </Row>
 
-        <View style={styles.card}>
-          <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('progress.weightTitle')}</Text>
-          <View style={[styles.weightInputRow, { flexDirection: rowDirection(isRTL) }]}>
-            <TextInput
-              style={[styles.input, { textAlign: textAlign(isRTL) }]}
-              keyboardType="numeric"
-              placeholder={t('progress.weightPlaceholder')}
-              placeholderTextColor={colors.textMuted}
+        {weightPoints.length ? (
+          <TrendLineChart
+            points={weightPoints}
+            minSpan={2}
+            formatTick={(value) => formatNumber(value, language, 1)}
+            formatAxisDate={(date) => formatDate(date, language, 'dayMonth')}
+            accessibilityLabel={`${t('progress.weightTitle')}: ${weightPoints
+              .map((point) => `${formatDate(point.date, language, 'dayMonth')} ${formatNumber(point.value, language, 1)} ${kg}`)
+              .join(', ')}`}
+            testID="weight-chart"
+            renderReadout={(point, index) => (
+              <View>
+                <Row gap={6} align="flex-end">
+                  <Txt variant="display" testID="weight-readout">
+                    {formatNumber(point.value, language, 1)}
+                  </Txt>
+                  <Txt variant="subheading" color={colors.textMuted} style={{ marginBottom: 5 }}>
+                    {kg}
+                  </Txt>
+                </Row>
+                <Txt variant="caption" color={colors.textMuted}>
+                  {index === weightPoints.length - 1 && weights.length > 1
+                    ? t('progress.sinceStart', {
+                        change: formatSigned(weightChange),
+                        date: formatDate(weightPoints[0].date, language, 'dayMonth'),
+                      })
+                    : formatDate(point.date, language, 'full')}
+                </Txt>
+              </View>
+            )}
+          />
+        ) : (
+          <View style={styles.empty}>
+            <Txt variant="body" center color={colors.textMuted}>
+              {t('progress.weightEmpty')}
+            </Txt>
+          </View>
+        )}
+
+        {weightPoints.length === 1 ? (
+          <Txt variant="caption" color={colors.textMuted}>
+            {t('progress.weightOnePoint')}
+          </Txt>
+        ) : null}
+
+        <View style={{ gap: 8 }}>
+          <Row gap={10} align="flex-end">
+            <TextField
+              label={t('progress.todayWeight')}
               value={weightInput}
               onChangeText={setWeightInput}
+              keyboardType="decimal-pad"
+              unit={kg}
+              placeholder={profile ? formatNumber(profile.weightKg, language, 1) : '72'}
+              invalid={weightInvalid}
+              style={{ flex: 1 }}
+              testID="weight-input"
             />
-            <TouchableOpacity style={styles.addButton} onPress={handleLogWeight}>
-              <Text style={styles.addButtonText}>{t('progress.addWeight')}</Text>
-            </TouchableOpacity>
-          </View>
-          {recentWeights.map((entry) => (
-            <View key={entry.date} style={[styles.listRow, { flexDirection: rowDirection(isRTL) }]}>
-              <Text style={styles.listDate}>{entry.date}</Text>
-              <Text style={styles.listValue}>{entry.weightKg} kg</Text>
-            </View>
-          ))}
+            <Button
+              label={t('common.save')}
+              icon="check"
+              disabled={!weightValid}
+              loading={isSaving}
+              onPress={saveWeight}
+              style={styles.saveButton}
+              testID="weight-save"
+            />
+          </Row>
+          {weightInvalid ? (
+            <Txt variant="caption" color={colors.danger}>
+              {t('onboarding.rangeHint', { min: 25, max: 300 })}
+            </Txt>
+          ) : null}
         </View>
 
-        <View style={styles.card}>
-          <Text style={[styles.cardTitle, { textAlign: textAlign(isRTL) }]}>{t('progress.nutritionHistory')}</Text>
-          {dayTotals.length === 0 ? (
-            <Text style={styles.empty}>{t('history.noHistory')}</Text>
-          ) : (
-            dayTotals.map((item) => (
-              <View key={item.date} style={[styles.listRow, { flexDirection: rowDirection(isRTL) }]}>
-                <Text style={styles.listDate}>{item.date}</Text>
-                <Text style={styles.listValue}>
-                  {Math.round(item.kcal)} {t('common.kcal')}
-                </Text>
-              </View>
-            ))
-          )}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        {history.length ? (
+          <View>
+            <Txt variant="label" color={colors.textMuted} style={{ marginBottom: 4 }}>
+              {t('history.title')}
+            </Txt>
+            {history.map((entry, index) => {
+              const previous = history[index + 1];
+              const change = previous ? entry.weightKg - previous.weightKg : null;
+              return (
+                <Row key={entry.date} gap={10} style={styles.historyRow} testID={`weight-row-${entry.date}`}>
+                  <Txt variant="body" style={{ flex: 1 }}>
+                    {entry.date === today ? t('common.today') : formatDate(entry.date, language, 'full')}
+                  </Txt>
+                  {change !== null && change !== 0 ? (
+                    <Txt variant="caption" tabular color={colors.textDim}>
+                      {formatSigned(Math.round(change * 10) / 10)}
+                    </Txt>
+                  ) : null}
+                  <Txt variant="subheading" tabular>
+                    {formatNumber(entry.weightKg, language, 1)} {kg}
+                  </Txt>
+                </Row>
+              );
+            })}
+          </View>
+        ) : null}
+      </Card>
+
+      <Card style={{ gap: 18 }} testID="calories-card">
+        <Row gap={12}>
+          <IconBadge icon="flame" tone="primary" size={40} />
+          <View style={{ flex: 1 }}>
+            <Txt variant="heading">{t('progress.caloriesTitle')}</Txt>
+            <Txt variant="caption" color={colors.textMuted}>
+              {loggedDays.length
+                ? t('progress.caloriesSummary', {
+                    average: formatNumber(averageKcal, language, 0),
+                    count: loggedDays.length,
+                  })
+                : t('progress.noMealsWeek')}
+            </Txt>
+          </View>
+        </Row>
+
+        {week.length ? (
+          <ColumnChart
+            data={week.map((day) => ({
+              key: day.date,
+              label: formatDate(day.date, language, 'weekdayNarrow'),
+              value: Math.round(day.kcal),
+            }))}
+            reference={goalKcal || undefined}
+            defaultKey={today}
+            formatTick={(value) => formatNumber(value, language, 0)}
+            accessibilityLabel={`${t('progress.caloriesTitle')}: ${week
+              .map((day) => `${formatDate(day.date, language, 'dayMonth')} ${Math.round(day.kcal)} ${kcal}`)
+              .join(', ')}`}
+            testID="calories-chart"
+            renderReadout={(datum) => {
+              const difference = datum.value - goalKcal;
+              return (
+                <Row gap={12} align="flex-end" justify="space-between">
+                  <View style={{ flexShrink: 1 }}>
+                    <Txt variant="caption" color={colors.textMuted}>
+                      {datum.key === today ? t('common.today') : formatDate(datum.key, language, 'full')}
+                    </Txt>
+                    <Row gap={6} align="flex-end">
+                      <Txt variant="title" testID="calories-readout">
+                        {formatNumber(datum.value, language, 0)}
+                      </Txt>
+                      <Txt variant="subheading" color={colors.textMuted} style={{ marginBottom: 4 }}>
+                        {kcal}
+                      </Txt>
+                    </Row>
+                  </View>
+                  <Txt variant="caption" color={colors.textMuted} style={{ marginBottom: 6, flexShrink: 1 }}>
+                    {datum.value === 0
+                      ? t('progress.nothingLogged')
+                      : difference > 0
+                        ? t('progress.overGoal', { value: formatNumber(difference, language, 0) })
+                        : t('progress.underGoal', { value: formatNumber(-difference, language, 0) })}
+                  </Txt>
+                </Row>
+              );
+            }}
+          />
+        ) : null}
+
+        {goalKcal ? (
+          <Row gap={8}>
+            <View style={styles.referenceKey} />
+            <Txt variant="caption" color={colors.textMuted}>
+              {t('progress.goalLine', { value: formatNumber(goalKcal, language, 0) })}
+            </Txt>
+          </Row>
+        ) : null}
+      </Card>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: 20, paddingBottom: 48 },
-  title: { fontSize: 24, fontWeight: '700', color: colors.text, marginBottom: 14 },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 14,
+  statTile: { flexGrow: 1, flexBasis: '40%', gap: 12 },
+  statValue: { fontSize: 26, lineHeight: 32 },
+  changePill: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: colors.surfaceRaised,
   },
-  cardTitle: { fontSize: 16, fontWeight: '700', color: colors.text, marginBottom: 10 },
-  statRow: { gap: 10 },
-  statTile: {
-    flex: 1,
-    backgroundColor: colors.background,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 6,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: 'center',
-  },
-  statValue: { fontSize: 20, fontWeight: '700', color: colors.primary },
-  statLabel: { fontSize: 11, color: colors.textMuted, marginTop: 4, textAlign: 'center' },
-  weightInputRow: { gap: 8, marginBottom: 10 },
-  input: {
-    flex: 1,
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
+  empty: {
+    paddingVertical: 28,
     paddingHorizontal: 12,
-    paddingVertical: 9,
-    fontSize: 14,
-    color: colors.text,
+    borderRadius: 12,
+    backgroundColor: colors.surfaceRaised,
   },
-  addButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    justifyContent: 'center',
-  },
-  addButtonText: { color: '#fff', fontWeight: '700', fontSize: 13 },
-  listRow: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
+  saveButton: { height: 51 },
+  historyRow: {
+    paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border,
   },
-  listDate: { fontSize: 13, color: colors.text, fontVariant: ['tabular-nums'] },
-  listValue: { fontSize: 13, color: colors.primaryLight, fontWeight: '600', fontVariant: ['tabular-nums'] },
-  empty: { color: colors.textMuted, fontStyle: 'italic' },
+  referenceKey: { width: 16, height: 2, borderRadius: 1, backgroundColor: chartColors.reference },
 });

@@ -13,6 +13,7 @@ import { StepIndicator } from '../../src/components/ui/StepIndicator';
 import { Txt } from '../../src/components/ui/Txt';
 import { computeTargets } from '../../src/services/calorieCalculator';
 import { parseDecimal } from '../../src/services/profileValidation';
+import { useActivity } from '../../src/store/ActivityContext';
 import { useOnboardingDraft } from '../../src/store/OnboardingDraftContext';
 import { useProfile } from '../../src/store/ProfileContext';
 import { colors } from '../../src/theme/colors';
@@ -24,6 +25,7 @@ export default function GoalsScreen() {
   const isRTL = useRTL();
   const { draft, updateDraft } = useOnboardingDraft();
   const { createProfile } = useProfile();
+  const { logWeight } = useActivity();
   const [isSaving, setIsSaving] = useState(false);
 
   const profileDraft = useMemo(
@@ -43,6 +45,8 @@ export default function GoalsScreen() {
   const handleFinish = async () => {
     setIsSaving(true);
     await createProfile(profileDraft);
+    // The starting weight is the first point of the progress chart.
+    await logWeight(profileDraft.weightKg);
     router.replace('/(tabs)');
   };
 

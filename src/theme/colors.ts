@@ -58,6 +58,19 @@ export const tones: Record<Tone, { fg: string; bg: string }> = {
   danger: { fg: colors.danger, bg: colors.dangerSoft },
 };
 
+/**
+ * Chart marks. Each chart plots a single series, so each gets one hue; both pass the palette checks
+ * (lightness band, chroma, 3:1 contrast) against the dark card surface. Gridlines sit one step off
+ * the surface; labels always use text colors, never these.
+ */
+export const chartColors = {
+  weight: '#3B8EF0',
+  kcal: colors.primary,
+  kcalSelected: colors.primaryLight,
+  grid: colors.border,
+  reference: colors.textDim,
+};
+
 /** Fixed hues for the three macronutrients, used consistently in every chart. */
 export const macroColors = {
   protein: colors.secondary,

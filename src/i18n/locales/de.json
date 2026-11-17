@@ -115,7 +115,12 @@
     "ramadanOn": "Immer an",
     "ramadanOff": "Immer aus",
     "resetData": "Alle Daten zurücksetzen",
-    "resetConfirm": "Dadurch werden dein Profil und alle Einträge gelöscht. Bist du sicher?"
+    "resetConfirm": "Dadurch werden dein Profil und alle Einträge gelöscht. Bist du sicher?",
+    "ramadanHint": "Im Ramadan wechseln die Mahlzeiten zu Suhoor und Iftar.",
+    "resetAction": "Alles löschen",
+    "resetDone": "Alle Daten gelöscht",
+    "dataTitle": "Deine Daten",
+    "dataHint": "Alles wird nur auf diesem Gerät gespeichert."
   },
   "ramadan": {
     "bannerActive": "Ramadan-Modus ist aktiv",
@@ -224,13 +229,41 @@
     "totalWorkouts": "Workouts",
     "totalCardio": "Cardio-Einheiten",
     "totalMobility": "Mobility-Routinen",
-    "nutritionHistory": "Ernährungsverlauf"
+    "nutritionHistory": "Ernährungsverlauf",
+    "streakDays_one": "Tag in Folge",
+    "streakDays_other": "Tage in Folge",
+    "bestStreak_one": "Rekord: {{count}} Tag",
+    "bestStreak_other": "Rekord: {{count}} Tage",
+    "weightSaved": "Gewicht gespeichert · Ziele aktualisiert",
+    "sinceStart": "{{change}} seit {{date}}",
+    "weightEmpty": "Trag dein Gewicht ein, um deinen Verlauf zu sehen.",
+    "weightOnePoint": "Trag an einem anderen Tag erneut ein, um den Verlauf zu sehen.",
+    "todayWeight": "Gewicht heute",
+    "caloriesTitle": "Kalorien · letzte 7 Tage",
+    "caloriesSummary_one": "Ø {{average}} kcal · {{count}} Tag erfasst",
+    "caloriesSummary_other": "Ø {{average}} kcal · {{count}} Tage erfasst",
+    "noMealsWeek": "Keine Mahlzeiten in den letzten 7 Tagen",
+    "nothingLogged": "Nichts eingetragen",
+    "overGoal": "{{value}} über dem Ziel",
+    "underGoal": "{{value}} unter dem Ziel",
+    "goalLine": "Tagesziel · {{value}} kcal"
   },
   "profile": {
     "title": "Profil",
     "yourTargets": "Deine Tagesziele",
     "community": "Community",
-    "joinDiscord": "Discord-Community beitreten"
+    "joinDiscord": "Discord-Community beitreten",
+    "yourProfile": "Dein Profil",
+    "edit": "Profil bearbeiten",
+    "goal": "Ziel",
+    "activity": "Aktivität",
+    "communityHint": "Fragen stellen, Fortschritte teilen, Trainingspartner finden",
+    "version": "Version {{version}}",
+    "editTitle": "Profil bearbeiten",
+    "editSubtitle": "Deine Tagesziele werden beim Speichern neu berechnet.",
+    "saveChanges": "Änderungen speichern",
+    "newTargets": "Deine neuen Tagesziele",
+    "updated": "Profil aktualisiert"
   },
   "exercise": {
     "squat": "Kniebeugen",

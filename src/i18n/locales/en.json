@@ -115,7 +115,12 @@
     "ramadanOn": "Always on",
     "ramadanOff": "Always off",
     "resetData": "Reset all data",
-    "resetConfirm": "This will delete your profile and all logged entries. Are you sure?"
+    "resetConfirm": "This will delete your profile and all logged entries. Are you sure?",
+    "ramadanHint": "During Ramadan, meals switch to Suhoor and Iftar.",
+    "resetAction": "Delete everything",
+    "resetDone": "All data deleted",
+    "dataTitle": "Your data",
+    "dataHint": "Everything is stored only on this device."
   },
   "ramadan": {
     "bannerActive": "Ramadan mode is active",
@@ -224,13 +229,41 @@
     "totalWorkouts": "Workouts",
     "totalCardio": "Cardio sessions",
     "totalMobility": "Mobility routines",
-    "nutritionHistory": "Nutrition history"
+    "nutritionHistory": "Nutrition history",
+    "streakDays_one": "day in a row",
+    "streakDays_other": "days in a row",
+    "bestStreak_one": "Best: {{count}} day",
+    "bestStreak_other": "Best: {{count}} days",
+    "weightSaved": "Weight saved · targets updated",
+    "sinceStart": "{{change}} since {{date}}",
+    "weightEmpty": "Log your weight to start your trend line.",
+    "weightOnePoint": "Log again on another day to see your trend.",
+    "todayWeight": "Today's weight",
+    "caloriesTitle": "Calories · last 7 days",
+    "caloriesSummary_one": "Average {{average}} kcal · {{count}} day logged",
+    "caloriesSummary_other": "Average {{average}} kcal · {{count}} days logged",
+    "noMealsWeek": "No meals logged in the last 7 days",
+    "nothingLogged": "Nothing logged",
+    "overGoal": "{{value}} over goal",
+    "underGoal": "{{value}} under goal",
+    "goalLine": "Daily goal · {{value}} kcal"
   },
   "profile": {
     "title": "Profile",
     "yourTargets": "Your daily targets",
     "community": "Community",
-    "joinDiscord": "Join the Discord community"
+    "joinDiscord": "Join the Discord community",
+    "yourProfile": "Your profile",
+    "edit": "Edit profile",
+    "goal": "Goal",
+    "activity": "Activity",
+    "communityHint": "Ask questions, share progress, find training partners",
+    "version": "Version {{version}}",
+    "editTitle": "Edit profile",
+    "editSubtitle": "Your daily targets update when you save.",
+    "saveChanges": "Save changes",
+    "newTargets": "Your new daily targets",
+    "updated": "Profile updated"
   },
   "exercise": {
     "squat": "Squat",
