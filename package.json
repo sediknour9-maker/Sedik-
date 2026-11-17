@@ -41,7 +41,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:web-single": "expo export --platform web && node scripts/build-single-html.js"
   },
   "jest": {
     "preset": "jest-expo",
