@@ -17,7 +17,9 @@
     "fat": "Fat",
     "today": "Today",
     "perDay": "per day",
-    "minutes": "min"
+    "minutes": "min",
+    "decrease": "Decrease",
+    "increase": "Increase"
   },
   "onboarding": {
     "languageTitle": "Choose your language",
@@ -97,7 +99,8 @@
   "ramadan": {
     "bannerActive": "Ramadan mode is active",
     "suhoorLabel": "Suhoor",
-    "iftarLabel": "Iftar"
+    "iftarLabel": "Iftar",
+    "bannerHint": "Meals are grouped into Suhoor and Iftar."
   },
   "nutrition": {
     "title": "Nutrition"
@@ -111,7 +114,12 @@
     "todaysTraining": "Today's training",
     "goToTraining": "Go to training",
     "kcalBurnedToday": "Burned today",
-    "nutritionToday": "Nutrition today"
+    "nutritionToday": "Nutrition today",
+    "kcalLeft": "kcal left",
+    "kcalOver": "kcal over",
+    "eaten": "Eaten",
+    "burned": "Burned",
+    "goal": "Goal"
   },
   "training": {
     "title": "Training",
@@ -398,5 +406,11 @@
     "split_squat": "One foot forward, one behind — lower the back knee toward the floor, then press up through the front heel.",
     "glute_bridge": "Lie on your back with knees bent and lift your hips by squeezing the glutes, then lower slowly.",
     "dumbbell_row": "Support one hand on a bench, pull the dumbbell to your hip with a flat back, then lower with control."
+  },
+  "water": {
+    "title": "Water",
+    "progress": "{{count}} / {{goal}} glasses",
+    "glassNumber": "Glass {{number}}",
+    "addGlass": "Add a glass"
   }
 }

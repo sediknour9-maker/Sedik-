@@ -17,7 +17,9 @@
     "fat": "Fett",
     "today": "Heute",
     "perDay": "pro Tag",
-    "minutes": "Min."
+    "minutes": "Min.",
+    "decrease": "Verringern",
+    "increase": "Erhöhen"
   },
   "onboarding": {
     "languageTitle": "Wähle deine Sprache",
@@ -97,7 +99,8 @@
   "ramadan": {
     "bannerActive": "Ramadan-Modus ist aktiv",
     "suhoorLabel": "Suhoor",
-    "iftarLabel": "Iftar"
+    "iftarLabel": "Iftar",
+    "bannerHint": "Mahlzeiten werden nach Suhoor und Iftar gruppiert."
   },
   "nutrition": {
     "title": "Ernährung"
@@ -111,7 +114,12 @@
     "todaysTraining": "Heutiges Training",
     "goToTraining": "Zum Training",
     "kcalBurnedToday": "Heute verbrannt",
-    "nutritionToday": "Ernährung heute"
+    "nutritionToday": "Ernährung heute",
+    "kcalLeft": "kcal übrig",
+    "kcalOver": "kcal zu viel",
+    "eaten": "Gegessen",
+    "burned": "Verbrannt",
+    "goal": "Ziel"
   },
   "training": {
     "title": "Training",
@@ -398,5 +406,11 @@
     "split_squat": "Ein Fuß vorn, einer hinten — das hintere Knie Richtung Boden senken und über die vordere Ferse hochdrücken.",
     "glute_bridge": "Rückenlage mit angewinkelten Beinen, Hüfte durch Anspannen des Gesäßes anheben und langsam senken.",
     "dumbbell_row": "Mit einer Hand auf der Bank abstützen, die Kurzhantel mit geradem Rücken zur Hüfte ziehen und kontrolliert absenken."
+  },
+  "water": {
+    "title": "Wasser",
+    "progress": "{{count}} / {{goal}} Gläser",
+    "glassNumber": "Glas {{number}}",
+    "addGlass": "Glas hinzufügen"
   }
 }

@@ -1,33 +1,35 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { colors } from '../theme/colors';
-import { useRTL, textAlign } from '../theme/rtl';
+import { radius, spacing } from '../theme/tokens';
+import { IconBadge } from './ui/IconBadge';
+import { Row } from './ui/Row';
+import { Txt } from './ui/Txt';
 
+/** Shown while Ramadan mode is active, explaining why the meal slots changed. */
 export function RamadanBanner() {
   const { t } = useTranslation();
-  const isRTL = useRTL();
 
   return (
-    <View style={styles.banner}>
-      <Text style={styles.moon}>🌙</Text>
-      <Text style={[styles.text, { textAlign: textAlign(isRTL) }]}>{t('ramadan.bannerActive')}</Text>
-    </View>
+    <Row gap={12} style={styles.banner}>
+      <IconBadge icon="moonStar" tone="accent" size={38} />
+      <View style={{ flex: 1 }}>
+        <Txt variant="subheading">{t('ramadan.bannerActive')}</Txt>
+        <Txt variant="caption" color={colors.textMuted}>
+          {t('ramadan.bannerHint')}
+        </Txt>
+      </View>
+    </Row>
   );
 }
 
 const styles = StyleSheet.create({
   banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: colors.secondary,
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    marginBottom: 14,
+    backgroundColor: colors.accentSoft,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
-  moon: { fontSize: 18 },
-  text: { color: '#fff', fontWeight: '600', flex: 1 },
 });

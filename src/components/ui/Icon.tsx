@@ -1,5 +1,4 @@
-import React from 'react';
-import type { LucideIcon } from 'lucide-react-native';
+import React, { type ComponentType } from 'react';
 
 import Activity from 'lucide-react-native/icons/activity';
 import Apple from 'lucide-react-native/icons/apple';
@@ -10,6 +9,7 @@ import Bike from 'lucide-react-native/icons/bike';
 import CalendarDays from 'lucide-react-native/icons/calendar-days';
 import Camera from 'lucide-react-native/icons/camera';
 import ChartColumn from 'lucide-react-native/icons/chart-column';
+import ChartNoAxesColumnIncreasing from 'lucide-react-native/icons/chart-no-axes-column-increasing';
 import Check from 'lucide-react-native/icons/check';
 import ChevronDown from 'lucide-react-native/icons/chevron-down';
 import ChevronLeft from 'lucide-react-native/icons/chevron-left';
@@ -71,6 +71,14 @@ import X from 'lucide-react-native/icons/x';
 import Zap from 'lucide-react-native/icons/zap';
 
 import { colors } from '../../theme/colors';
+import { TagineGlyph } from '../brand/TagineGlyph';
+
+type Glyph = ComponentType<{
+  size?: number | string;
+  color?: string;
+  strokeWidth?: number | string;
+  fill?: string;
+}>;
 
 // Icons are imported one by one so the bundle only contains the ones in use.
 const ICONS = {
@@ -137,12 +145,14 @@ const ICONS = {
   user: UserRound,
   utensils: Utensils,
   ball: Volleyball,
+  stairs: ChartNoAxesColumnIncreasing,
   swim: WavesLadder,
+  tagine: TagineGlyph,
   weight: Weight,
   wheat: Wheat,
   close: X,
   zap: Zap,
-} satisfies Record<string, LucideIcon>;
+} satisfies Record<string, Glyph>;
 
 export type IconName = keyof typeof ICONS;
 
@@ -151,9 +161,11 @@ interface IconProps {
   size?: number;
   color?: string;
   strokeWidth?: number;
+  /** Fills the outline, e.g. to show a droplet or flame as "on". */
+  fill?: string;
 }
 
-export function Icon({ name, size = 20, color = colors.text, strokeWidth = 2 }: IconProps) {
-  const Glyph = ICONS[name];
-  return <Glyph size={size} color={color} strokeWidth={strokeWidth} />;
+export function Icon({ name, size = 20, color = colors.text, strokeWidth = 2, fill = 'none' }: IconProps) {
+  const IconComponent: Glyph = ICONS[name];
+  return <IconComponent size={size} color={color} strokeWidth={strokeWidth} fill={fill} />;
 }

@@ -17,7 +17,9 @@
     "fat": "دهون",
     "today": "اليوم",
     "perDay": "في اليوم",
-    "minutes": "دقيقة"
+    "minutes": "دقيقة",
+    "decrease": "إنقاص",
+    "increase": "زيادة"
   },
   "onboarding": {
     "languageTitle": "اختر لغتك",
@@ -97,7 +99,8 @@
   "ramadan": {
     "bannerActive": "وضع رمضان مفعّل",
     "suhoorLabel": "السحور",
-    "iftarLabel": "الإفطار"
+    "iftarLabel": "الإفطار",
+    "bannerHint": "تُجمع الوجبات في السحور والإفطار."
   },
   "nutrition": {
     "title": "التغذية"
@@ -111,7 +114,12 @@
     "todaysTraining": "تمرين اليوم",
     "goToTraining": "إلى التمرين",
     "kcalBurnedToday": "المحروقة اليوم",
-    "nutritionToday": "التغذية اليوم"
+    "nutritionToday": "التغذية اليوم",
+    "kcalLeft": "سعرة متبقية",
+    "kcalOver": "سعرة زائدة",
+    "eaten": "مستهلكة",
+    "burned": "محروقة",
+    "goal": "الهدف"
   },
   "training": {
     "title": "التمرين",
@@ -398,5 +406,11 @@
     "split_squat": "قدم أمامية وأخرى خلفية — انزل بالركبة الخلفية نحو الأرض ثم ادفع عبر كعب القدم الأمامية.",
     "glute_bridge": "استلقِ على ظهرك مع ثني الركبتين وارفع الوركين بشد المؤخرة ثم انزل ببطء.",
     "dumbbell_row": "استند بيد على مقعد واسحب الدمبل نحو الورك بظهر مستقيم ثم أنزله بتحكم."
+  },
+  "water": {
+    "title": "الماء",
+    "progress": "{{count}} / {{goal}} أكواب",
+    "glassNumber": "الكوب {{number}}",
+    "addGlass": "إضافة كوب"
   }
 }

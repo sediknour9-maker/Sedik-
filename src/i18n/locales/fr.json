@@ -17,7 +17,9 @@
     "fat": "Lipides",
     "today": "Aujourd'hui",
     "perDay": "par jour",
-    "minutes": "min"
+    "minutes": "min",
+    "decrease": "Diminuer",
+    "increase": "Augmenter"
   },
   "onboarding": {
     "languageTitle": "Choisissez votre langue",
@@ -97,7 +99,8 @@
   "ramadan": {
     "bannerActive": "Le mode Ramadan est actif",
     "suhoorLabel": "Suhoor",
-    "iftarLabel": "Iftar"
+    "iftarLabel": "Iftar",
+    "bannerHint": "Les repas sont regroupés en Suhoor et Iftar."
   },
   "nutrition": {
     "title": "Nutrition"
@@ -111,7 +114,12 @@
     "todaysTraining": "Entraînement du jour",
     "goToTraining": "Vers l'entraînement",
     "kcalBurnedToday": "Brûlées aujourd'hui",
-    "nutritionToday": "Nutrition aujourd'hui"
+    "nutritionToday": "Nutrition aujourd'hui",
+    "kcalLeft": "kcal restantes",
+    "kcalOver": "kcal en trop",
+    "eaten": "Mangé",
+    "burned": "Brûlé",
+    "goal": "Objectif"
   },
   "training": {
     "title": "Entraînement",
@@ -398,5 +406,11 @@
     "split_squat": "Un pied devant, un derrière — descendez le genou arrière vers le sol puis poussez sur le talon avant.",
     "glute_bridge": "Allongé genoux fléchis, soulevez les hanches en serrant les fessiers puis redescendez lentement.",
     "dumbbell_row": "Une main en appui sur un banc, tirez l'haltère vers la hanche dos plat, puis redescendez en contrôle."
+  },
+  "water": {
+    "title": "Eau",
+    "progress": "{{count}} / {{goal}} verres",
+    "glassNumber": "Verre {{number}}",
+    "addGlass": "Ajouter un verre"
   }
 }
