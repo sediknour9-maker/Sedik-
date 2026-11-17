@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ConfirmHost } from '../src/components/ui/ConfirmDialog';
 import { AppProviders } from '../src/store/AppProviders';
 import { colors } from '../src/theme/colors';
 import { MAX_CONTENT_WIDTH } from '../src/theme/tokens';
@@ -32,6 +33,7 @@ export default function RootLayout() {
               <Stack.Screen name="workout/[dayId]" options={{ gestureEnabled: false }} />
               <Stack.Screen name="mobility" options={{ gestureEnabled: false }} />
             </Stack>
+            <ConfirmHost />
           </View>
         </AppProviders>
       </SafeAreaProvider>
